@@ -12,7 +12,7 @@ Model one portfolio owner for the initial individual portfolio. All reflections,
 
 ## 3. Configurable Academic Hierarchy
 
-Use level, subject, folder, period, and domain entities rather than Level 1-specific columns. Level 1 can require three subjects and four folders per subject while future levels use different structures.
+Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
 
 ## 4. MED 102 Domain Identity
 
@@ -53,6 +53,10 @@ Favor compact metadata, targeted indexes, scoped queries, one file per artifact,
 - Artifact retention and cleanup.
 - Completion calculation.
 - Audit event set and retention.
-- Final MED 102 grouping.
+- MED 102 structure is confirmed as eight independent domains; no parent grouping is required.
 - Final MED 103 display labels.
 - Supabase project region and operational ownership.
+
+## Current MED 102 structure (13 November 2026)
+
+The official instructions PDF, section 2.2 (pp. 5-6), defines eight independent MED 102 domains, with required evidence, competency descriptions, one shared four-question reflection guide, and pertinent artifacts. MED 102 has no four-parent-folder requirement. Earlier proposed-parent and unresolved-grouping text in this document is superseded. See docs/phase-2-academic-content/03_MED102_STRUCTURE_FINALIZATION.md for exact wording and the database representation review.

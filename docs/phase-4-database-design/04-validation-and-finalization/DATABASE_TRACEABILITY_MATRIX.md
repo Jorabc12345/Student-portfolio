@@ -13,7 +13,7 @@
 | Reviews and feedback | `portfolio_reviews`, `portfolio_feedback` | Supported |
 | Feedback cannot alter originals | Separate tables and denied instructor mutations | Requires RLS |
 | Three Level 1 subjects | Seed validation requirement | Supported by design |
-| Twelve folders | Four-folder-per-subject seed check | Supported by design |
+| Academic structure | Four MED 101/103 periods and eight independent MED 102 domains | Confirmed; no MED 102 parent folders |
 | Eight MED 102 domains | Separate `learning_domains` records | Supported |
 | Official reflection requirements | Protected `content_prompts` | Supported |
 | Global sections | `global_sections` and content records | Supported |

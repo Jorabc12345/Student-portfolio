@@ -42,7 +42,7 @@ The reconciliation changes technology references only. It does not change:
 
 - Individual student portfolio scope.
 - Level 1, MED 101, MED 102, and MED 103 coverage.
-- Four folders per subject and twelve total folders.
+- Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
 - Student ownership and private access.
 - Shared faculty invitation-code registration.
 - Separate student authorization and revocation.

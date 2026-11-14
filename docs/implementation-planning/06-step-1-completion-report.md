@@ -18,7 +18,7 @@
 
 - `docs/phase-1-requirements/SOURCE_REVIEW_NOTES.md` preserves secondary summaries of the missing SRS/PDF, but does not replace them for exact wording, completeness, or approval verification.
 - The approved roadmap is absent, so backlog-to-roadmap phase numbers, approved sequence and dates cannot be verified. “Phase 7 planning” is referenced only because the Phase 6 validation report uses that label.
-- Academic prompt wording and labels require direct comparison with the original PDF/SRS; MED 102 grouping and operational policies remain unresolved.
+- Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
 - Instructor feedback is represented as separate additive guidance by the latest Phase 4/5 model, but older documentation conflicts. Feedback edit/delete/publication/reply/notification/retention rules still require decisions.
 - Client/institution decisions remain necessary for account provisioning, instructor identity verification, administrator access, artifact policy, backup/recovery, audit retention and hosting.
 

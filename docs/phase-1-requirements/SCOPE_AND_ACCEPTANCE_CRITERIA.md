@@ -67,7 +67,7 @@ Institutional identity provisioning unless later integrated, formal academic gra
 
 - **AC-012:** Level 1 displays exactly three subjects: MED 101, MED 102, and MED 103.
 - **AC-013:** Each subject displays exactly four main folders.
-- **AC-014:** The Level 1 subject structure contains exactly twelve main subject folders.
+- Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
 - **AC-015:** Home Page, PLO documentation, and Final Musings are not counted as subject folders.
 - **AC-016:** Folder names are not finalized in the system until client approval is recorded.
 

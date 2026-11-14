@@ -11,7 +11,7 @@
 | Instructor reviews/feedback | Review and feedback wireframes/specifications | Passed |
 | No instructor modification of originals | Read-only visual treatment and hidden mutation controls | Passed |
 | Three Level 1 subjects | Level 1 sitemap and subject designs | Passed |
-| Four folders per subject | Subject/folder navigation | Passed structurally |
+| Academic structure | Four MED 101/103 periods and eight independent MED 102 domains | Confirmed; no MED 102 parent folders |
 | Eight MED 102 domains | Domain index and direct domain navigation | Passed |
 | PLO Attainment separate | Level 1 sitemap and page design | Passed |
 | Final Musings separate | Level 1 sitemap and question flow | Passed |

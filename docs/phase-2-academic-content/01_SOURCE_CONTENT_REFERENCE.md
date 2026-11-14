@@ -45,9 +45,9 @@ Phase 2 – Stage 1 source and traceability ledger
 | MED 101 – Integrated Basic Sciences | R1, pp. 4–5; client decision | Confirmed by college document and client |
 | MED 102 – Family, Community, & Preventive Medicine I | R1, pp. 5–6; client decision | Confirmed by college document and client |
 | MED 103 – Medical Humanities I | R1, pp. 6–8; client decision | Confirmed by college document and client |
-| Four main folders per subject | Client decision; Phase 1 | Confirmed by client |
+| Academic structure | Four MED 101/103 periods and eight independent MED 102 domains | Confirmed; no MED 102 parent folders |
 | Twelve total subject folders | Client decision; Phase 1 | Confirmed by client |
-| Folder IDs and temporary display values | Client instruction; Phase 2 update | IDs stable, names configurable |
+| Stable folder IDs and confirmed section/domain names | Official PDF pp. 4-8 and user confirmation | Names confirmed; MED 102 slot relation open |
 
 ### MED 101
 
@@ -60,7 +60,7 @@ Phase 2 – Stage 1 source and traceability ledger
 | Milestone artifacts in specified questions | R1, pp. 4–5 | Confirmed by college document |
 | Improvement-plan artifacts in first and second periods | R1, pp. 4–5 | Confirmed by college document |
 | Proposed period-to-folder alignment | Phase 1/2 organization | Proposed organization |
-| Folder IDs and temporary display values | Client instruction; Phase 2 update | IDs stable, names configurable |
+| Stable folder IDs and confirmed section/domain names | Official PDF pp. 4-8 and user confirmation | Names confirmed; MED 102 slot relation open |
 
 ### MED 102
 
@@ -70,14 +70,14 @@ Phase 2 – Stage 1 source and traceability ledger
 | Family-focused care | R1, pp. 5–6 | Confirmed by college document |
 | Social determinants of health | R1, pp. 5–6 | Confirmed by college document |
 | Global and national health frameworks | R1, pp. 5–6 | Confirmed by college document |
-| Primary health care and Universal Health Care | R1, pp. 5–6 | Confirmed by college document |
+| Primary health care and UHC | R1, pp. 5–6 | Confirmed by college document |
 | Systems thinking | R1, pp. 5–6 | Confirmed by college document |
 | Community engagement and social accountability | R1, pp. 5–6 | Confirmed by college document |
 | Professional identity formation | R1, pp. 5–6 | Confirmed by college document |
 | Four recurring questions for every domain | R1, pp. 5–6 | Confirmed by college document |
 | Domain-specific evidence examples | R1, pp. 5–6 | Confirmed by college document |
 | Domain-to-folder grouping | Not supplied | Pending clarification |
-| Folder IDs and temporary display values | Client instruction; Phase 2 update | IDs stable, names configurable |
+| Stable folder IDs and confirmed section/domain names | Official PDF pp. 4-8 and user confirmation | Names confirmed; MED 102 slot relation open |
 
 ### MED 103
 
@@ -88,7 +88,7 @@ Phase 2 – Stage 1 source and traceability ledger
 | 3rd Bimonthly – Professional Identity, Ethics, Accountability, and Well-Being | R1, pp. 7–8 | Confirmed by college document |
 | 4th Bimonthly – Ethical Leadership, Disaster Preparedness, Social Responsibility, and Year-End Integration | R1, p. 8 | Confirmed by college document |
 | Period-to-folder alignment | Phase 1/2 organization | Proposed organization |
-| Folder IDs and temporary display values | Client instruction; Phase 2 update | IDs stable, names configurable |
+| Stable folder IDs and confirmed section/domain names | Official PDF pp. 4-8 and user confirmation | Names confirmed; MED 102 slot relation open |
 
 ### PLOs and Final Musings
 
@@ -105,7 +105,7 @@ Phase 2 – Stage 1 source and traceability ledger
 | Individual medical student portfolio | R3 / client decision | Confirmed by client |
 | Level 1 initial coverage | R3 / client decision | Confirmed by client |
 | Exactly three named subjects | R3 / client decision | Confirmed by client |
-| Four main folders per subject and twelve total | R3 / client decision | Confirmed by client |
+| Academic structure | Four MED 101/103 periods and eight independent MED 102 domains | Confirmed; no MED 102 parent folders |
 | MED 102 domains must not be arbitrarily grouped | R3 / Phase 1 baseline | Confirmed by client constraint |
 | Student full management of own portfolio | R3 / client decision | Confirmed by client |
 | Faculty authenticated read-only access | R3 / client decision | Confirmed by client |
@@ -122,7 +122,7 @@ Phase 2 – Stage 1 source and traceability ledger
 3. MED 102 retains all eight domains and all four recurring questions without assigning domains to folders.
 4. MED 103 themes and prescribed questions are retained without adding academic requirements.
 5. Evidence descriptions identify only evidence explicitly required or described by the source. Question-derived learning themes are not treated as separate invented requirements.
-6. Permanent folder names and MED 102 domain grouping remain pending clarification; supplied IDs and temporary display values are recorded.
+6. MED 101 and MED 103 Bimonthly labels and the eight MED 102 domain names are confirmed. MED 102 has eight independent domains; no relation to parent-folder slots is required or open.
 
 ## 6. Inventory Validation
 
@@ -136,3 +136,14 @@ Phase 2 – Stage 1 source and traceability ledger
 - PLOs: **11**
 - Final Musings questions: **5**
 
+
+## Official academic wording status update (13 November 2026)
+
+MED 102 has eight independent domain sections; direct navigation must expose each one without parent folders.
+## Source availability update (13 November 2026)
+
+The official instructions PDF is now attached and was directly reviewed for academic structure. MED 101 labels are on p. 4, MED 102 domains on pp. 5-6, and MED 103 headings/themes on pp. 6-8. The approved SRS and master roadmap remain unavailable.
+
+## Current MED 102 structure (13 November 2026)
+
+The official instructions PDF, section 2.2 (pp. 5-6), defines eight independent MED 102 domains, with required evidence, competency descriptions, one shared four-question reflection guide, and pertinent artifacts. MED 102 has no four-parent-folder requirement. Earlier proposed-parent and unresolved-grouping text in this document is superseded. See docs/phase-2-academic-content/03_MED102_STRUCTURE_FINALIZATION.md for exact wording and the database representation review.

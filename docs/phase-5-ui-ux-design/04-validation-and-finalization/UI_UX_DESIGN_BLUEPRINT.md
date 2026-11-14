@@ -16,8 +16,12 @@ SLRP is a private academic reflection and evidence portfolio for BukSU-COM medic
 
 ## Academic UX
 
-Level 1 contains MED 101, MED 102, and MED 103, with four folders per subject and twelve total. MED 102 exposes eight distinct domains even when organized under provisional folders. PLO Attainment and Final Musings remain separate global sections. Future levels are data-driven.
+Level 1 contains MED 101 and MED 103 with four Bimonthly sections each, and MED 102 with eight independent, directly accessible domains. PLO Attainment and Final Musings remain separate global sections. Future levels are data-driven.
 
 ## Technology Alignment
 
 The design is implementable with React + Vite, Tailwind CSS, Framer Motion, Lucide React, Supabase Auth, Supabase PostgreSQL/RLS, and private Supabase Storage. No UI assumption requires a new backend or paid service.
+
+## Current MED 102 structure (13 November 2026)
+
+The official instructions PDF, section 2.2 (pp. 5-6), defines eight independent MED 102 domains, with required evidence, competency descriptions, one shared four-question reflection guide, and pertinent artifacts. MED 102 has no four-parent-folder requirement. Earlier proposed-parent and unresolved-grouping text in this document is superseded. See docs/phase-2-academic-content/03_MED102_STRUCTURE_FINALIZATION.md for exact wording and the database representation review.

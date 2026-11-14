@@ -31,7 +31,7 @@ Use Supabase PostgreSQL, Supabase Auth, private Supabase Storage, and PostgreSQL
 
 ## Academic Scope
 
-Level 1 contains exactly MED 101, MED 102, and MED 103, with four main folders per subject. MED 102 has eight separate, directly accessible domains that may be organized under four folders without merging domain records. MED 101 and MED 103 source reflection requirements remain preserved. Home Page, PLO Attainment, and Final Musings remain separate global sections. Future levels are represented as configurable data.
+Level 1 contains exactly MED 101, MED 102, and MED 103, with four Bimonthly sections each for MED 101 and MED 103. MED 102 has eight separate, directly accessible domains and no parent folders. MED 101 and MED 103 source reflection requirements remain preserved. Home Page, PLO Attainment, and Final Musings remain separate global sections. Future levels are represented as configurable data.
 
 ## Required Data Categories
 

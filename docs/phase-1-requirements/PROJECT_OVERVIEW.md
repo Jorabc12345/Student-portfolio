@@ -38,7 +38,7 @@ An explicitly authorized instructor may log in and view the portfolio within the
   2. **MED 102 – Family, Community, & Preventive Medicine I**
   3. **MED 103 – Medical Humanities I**
 - Exactly four main folders under each subject.
-- Twelve main subject folders in total.
+- Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
 - Mandatory login and authenticated access.
 - Private portfolio access; no unrestricted public access.
 - Student full management access to their own portfolio.
@@ -46,7 +46,7 @@ An explicitly authorized instructor may log in and view the portfolio within the
 - No faculty comments, feedback, editing, deletion, or grading features.
 - Custom development approved by the College.
 - Future academic levels must be supportable by the eventual system structure, although their content is outside the initial release.
-- Home Page, eleven PLOs, and Level 1 Final Musings are portfolio-wide sections and are not counted as the twelve subject folders.
+- Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
 
 ## Initial Academic Coverage
 
@@ -72,7 +72,7 @@ The source specifies eight learning domains. Each domain uses four recurring ref
 3. Why does this matter to the people and communities we serve?
 4. How will I apply this as a future physician?
 
-The eight domains and their evidence expectations must remain represented. The client-required four-folder arrangement and domain-to-folder mapping remain to be approved; no grouping is assumed here.
+MED 102 has eight independent official domains. The source does not require a four-parent arrangement or a domain-to-parent mapping.
 
 ### MED 103
 

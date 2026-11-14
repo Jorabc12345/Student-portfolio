@@ -1,5 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { AcademicQuestion } from "../data/level1Content";
+import { getPortfolioItem, setPortfolioItem } from "../services/portfolioStorage";
 
 type ReflectionStatus = "draft" | "published";
 
@@ -40,7 +41,7 @@ function storageKey(context: string, questionIndex: number) {
 }
 
 function loadDraft(context: string, questionIndex: number): ReflectionDraft {
-  const savedDraft = localStorage.getItem(storageKey(context, questionIndex));
+  const savedDraft = getPortfolioItem(storageKey(context, questionIndex));
 
   if (!savedDraft) {
     return emptyDraft;
@@ -100,7 +101,7 @@ export default function ReflectionEditor({
     const nextDraft = { ...draft, updatedAt: new Date().toISOString() };
 
     try {
-      localStorage.setItem(storageKey(context, questionIndex), JSON.stringify(nextDraft));
+      setPortfolioItem(storageKey(context, questionIndex), JSON.stringify(nextDraft));
       setSavedDraft(nextDraft);
       setDraft(nextDraft);
       setMessage("Reflection saved successfully.");

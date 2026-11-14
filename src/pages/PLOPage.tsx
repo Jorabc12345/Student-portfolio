@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
+import { ArrowLeft } from "lucide-react";
 import { level1Subjects, programLearningOutcomes } from "../data/level1Content";
+import { getPortfolioItem, setPortfolioItem } from "../services/portfolioStorage";
 
 type ArtifactOption = {
   id: string;
@@ -30,7 +32,7 @@ const emptyEvidence: PLOEvidence = {
 };
 
 function loadEvidence(): Record<string, PLOEvidence> {
-  const savedEvidence = localStorage.getItem(STORAGE_KEY);
+  const savedEvidence = getPortfolioItem(STORAGE_KEY);
 
   if (!savedEvidence) {
     return {};
@@ -45,7 +47,7 @@ function loadEvidence(): Record<string, PLOEvidence> {
 }
 
 function loadArtifacts(): ArtifactOption[] {
-  const savedArtifacts = localStorage.getItem("buksu-artifacts");
+  const savedArtifacts = getPortfolioItem("buksu-artifacts");
 
   if (!savedArtifacts) {
     return [];
@@ -59,7 +61,7 @@ function loadArtifacts(): ArtifactOption[] {
   }
 }
 
-export default function PLOPage() {
+export default function PLOPage({ readOnly = false, onBack }: { readOnly?: boolean; onBack: () => void }) {
   const [selectedPloIndex, setSelectedPloIndex] = useState(0);
   const [savedEvidence, setSavedEvidence] = useState(loadEvidence);
   const [draft, setDraft] = useState<PLOEvidence>(savedEvidence["0"] ?? emptyEvidence);
@@ -67,6 +69,8 @@ export default function PLOPage() {
   const [error, setError] = useState("");
   const artifacts = useMemo(loadArtifacts, []);
   const selectedPlo = programLearningOutcomes[selectedPloIndex];
+  const selectedEvidence = savedEvidence[String(selectedPloIndex)];
+  const selectedArtifact = artifacts.find((artifact) => artifact.id === selectedEvidence?.artifactId);
   const isDirty =
     JSON.stringify(savedEvidence[String(selectedPloIndex)] ?? emptyEvidence) !==
     JSON.stringify(draft);
@@ -76,6 +80,18 @@ export default function PLOPage() {
     setMessage("");
     setError("");
   }, [savedEvidence, selectedPloIndex]);
+
+  if (readOnly) {
+    return (
+      <>
+        <div className="page-intro"><button className="back-button" onClick={onBack}><ArrowLeft size={16} aria-hidden="true" /> Back to Level 1</button><p className="eyebrow">Level 1 global section</p><h1>PLO Attainment</h1><p>Review the portfolio owner's evidence and reflections for each Program Learning Outcome.</p></div>
+        <div className="plo-layout">
+          <div className="plo-list">{programLearningOutcomes.map((plo, index) => <button className={`plo-item ${selectedPloIndex === index ? "selected" : ""}`} key={plo} onClick={() => setSelectedPloIndex(index)}><span>PLO {index + 1}</span><strong>{plo}</strong><small>{savedEvidence[String(index)]?.updatedAt ? "Evidence recorded" : "No evidence recorded"}</small></button>)}</div>
+          <section className="plo-editor"><div className="detail-heading"><div><span className="code-pill">PLO {selectedPloIndex + 1}</span><h2>{selectedPlo}</h2></div></div>{selectedEvidence?.updatedAt ? <div className="readonly-evidence"><p><strong>Supporting artifact</strong><br />{selectedArtifact?.title ?? "Artifact details unavailable"}</p><p><strong>Description</strong><br />{selectedEvidence.description}</p><p><strong>Significance</strong><br />{selectedEvidence.significance}</p><p><strong>Student reflection</strong><br />{selectedEvidence.reflection}</p><p><strong>Related subject or context</strong><br />{[selectedEvidence.subject, selectedEvidence.context].filter(Boolean).join(" · ") || "Not specified"}</p></div> : <div className="empty-guidance"><h2>No evidence recorded for this outcome</h2><p>The portfolio owner has not added PLO evidence here yet.</p></div>}</section>
+        </div>
+      </>
+    );
+  }
 
   const selectPlo = (index: number) => {
     if (isDirty && !window.confirm("Discard your unsaved PLO evidence changes?")) {
@@ -106,7 +122,7 @@ export default function PLOPage() {
       [String(selectedPloIndex)]: { ...draft, updatedAt: new Date().toISOString() },
     };
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(nextEvidence));
+    setPortfolioItem(STORAGE_KEY, JSON.stringify(nextEvidence));
     setSavedEvidence(nextEvidence);
     setMessage("PLO evidence saved. Attainment remains a student and faculty review decision.");
     setError("");
@@ -115,6 +131,7 @@ export default function PLOPage() {
   return (
     <>
       <div className="page-intro">
+        <button className="back-button" onClick={onBack}><ArrowLeft size={16} aria-hidden="true" /> Back to Level 1</button>
         <p className="eyebrow">Level 1 global section</p>
         <h1>PLO Attainment</h1>
         <p>

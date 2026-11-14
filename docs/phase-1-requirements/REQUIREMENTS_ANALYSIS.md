@@ -239,6 +239,6 @@ Phase 1 – Stage 3: System Requirements and Scope Definition
 ## Requirements Traceability
 
 - Stage 1 confirmed the individual scope, access model, privacy, custom-development decision, and future-level objective.
-- Stage 2 established three subjects, twelve folders, the MED 101 and MED 103 periods, the eight MED 102 domains, eleven PLOs, and five Final Musings questions.
+- Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
 - The original PDF supplies the academic prompts, evidence expectations, confidentiality, and academic-integrity requirements.
 

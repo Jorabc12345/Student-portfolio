@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { ArrowLeft } from "lucide-react";
 import { finalMusingsQuestions } from "../data/level1Content";
+import { getPortfolioItem, setPortfolioItem } from "../services/portfolioStorage";
 
 const STORAGE_KEY = "buksu-final-musings";
 
 function loadResponses(): string[] {
-  const savedResponses = localStorage.getItem(STORAGE_KEY);
+  const savedResponses = getPortfolioItem(STORAGE_KEY);
 
   if (!savedResponses) {
     return finalMusingsQuestions.map(() => "");
@@ -19,7 +21,7 @@ function loadResponses(): string[] {
   }
 }
 
-export default function FinalMusingsPage() {
+export default function FinalMusingsPage({ readOnly = false, onBack }: { readOnly?: boolean; onBack: () => void }) {
   const [savedResponses, setSavedResponses] = useState(loadResponses);
   const [draftResponses, setDraftResponses] = useState(savedResponses);
   const [isEditing, setIsEditing] = useState(false);
@@ -61,7 +63,7 @@ export default function FinalMusingsPage() {
 
   const saveResponses = () => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(draftResponses));
+      setPortfolioItem(STORAGE_KEY, JSON.stringify(draftResponses));
       setSavedResponses(draftResponses);
       setDraftResponses(draftResponses);
       setIsEditing(false);
@@ -76,6 +78,7 @@ export default function FinalMusingsPage() {
   return (
     <>
       <div className="page-intro">
+        <button className="back-button" onClick={onBack}><ArrowLeft size={16} aria-hidden="true" /> Back to Level 1</button>
         <p className="eyebrow">Level 1 global section</p>
         <h1>Final Musings</h1>
         <p>Look back on your Level 1 journey and the physician you are becoming.</p>
@@ -85,7 +88,7 @@ export default function FinalMusingsPage() {
           <strong>{completedCount} of 5 questions answered</strong>
           <p>These reflections remain part of your private portfolio.</p>
         </div>
-        {!isEditing ? (
+        {readOnly ? null : !isEditing ? (
           <button className="primary-button compact-button" onClick={startEditing}>
             {completedCount ? "Edit Final Musings" : "Write Final Musings"}
           </button>
@@ -131,9 +134,7 @@ export default function FinalMusingsPage() {
             ) : (
               <div className="empty-section">
                 <p>This Final Musings response has not been completed yet.</p>
-                <button className="text-button" onClick={startEditing}>
-                  Start writing →
-                </button>
+                {!readOnly && <button className="text-button" onClick={startEditing}>Start writing →</button>}
               </div>
             )}
           </article>

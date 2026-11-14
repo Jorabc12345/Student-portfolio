@@ -2,7 +2,7 @@
 
 Phase 2 – Stage 1: Academic Content Inventory
 
-This inventory records the academic content required for the BukSU-COM Student Learning and Reflective Digital Portfolio. Stable folder IDs and temporary display values are recorded, while the MED 102 grouping remains proposed and unapproved. This document does not design a database or define a user interface.
+This inventory records the official academic content for the portfolio. MED 102 consists of eight independent domains; see the Phase 2 finalization record.
 
 ## Status Labels
 
@@ -29,31 +29,30 @@ Home Page, PLO documentation, and Final Musings are portfolio-wide sections. The
 
 | Subject | Official title | Main folders | Folder status | Academic structure |
 |---|---|---:|---|---|
-| MED 101 | Integrated Basic Sciences | 4 | MED101-F01–F04; temporary display values | Four bimonthly periods |
-| MED 102 | Family, Community, & Preventive Medicine I | 4 | MED102-F01–F04; proposed display grouping not client-approved | Eight independent learning domains |
-| MED 103 | Medical Humanities I | 4 | MED103-F01–F04; temporary display values | Four bimonthly periods |
+| MED 101 | Integrated Basic Sciences | 4 | Official section names confirmed: 1st Bimonthly through 4th Bimonthly (PDF p. 4) | Four bimonthly periods |
+| MED 102 | Family, Community, & Preventive Medicine I | 4 prior-confirmed slots | Eight distinct official domains; slot relationship unspecified | Eight independent learning domains |
+| MED 103 | Medical Humanities I | 4 | User-confirmed section names: 1st Bimonthly through 4th Bimonthly; PDF themes retained separately (pp. 6-8) | Four bimonthly periods |
 
 **Total:** 3 subjects and 12 main subject folders.
 
-The four-folder count is confirmed by the client. The following stable IDs and configurable display values are recorded:
+MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains with no parent folders.
 
-- MED 101 / MED101-F01–F04 — **Temporary display values**
-- MED 102 / MED102-F01–F04 — **Proposed display grouping; not client-approved**
-- MED 103 / MED103-F01–F04 — **Temporary display values**
+- MED 101 / MED101-F01-F04 — **Confirmed official labels: 1st Bimonthly, 2nd Bimonthly, 3rd Bimonthly, 4th Bimonthly**
+- Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
+- MED 103 / MED103-F01-F04 — **User-confirmed labels: 1st Bimonthly, 2nd Bimonthly, 3rd Bimonthly, 4th Bimonthly; source themes are separate descriptors**
 
-## 3. MED 101 – Integrated Basic Sciences
+## 3. MED 101 - Integrated Basic Sciences
 
-**Source:** Original PDF, pp. 4–5.
+**Source:** Official PDF, p. 4.
 
-MED 101 contains four bimonthly periods. Each period contains a CERAE section. The period-to-folder alignment below is only a proposed organization; the client has not approved final folder names.
+MED 101 contains four Bimonthly sections, each with a CERAE section. The exact official section/folder names are:
 
-| Period | Proposed folder relationship | Status |
+| Section name | Stable ID | Status |
 |---|---|---|
-| 1st Bimonthly | MED 101 / MED101-F01 – 1st Bimonthly – Medical Foundations | Temporary display value |
-| 2nd Bimonthly | MED 101 / MED101-F02 – 2nd Bimonthly – Knowledge Development | Temporary display value |
-| 3rd Bimonthly | MED 101 / MED101-F03 – 3rd Bimonthly – Learning Integration | Temporary display value |
-| 4th Bimonthly | MED 101 / MED101-F04 – 4th Bimonthly – Year-End Reflection | Temporary display value |
-
+| 1st Bimonthly | MED101-F01 | Confirmed by PDF p. 4 and user direction |
+| 2nd Bimonthly | MED101-F02 | Confirmed by PDF p. 4 and user direction |
+| 3rd Bimonthly | MED101-F03 | Confirmed by PDF p. 4 and user direction |
+| 4th Bimonthly | MED101-F04 | Confirmed by PDF p. 4 and user direction |
 ### 3.1 1st Bimonthly – CERAE
 
 **Required reflection questions**
@@ -130,7 +129,7 @@ The source lists three questions for the fourth bimonthly. No fourth question is
 
 **Source:** Original PDF, pp. 5–6.
 
-MED 102 contains eight required learning domains. The client requires four main folders, but the supplied materials do not approve folder names or a domain-to-folder grouping. All domains remain independently inventoried below.
+MED 102 contains eight independent domains; no parent-folder assignments are required.
 
 **Important restriction:** No domain is assigned to any of the four folders in this inventory.
 
@@ -151,7 +150,7 @@ MED 102 contains eight required learning domains. The client requires four main 
 | Family-focused care | Genogram or family assessment with reflection | Four recurring MED 102 questions | PDF pp. 5–6 | Confirmed by college document |
 | Social determinants of health | Social determinants analysis of a patient or community case | Four recurring MED 102 questions | PDF pp. 5–6 | Confirmed by college document |
 | Global and national health frameworks | SDG mapping worksheet linking health priorities with Philippine health programs | Four recurring MED 102 questions | PDF pp. 5–6 | Confirmed by college document |
-| Primary health care and Universal Health Care | Reflection and output from the mock Rural Health Unit activity | Four recurring MED 102 questions | PDF pp. 5–6 | Confirmed by college document |
+| Primary health care and UHC | Reflection and output from the mock Rural Health Unit activity | Four recurring MED 102 questions | PDF pp. 5–6 | Confirmed by college document |
 | Systems thinking | Map or causal loop diagram with written analysis | Four recurring MED 102 questions | PDF pp. 5–6 | Confirmed by college document |
 | Community engagement and social accountability | Community health needs analysis or community-oriented intervention proposal | Four recurring MED 102 questions | PDF pp. 5–6 | Confirmed by college document |
 | Professional identity formation | Integrative reflection on learning and growth throughout MED 102 | Four recurring MED 102 questions | PDF pp. 5–6 | Confirmed by college document |
@@ -160,25 +159,22 @@ MED 102 contains eight required learning domains. The client requires four main 
 
 | Item | Status |
 |---|---|
-| Four main folders under MED 102 | Confirmed by client |
-| Exact folder names | Pending clarification |
-| Domain-to-folder mapping | Pending clarification |
-| Assumption that there are two domains per folder | Not permitted |
-| Independent preservation of all eight domains before mapping | Proposed organization required to avoid loss of source content |
-
+| Eight MED 102 domains | Confirmed official sections; preserve each as an independently identifiable domain (PDF pp. 5-6) |
+| Four main-folder slots per subject | Previously confirmed client constraint; not specified as MED 102 parent folders by the PDF |
+| Parent-folder names or domain assignments | Not supplied by the PDF; none approved; do not invent |
+| UI navigation | Must expose all eight domains separately; four-slot purpose/navigation requires design review |
 ## 5. MED 103 – Medical Humanities I
 
 **Source:** Original PDF, pp. 6–8.
 
-MED 103 contains four bimonthly periods. The period-to-folder alignment below is a proposed organization only.
+MED 103 uses the four Bimonthly terms as the section/folder names per the user instruction. The PDF headings also carry `(CERAE)` and a theme; preserve this source-defined text as a period descriptor.
 
-| Period and official theme | Proposed folder relationship | Status |
+| Section/folder name | Exact PDF heading and period descriptor | Source |
 |---|---|---|
-| 1st Bimonthly – Learning Identity, Historical Perspectives, and Humanistic Foundations | MED 103 / Provisional Folder 1 | Proposed organization; folder name pending clarification |
-| 2nd Bimonthly – Patient-Centered Relationships, Advocacy, and Cultural Understanding | MED 103 / Provisional Folder 2 | Proposed organization; folder name pending clarification |
-| 3rd Bimonthly – Professional Identity, Ethics, Accountability, and Well-Being | MED 103 / Provisional Folder 3 | Proposed organization; folder name pending clarification |
-| 4th Bimonthly – Ethical Leadership, Disaster Preparedness, Social Responsibility, and Year-End Integration | MED 103 / Provisional Folder 4 | Proposed organization; folder name pending clarification |
-
+| 1st Bimonthly | 1st Bimonthly (CERAE): Learning Identity, Historical Perspectives, and Humanistic Foundations | p. 6 |
+| 2nd Bimonthly | 2nd Bimonthly (CERAE): Patient-Centered Relationships, Advocacy, and Cultural Understanding | p. 7 |
+| 3rd Bimonthly | 3rd Bimonthly (CERAE): Professional Identity, Ethics, Accountability, and Well-Being | p. 7 |
+| 4th Bimonthly | 4th Bimonthly (CERAE): Ethical Leadership, Disaster Preparedness, Social Responsibility, and Year-End Integration | p. 8 |
 ### 5.1 1st Bimonthly – Learning Identity, Historical Perspectives, and Humanistic Foundations
 
 1. How have the principles of andragogy, learning, and memory influenced the way you study and take responsibility for your learning as a medical student? Reflect on one study practice you changed or need to change, and explain how this relates to your “My Learning Philosophy” and “My Why.”
@@ -188,7 +184,7 @@ MED 103 contains four bimonthly periods. The period-to-folder alignment below is
 
 **Inventory:** The period covers learning responsibility, historical perspectives, the patient–doctor relationship, empathy, respect, trust, professional responsibility, a personal milestone, a learning difficulty, an artifact demonstrating learning, and one specific improvement action. These are question-derived content items, not additional requirements.
 
-**Status:** Questions and evidence instruction confirmed by college document; the period-to-folder relationship is proposed organization.
+**Status:** Questions and evidence instruction confirmed by college document; the section/folder labels confirmed by user; themes remain separate PDF descriptors.
 
 ### 5.2 2nd Bimonthly – Patient-Centered Relationships, Advocacy, and Cultural Understanding
 
@@ -199,7 +195,7 @@ MED 103 contains four bimonthly periods. The period-to-folder alignment below is
 
 **Inventory:** The period covers patient narratives or role-plays, listening, empathy, nonjudgmental communication, trust-building, advocacy, patient empowerment, autonomy, cultural integration, diversity, planetary/environmental health, Bukidnon context, cultural humility, and a specific improvement plan. Question 4 identifies a learning activity or artifact; it does not add a separate artifact format beyond the source wording.
 
-**Status:** Questions confirmed by college document; period-to-folder relationship proposed organization.
+**Status:** Questions confirmed by college document; section/folder labels confirmed by user; themes remain separate PDF descriptors.
 
 ### 5.3 3rd Bimonthly – Professional Identity, Ethics, Accountability, and Well-Being
 
@@ -210,7 +206,7 @@ MED 103 contains four bimonthly periods. The period-to-folder alignment below is
 
 **Inventory:** The period covers professionalism, integrity, respect, responsibility, ethical dilemmas, compassion, honesty, confidentiality, accountability, peer behavior, patient history-taking, communication adaptation, teamwork, bias, cultural considerations, feedback, identified weaknesses, and self-care. Question 4 asks for evidence of growth; no separate artifact format is prescribed.
 
-**Status:** Questions confirmed by college document; period-to-folder relationship proposed organization.
+**Status:** Questions confirmed by college document; section/folder labels confirmed by user; themes remain separate PDF descriptors.
 
 ### 5.4 4th Bimonthly – Ethical Leadership, Disaster Preparedness, Social Responsibility, and Year-End Integration
 
@@ -221,7 +217,7 @@ MED 103 contains four bimonthly periods. The period-to-folder alignment below is
 
 **Inventory:** The period covers group work, leadership, management, ethical leadership, collaboration, quality improvement, patient safety, disaster-risk reduction, preparedness, coordinated response, risk communication, recovery, vulnerable communities, service, social accountability, BukSU-COM core values, year-end growth, empathy, professionalism, cultural humility, and commitments for Level II. Question 3 explicitly requires an artifact; Question 4 requires evidence supporting growth.
 
-**Status:** Questions and explicit artifact instruction confirmed by college document; period-to-folder relationship proposed organization.
+**Status:** Questions and explicit artifact instruction confirmed by college document; section/folder labels confirmed by user; themes remain separate PDF descriptors.
 
 ## 6. Program Learning Outcomes
 
@@ -281,3 +277,61 @@ The portfolio documents evidence and does not automatically declare formal PLO a
 
 No folder names, MED 102 groupings, new questions, or additional academic requirements were invented.
 
+
+## Official academic wording update (13 November 2026)
+
+**Authority note:** The project owner supplied the exact academic wording below as transcribed from `BukSU-COM Portfolio Instructions(4).pdf` and confirmed it as official. The attached PDF was directly inspected. MED 101 and MED 102 wording appears on pp. 4-5; MED 103 headings appear on pp. 6-8. This owner-confirmed wording supersedes the earlier temporary-label statuses below; do not infer any additional wording or parent-folder names.
+
+### Confirmed official section names
+
+**MED 101 - Integrated Basic Sciences**
+
+- 1st Bimonthly
+- 2nd Bimonthly
+- 3rd Bimonthly
+- 4th Bimonthly
+
+**MED 102 - Family, Community, & Preventive Medicine I**
+
+These eight domains are separate, individually identifiable sections:
+
+1. Patient-centered care
+2. Family-focused care
+3. Social determinants of health
+4. Global and national health frameworks
+5. Primary health care and UHC
+6. Systems thinking
+7. Community engagement and social accountability
+8. Professional identity formation
+
+**MED 103 - Medical Humanities I**
+
+- 1st Bimonthly
+- 2nd Bimonthly
+- 3rd Bimonthly
+- 4th Bimonthly
+
+MED 102 has eight independent official sections without parent folders.
+
+### Representation in the reviewed database design
+
+The review-only Phase 4 schema can represent the eight official sections without loss: `learning_domains` has its own primary key, stable code, `official_title`, `display_order`, and `subject_id`; `parent_folder_id` is nullable. Therefore, all eight MED 102 domains can be records under MED 102 with no invented parent-folder mapping. `main_folders` separately represents the four folder slots. The schema's data model needs no change solely to preserve the eight domains.
+
+The eight MED 102 domains are the direct sections under the subject. No parent-folder clarification is required. The UI must expose all eight directly.
+
+## Direct source cross-check (13 November 2026)
+
+?   ?   ??? Eight independent MED 102 domains
+### Direct official-source verification
+
+The official PDF was inspected directly at pages 4-8. The MED 101 and MED 102 names in this inventory match the source wording. For MED 103, the four user-selected folder labels are the bare Bimonthly terms; the exact full source headings, including `(CERAE)` and each theme, are recorded in `02_FOLDER_MAPPING_DECISIONS.md` and should be preserved as separate period descriptors. Four MED 102 parent folders and their names are not prescribed by the PDF.
+| Section/folder name | Exact PDF heading and period descriptor | Source |
+|---|---|---|
+| 1st Bimonthly | 1st Bimonthly (CERAE): Learning Identity, Historical Perspectives, and Humanistic Foundations | p. 6 |
+| 2nd Bimonthly | 2nd Bimonthly (CERAE): Patient-Centered Relationships, Advocacy, and Cultural Understanding | p. 7 |
+| 3rd Bimonthly | 3rd Bimonthly (CERAE): Professional Identity, Ethics, Accountability, and Well-Being | p. 7 |
+| 4th Bimonthly | 4th Bimonthly (CERAE): Ethical Leadership, Disaster Preparedness, Social Responsibility, and Year-End Integration | p. 8 |
+
+## Current MED 102 structure (13 November 2026)
+
+The official instructions PDF, section 2.2 (pp. 5-6), defines eight independent MED 102 domains, with required evidence, competency descriptions, one shared four-question reflection guide, and pertinent artifacts. MED 102 has no four-parent-folder requirement. Earlier proposed-parent and unresolved-grouping text in this document is superseded. See docs/phase-2-academic-content/03_MED102_STRUCTURE_FINALIZATION.md for exact wording and the database representation review.

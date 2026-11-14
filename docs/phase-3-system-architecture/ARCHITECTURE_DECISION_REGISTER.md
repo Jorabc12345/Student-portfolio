@@ -22,7 +22,7 @@
 | ADR-016 | Initial accounts are manually invited | Recommended; client and developer approval |
 | ADR-017 | Client individually assigns and revokes authorized faculty | Recommended; client approval |
 | ADR-018 | Upload limits and documented retention policy are required | Required direction; exact policy client approval |
-| ADR-019 | Present proposed MED 102 four-group mapping for approval | Pending client approval |
+| ADR-019 | Show eight official MED 102 domains as independent sections; omit proposed four-group mapping | Confirmed by official PDF; no client approval required |
 | ADR-020 | Preserve official MED 103 period titles; use shorter navigation labels | Recommended; client approval |
 | ADR-021 | Basic activity logs and defined completion rules | Recommended; client and developer approval |
 

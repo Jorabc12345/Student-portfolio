@@ -1,7 +1,7 @@
-﻿# Implementation Priority Matrix
+# Implementation Priority Matrix
 
 **Status:** Proposed priority order; priorities express dependency and risk, not promised dates.  
-**Roadmap:** The master roadmap is unavailable; mappings below use current Phase 1â€“6 references and leave roadmap phase numbers unverified.
+**Roadmap:** UPDATED PROJECT ROADMAP.pdf v2.0 defines 18 phases. Its cover says Pending Client Approval; mapping follows this baseline pending formal approval.
 
 ## Priority definitions
 
@@ -16,10 +16,10 @@
 
 | Priority | Task IDs | Why this priority | Gate / approval condition |
 |---|---|---|---|
-| P0 | PLAN-01 | Without approved SRS/PDF/roadmap, completeness, exact academic content and roadmap phases cannot be confirmed. | Client supplies originals or approved versioned replacements. |
-| P0 | PLAN-02 | Provisional academic labels/grouping must not be frozen into production. | Client approves against authoritative sources. |
+| P0 | PLAN-01 | The v2.0 SRS and roadmap are available; full crosswalk and formal approval status must be recorded. Phase mapping is now identifiable. | Client/project owner formally approves the supplied v2.0 SRS and roadmap or records revisions. |
+| P0 | PLAN-02 | Align academic content/navigation with the official instructions. MED 102 eight-domain structure is confirmed. | Implement eight direct domain sections, source evidence/competency text, shared questions, and artifact requirement; remove proposed parent cards. |
 | P0 | PLAN-03 | Account provisioning, recovery and trusted role assignment define Auth and support boundaries. | Client/institution names process and responsible operators. |
-| P0 | PLAN-04 | Phase 1/3 conflicts with revised Phase 4/5 feedback model; policies cannot be implemented consistently until reconciled. | Confirm separate feedback authority and lifecycle. |
+| P0 | PLAN-04 | Older docs conflict with the confirmed Phase 4/5 separate-feedback direction; lifecycle rules remain open. | Reconcile stale docs; obtain DEC-12 lifecycle decisions before lifecycle implementation. |
 | P0 | PLAN-05 | File policy and signed URL/revocation rules determine storage, validation and privacy behavior. | Client/institution approves limits, retention, deletion and URL behavior. |
 | P0 | PLAN-06 | Hosting, account/data deletion, backups, exports, recovery and audit retention are operational release requirements. | Named owners, host, deletion/retention rules, schedule and recovery process approved. |
 | P1 | ENV-01 | Source tracking, secret handling and authorized Supabase project configuration precede migration work. | Repository/project ownership and credential handling authorized. |
@@ -48,5 +48,14 @@
 4. **Wave 3 â€” Instructor/product UI:** INSTR-01, INSTR-02, ROUTE-01 and UX-01.
 5. **Wave 4 â€” Release readiness:** OPS-01 then QA-01. Hosting/deployment remains blocked until backup, restore, monitoring, privacy and budget decisions are in place.
 
-Actual dates, staffing and master-roadmap phase numbers are intentionally omitted because no approved roadmap is available.
+The v2.0 roadmap phase mapping is included in the backlog. Dates and staffing remain omitted because this matrix does not set approved commitments.
 
+
+## Requirements Finalization update (13 November 2026)
+
+Treat P0 items as source/policy gates without reopening confirmed decisions. PLAN-04 core separate-feedback direction is confirmed; lifecycle remains open. PLAN-03 identity details and PLAN-02 content tasks remain as scoped. Supplied roadmap v2.0 names the 18 phases, pending formal approval; see the backlog crosswalk.
+
+
+## Academic content priority update (13 November 2026)
+
+PLAN-02 no longer gates approval of MED 101/MED 103 names or MED 102 domain names. It tracks implementation of the confirmed MED 102 eight-domain structure; no folder relationship decision is pending. The supplied exact wording may be used in documentation; the attached PDF has been checked at pp. 4-8.

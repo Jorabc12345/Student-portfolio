@@ -9,7 +9,7 @@
 | Student owns portfolio | Owner checks on every portfolio child resource | `03_DATABASE_RLS_SECURITY_DESIGN.md` |
 | Faculty authorized read-only access | Assignment-scoped SELECT; all mutations denied | `03_ROLE_AND_PERMISSION_MATRIX.md` |
 | Exactly three Level 1 subjects | Configurable Level 1 with MED 101, MED 102, MED 103 | `02_ACADEMIC_HIERARCHY_ARCHITECTURE.md` |
-| Four folders per subject | Twelve main subject folders; global sections excluded | `02_ACADEMIC_HIERARCHY_ARCHITECTURE.md` |
+| Academic structure | Four MED 101/103 periods and eight independent MED 102 domains | Confirmed; no MED 102 parent folders |
 | Eight MED 102 domains | Independent domain identities and association links | `02_ACADEMIC_HIERARCHY_ARCHITECTURE.md` |
 | No duplicate cross-referenced files | One artifact binary with many association records | `02_SYSTEM_DATA_FLOW.md` |
 | MED 101 reflection requirements | Period folders preserve CERAE/reflection/artifact pattern | Phase 2 blueprint; `02_ACADEMIC_HIERARCHY_ARCHITECTURE.md` |

@@ -26,7 +26,7 @@ The first four items are required by the applicable academic content. PLO associ
 
 ## 2. MED 101 – Integrated Basic Sciences
 
-MED 101 has four period-to-folder alignments using stable IDs and temporary display values. Permanent names remain configurable.
+MED 101 has four period-to-folder alignments using stable IDs and confirmed official Bimonthly labels.
 
 ### 2.1 MED101-F01 – 1st Bimonthly – Medical Foundations
 
@@ -145,7 +145,7 @@ The source contains three questions in this period. No fourth question is added.
 
 ## 3. MED 102 – Family, Community, & Preventive Medicine I
 
-MED 102 has four stable main folder IDs with proposed display groupings. The grouping is not client-approved. Each domain below remains a standalone nested learning-domain profile inside its proposed parent folder.
+MED 102 has eight official domains that remain independently identifiable. MED 102 consists of eight independent academic sections. The source specifies no parent folders or domain assignments.
 
 ### Shared prescribed reflection questions
 
@@ -162,16 +162,16 @@ These questions are confirmed by the college document for every MED 102 domain.
 
 | Domain | Required academic evidence | Competency demonstrated through evidence | Suggested reflection/artifact organization | Folder assignment |
 |---|---|---|---|---|
-| Patient-centered care | Patient case analysis identifying biological, psychological, and social factors | Holistic understanding of illness | Four-question reflection linked to the case analysis | MED102-F01 – Patient & Family-Centered Care (proposed) |
-| Family-focused care | Genogram or family assessment with reflection | Recognition of family influences on health | Four-question reflection linked to the genogram or assessment | MED102-F01 – Patient & Family-Centered Care (proposed) |
-| Social determinants of health | Social determinants analysis of a patient or community case | Understanding of health inequities | Four-question reflection linked to the analysis | MED102-F02 – Health & Social Determinants (proposed) |
-| Global and national health frameworks | SDG mapping worksheet linking health priorities with Philippine health programs | Application of health frameworks | Four-question reflection linked to the mapping worksheet | MED102-F02 – Health & Social Determinants (proposed) |
-| Primary health care and Universal Health Care | Reflection and output from the mock Rural Health Unit activity | Understanding of primary care delivery, referral, and UHC | Four-question reflection linked to the activity output | MED102-F03 – Healthcare Systems & Primary Care (proposed) |
-| Systems thinking | Map or causal loop diagram with written analysis | Recognition of interrelationships and unintended consequences | Four-question reflection linked to the map/diagram and analysis | MED102-F03 – Healthcare Systems & Primary Care (proposed) |
-| Community engagement and social accountability | Community health needs analysis or community-oriented intervention proposal | Responsiveness to community health needs | Four-question reflection linked to the analysis or proposal | MED102-F04 – Community & Professional Development (proposed) |
-| Professional identity formation | Integrative reflection on learning and growth throughout MED 102 | Self-awareness, professional values, and commitment to service | Four-question integrative reflection with any relevant source evidence | MED102-F04 – Community & Professional Development (proposed) |
+| Patient-centered care | Patient case analysis identifying biological, psychological, and social factors | Holistic understanding of illness | Four-question reflection linked to the case analysis | No parent folder assigned |
+| Family-focused care | Genogram or family assessment with reflection | Recognition of family influences on health | Four-question reflection linked to the genogram or assessment | No parent folder assigned |
+| Social determinants of health | Social determinants analysis of a patient or community case | Understanding of health inequities | Four-question reflection linked to the analysis | No parent folder assigned |
+| Global and national health frameworks | SDG mapping worksheet linking health priorities with Philippine health programs | Application of health frameworks | Four-question reflection linked to the mapping worksheet | No parent folder assigned |
+| Primary health care and UHC | Reflection and output from the mock Rural Health Unit activity | Understanding of primary care delivery, referral, and UHC | Four-question reflection linked to the activity output | No parent folder assigned |
+| Systems thinking | Map or causal loop diagram with written analysis | Recognition of interrelationships and unintended consequences | Four-question reflection linked to the map/diagram and analysis | No parent folder assigned |
+| Community engagement and social accountability | Community health needs analysis or community-oriented intervention proposal | Responsiveness to community health needs | Four-question reflection linked to the analysis or proposal | No parent folder assigned |
+| Professional identity formation | Integrative reflection on learning and growth throughout MED 102 | Self-awareness, professional values, and commitment to service | Four-question integrative reflection with any relevant source evidence | No parent folder assigned |
 
-The proposed parent-folder assignments are organizational guidance, not approved academic requirements. The eight domains remain separate sections and may be reassigned when the client confirms the grouping. Cross-referencing is allowed: one evidence item may link to multiple relevant domains without merging their identities.
+No parent-folder assignments are proposed in this record. Keep all eight domains separate. Cross-referencing is allowed: one evidence item may link to multiple relevant domains without merging their identities. Resolve the four-slot navigation role before UI implementation.
 
 **Example cross-reference:** `Community_Health_Assessment.pdf` may be linked to:
 
@@ -181,9 +181,9 @@ The proposed parent-folder assignments are organizational guidance, not approved
 
 ## 4. MED 103 – Medical Humanities I
 
-MED 103 has four period-to-folder alignments using stable IDs and temporary display values. Permanent names remain configurable.
+MED 103 has four user-confirmed Bimonthly section labels; retain the official PDF themes separately as descriptors.
 
-### 4.1 MED103-F01 – Learning Identity & Humanistic Foundations
+### 4.1 MED103-F01 - 1st Bimonthly
 
 **Prescribed questions**
 
@@ -198,7 +198,7 @@ MED 103 has four period-to-folder alignments using stable IDs and temporary disp
 **Improvement plan:** One specific, realistic action for the next bimonthly is explicitly requested in Question 4.  
 **Relevant activities:** Class discussion, scenario, observed interaction, and study-practice reflection as named in the questions.
 
-### 4.2 MED103-F02 – Patient Relationships & Cultural Understanding
+### 4.2 MED103-F02 - 2nd Bimonthly
 
 **Prescribed questions**
 
@@ -213,7 +213,7 @@ MED 103 has four period-to-folder alignments using stable IDs and temporary disp
 **Improvement plan:** Specific plan for practicing competencies more consistently.  
 **Relevant activities:** Patient narrative, role-play, learning scenario, discussions, and patient feedback as named in the questions.
 
-### 4.3 MED103-F03 – Professional Identity, Ethics & Well-Being
+### 4.3 MED103-F03 - 3rd Bimonthly
 
 **Prescribed questions**
 
@@ -228,7 +228,7 @@ MED 103 has four period-to-folder alignments using stable IDs and temporary disp
 **Improvement plan:** Response to feedback, identified weakness, and healthy self-care.  
 **Relevant activities:** Simulated or observed dilemmas, patient history-taking, and exercises in the listed disciplines.
 
-### 4.4 MED103-F04 – Ethical Leadership & Social Responsibility
+### 4.4 MED103-F04 - 4th Bimonthly
 
 **Prescribed questions**
 
@@ -286,3 +286,14 @@ Artifact records must not require patient names, faces, identifying dates, recor
 
 Consistency should organize the content without changing the source questions or adding requirements.
 
+
+## Official academic wording status update (13 November 2026)
+
+The project owner supplied the official MED 101 and MED 103 period names and the eight MED 102 domain names verbatim in the current conversation, attributed to `BukSU-COM Portfolio Instructions(4).pdf`. These names are confirmed and supersede any earlier statement that their names require client approval. The attached PDF was directly inspected for the academic structure at pp. 4-8. MED 102 domains remain separate; no parent-folder names or assignments are approved. MED 102 navigation must expose eight domains directly, without parent folders.
+## Official structure and source-status update (13 November 2026)
+
+MED 101 and MED 103 use the confirmed Bimonthly section labels. The official PDF themes for MED 103 are separate descriptors. MED 102 domain rows have no parent-folder assignments; preserve all eight independently. The reviewed database design supports separate domain records with nullable parent folders. No schema or application change was made.
+
+## Current MED 102 structure (13 November 2026)
+
+The official instructions PDF, section 2.2 (pp. 5-6), defines eight independent MED 102 domains, with required evidence, competency descriptions, one shared four-question reflection guide, and pertinent artifacts. MED 102 has no four-parent-folder requirement. Earlier proposed-parent and unresolved-grouping text in this document is superseded. See docs/phase-2-academic-content/03_MED102_STRUCTURE_FINALIZATION.md for exact wording and the database representation review.

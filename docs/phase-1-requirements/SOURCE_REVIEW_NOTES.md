@@ -98,7 +98,7 @@ These are treated as client-approved requirements, separate from source-document
 - MED 101 is Integrated Basic Sciences.
 - MED 102 is Family, Community, & Preventive Medicine I.
 - MED 103 is Medical Humanities I.
-- Each subject contains exactly four main folders; total: twelve main subject folders.
+- Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
 - The student has full management access to their own portfolio.
 - Authorized faculty have read-only access.
 - Faculty cannot comment, provide feedback, edit, or delete.
@@ -126,7 +126,7 @@ The supplied SRS/roadmap proposed React/Vite, Tailwind CSS, Framer Motion, Lucid
 - Exact names of the four folders under MED 101.
 - Exact names of the four folders under MED 102.
 - Exact names of the four folders under MED 103.
-- The client-approved mapping of eight MED 102 domains into four folders.
+- MED 102 has eight independent official domains; no four-folder mapping is required.
 - Which faculty members are authorized and who provisions authorization.
 - Whether authorized faculty see the entire portfolio or selected sections.
 - Account creation and password-recovery process.
@@ -140,7 +140,7 @@ The supplied SRS/roadmap proposed React/Vite, Tailwind CSS, Framer Motion, Lucid
 
 1. **Recommended platform versus custom development:** The college recommends Google Sites and Google Drive (PDF p. 3), while the client has approved custom development. Custom development is the confirmed project direction, but it must preserve the college's privacy and academic requirements.
 2. **Feedback language versus faculty permissions:** The college rationale discusses mentoring and formative feedback (PDF pp. 1–2), but the client explicitly excludes in-application comments and feedback. Version 1 faculty access is therefore view-only; external mentoring processes are outside the application.
-3. **Four folders versus eight MED 102 domains:** Four main folders are client-confirmed, while eight domains are source-required. All eight domains must remain represented, but names and grouping must be approved rather than inferred.
+3. MED 102 structure: the official instructions define eight independent domains; no four-parent arrangement applies.
 4. **SRS status wording:** The supplied SRS header calls itself “Draft for Client Review and Baseline Approval,” while the current instruction identifies it as the latest approved SRS. This document follows the current instruction for the review baseline, but the document-control status should be formally reconciled.
 5. **Roadmap proposed features:** A progress dashboard and draft/completion behavior are proposed in the roadmap/SRS and are not explicit college requirements or confirmed client decisions.
 
@@ -148,9 +148,9 @@ The supplied SRS/roadmap proposed React/Vite, Tailwind CSS, Framer Motion, Lucid
 
 | Topic | Source-based fact | Recommendation or unresolved interpretation |
 |---|---|---|
-| Folder count | Four main folders per subject; twelve total is client-confirmed | Do not invent labels or MED 102 grouping |
+| Academic structure | Four MED 101/103 periods and eight independent MED 102 domains | Confirmed; no MED 102 parent folders |
 | MED 101 | Four bimonthly periods and prescribed questions | Folder labels require client confirmation |
-| MED 102 | Eight named learning domains and recurring questions | Map domains into four folders only after approval |
+| MED 102 | Eight named domains, recurring questions, evidence and competencies | Implement as eight independent sections; no parent-folder approval |
 | MED 103 | Four bimonthly periods and prescribed questions | Folder labels require client confirmation |
 | Platform | College recommends Google Sites/Drive | Custom Supabase-based application is the approved technical direction; hosting and domain remain open |
 | Faculty | Client confirms read-only access | Authorization scope and provisioning remain open |
@@ -162,3 +162,6 @@ The supplied SRS/roadmap proposed React/Vite, Tailwind CSS, Framer Motion, Lucid
 
 This review establishes understanding and requirements traceability only. No application code, database migration, UI screen, dependency installation, or technical architecture was created in Stage 1.
 
+## Current MED 102 structure (13 November 2026)
+
+The official instructions PDF, section 2.2 (pp. 5-6), defines eight independent MED 102 domains, with required evidence, competency descriptions, one shared four-question reflection guide, and pertinent artifacts. MED 102 has no four-parent-folder requirement. Earlier proposed-parent and unresolved-grouping text in this document is superseded. See docs/phase-2-academic-content/03_MED102_STRUCTURE_FINALIZATION.md for exact wording and the database representation review.

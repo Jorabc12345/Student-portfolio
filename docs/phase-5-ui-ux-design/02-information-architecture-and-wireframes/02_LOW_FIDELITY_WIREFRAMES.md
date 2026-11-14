@@ -44,7 +44,7 @@ Level 1
 ```text
 Breadcrumb: Level 1 / MED 102
 MED 102 – Family, Community, & Preventive Medicine I
-Folders: [F1] [F2] [F3] [F4]  (provisional grouping)
+
 Learning Domains (8): [Domain 1] ... [Domain 8]
 [Open domain] [View reflections] [View artifacts]
 ```

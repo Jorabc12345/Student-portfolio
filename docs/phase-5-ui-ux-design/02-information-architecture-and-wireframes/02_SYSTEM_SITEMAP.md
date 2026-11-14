@@ -26,7 +26,7 @@ Student Portfolio
 │   ├── MED 101
 │   │   └── Four Main Folders
 │   ├── MED 102
-│   │   ├── Four Main Folders (provisional grouping)
+?   ?   ??? Eight independent MED 102 domains
 │   │   └── Eight Learning Domains
 │   ├── MED 103
 │   │   └── Four Main Folders

@@ -16,7 +16,7 @@ Personal editorial layout: portrait and introduction beside or above Learning Ph
 
 ## Level 1 and Subject Pages
 
-Use a subject index with three clear pink-accented subject entries and separate PLO/Final Musings entries. Subject pages show four folder sections. MED 102 includes a dedicated eight-domain index and labels the parent grouping as provisional.
+Use a subject index with three clear pink-accented subject entries and separate PLO/Final Musings entries. MED 101 and MED 103 pages show their four Bimonthly sections. MED 102 shows a dedicated index of eight independent domains with no parent-folder cards.
 
 ## Folder and Domain Pages
 
@@ -45,3 +45,7 @@ Use a restrained authorized-portfolio list, then a read-only portfolio viewer wi
 ## Client Administrator Invitation Settings
 
 Use a high-clarity operational page with current status, expiry, reveal/copy, replace, and disable actions. Destructive actions use explicit warnings: existing instructor accounts and portfolio grants are unaffected.
+
+## Current MED 102 structure (13 November 2026)
+
+The official instructions PDF, section 2.2 (pp. 5-6), defines eight independent MED 102 domains, with required evidence, competency descriptions, one shared four-question reflection guide, and pertinent artifacts. MED 102 has no four-parent-folder requirement. Earlier proposed-parent and unresolved-grouping text in this document is superseded. See docs/phase-2-academic-content/03_MED102_STRUCTURE_FINALIZATION.md for exact wording and the database representation review.

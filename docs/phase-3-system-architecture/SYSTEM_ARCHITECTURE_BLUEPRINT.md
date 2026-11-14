@@ -62,7 +62,7 @@ Portfolio
     └── Final Musings
 ```
 
-Level 1 has exactly three subjects and twelve main subject folders. MED 101 and MED 103 preserve their approved reflection requirements. MED 102 domains remain separate and may cross-reference one artifact without duplicate upload. The current MED 102 parent-folder grouping and some display names remain provisional.
+Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
 
 ## 6. Authentication and Authorization
 
@@ -111,10 +111,14 @@ The design minimizes queries, repeated listeners, duplicate files, large preview
 - Faculty assignment and revocation process.
 - Artifact formats, size limits, retention, review, and deletion.
 - Backup/export schedule and restore ownership.
-- Final MED 102 grouping and permanent display names.
+- Implement the confirmed MED 102 eight-domain hierarchy and official labels from the source.
 - Final MED 103 folder/period organization.
 - Audit requirements and progress calculation rules.
 
 ## 12. Phase 4 Boundary
 
 Phase 4 may translate this blueprint into a database design after approval. It must not silently finalize provisional academic mappings or operational policies.
+
+## Current MED 102 structure (13 November 2026)
+
+The official instructions PDF, section 2.2 (pp. 5-6), defines eight independent MED 102 domains, with required evidence, competency descriptions, one shared four-question reflection guide, and pertinent artifacts. MED 102 has no four-parent-folder requirement. Earlier proposed-parent and unresolved-grouping text in this document is superseded. See docs/phase-2-academic-content/03_MED102_STRUCTURE_FINALIZATION.md for exact wording and the database representation review.

@@ -2,7 +2,7 @@
 
 Phase 2 – Stage 4: Academic Structure Validation and Finalization
 
-This is the consolidated academic reference for Level 1. It combines the Phase 2 inventory, folder mapping, reflection mapping, PLO mapping, and global-section mapping. Stable folder IDs are used for content references; names are configurable display data. The MED 102 grouping remains proposed and is not client-approved.
+This is the consolidated academic reference for Level 1. MED 102 consists of eight independent domains; see the current finalization record for exact official wording.
 
 ## 1. Authority and Status
 
@@ -26,15 +26,15 @@ Individual Student Portfolio
 │   │   ├── MED101-F03 – 3rd Bimonthly – Learning Integration
 │   │   └── MED101-F04 – 4th Bimonthly – Year-End Reflection
 │   ├── MED 102 – Family, Community, & Preventive Medicine I
-│   │   ├── MED102-F01 – Patient & Family-Centered Care (proposed grouping)
-│   │   ├── MED102-F02 – Health & Social Determinants (proposed grouping)
-│   │   ├── MED102-F03 – Healthcare Systems & Primary Care (proposed grouping)
-│   │   └── MED102-F04 – Community & Professional Development (proposed grouping)
+
+
+
+
 │   └── MED 103 – Medical Humanities I
-│       ├── MED103-F01 – Learning Identity & Humanistic Foundations
-│       ├── MED103-F02 – Patient Relationships & Cultural Understanding
-│       ├── MED103-F03 – Professional Identity, Ethics & Well-Being
-│       └── MED103-F04 – Ethical Leadership & Social Responsibility
+│       ├── MED103-F01 – 1st Bimonthly
+│       ├── MED103-F02 – 2nd Bimonthly
+│       ├── MED103-F03 – 3rd Bimonthly
+│       └── MED103-F04 – 4th Bimonthly
 │   ├── Program Learning Outcomes (separate Level 1 section)
 │   └── Final Musings – Level 1 (separate Level 1 section)
 └── Future academic levels (configurable)
@@ -46,7 +46,7 @@ Individual Student Portfolio
 
 ### 3.1 MED 101 – Integrated Basic Sciences
 
-The four source bimonthly periods are the four main folders. Each folder contains CERAE, Reflections, and Artifacts. The supplied names are temporary configurable display values.
+The four source Bimonthly periods are the four MED 101 folders. Each contains CERAE, Reflections, and Artifacts. Use the exact period labels from PDF p. 4.
 
 | Folder ID / display value | Period | Content and evidence |
 |---|---|---|
@@ -90,20 +90,20 @@ The fourth period contains three questions in the source. No fourth question is 
 
 ### 3.2 MED 102 – Family, Community, & Preventive Medicine I
 
-Four main folder IDs and temporary display values are supplied, but the MED 102 grouping is not approved. All eight domains are preserved as separate sections inside their proposed parent folders and must not be omitted.
+Four earlier project folder slots are recorded but have no PDF-defined names or domain assignments. All eight official domains are separate sections with no parent-folder assignment. Keep them independently navigable.
 
 Domains retain their own identities. Relevant evidence may be cross-referenced across multiple domains without duplicating or merging the domain sections. For example, `Community_Health_Assessment.pdf` may link to Social determinants of health, Community engagement and social accountability, and Patient-centered care.
 
-| Domain | Source-specified evidence | Proposed parent folder |
+| Domain | Source-specified evidence | Parent assignment |
 |---|---|---|
-| Patient-centered care | Patient case analysis identifying biological, psychological, and social factors | MED102-F01 – Patient & Family-Centered Care (proposed) |
-| Family-focused care | Genogram or family assessment with reflection | MED102-F01 – Patient & Family-Centered Care (proposed) |
-| Social determinants of health | Social determinants analysis of a patient or community case | MED102-F02 – Health & Social Determinants (proposed) |
-| Global and national health frameworks | SDG mapping worksheet linking health priorities with Philippine health programs | MED102-F02 – Health & Social Determinants (proposed) |
-| Primary health care and Universal Health Care | Reflection and output from the mock Rural Health Unit activity | MED102-F03 – Healthcare Systems & Primary Care (proposed) |
-| Systems thinking | Map or causal loop diagram with written analysis | MED102-F03 – Healthcare Systems & Primary Care (proposed) |
-| Community engagement and social accountability | Community health needs analysis or community-oriented intervention proposal | MED102-F04 – Community & Professional Development (proposed) |
-| Professional identity formation | Integrative reflection on learning and growth throughout MED 102 | MED102-F04 – Community & Professional Development (proposed) |
+| Patient-centered care | Patient case analysis identifying biological, psychological, and social factors | No parent folder assigned |
+| Family-focused care | Genogram or family assessment with reflection | No parent folder assigned |
+| Social determinants of health | Social determinants analysis of a patient or community case | No parent folder assigned |
+| Global and national health frameworks | SDG mapping worksheet linking health priorities with Philippine health programs | No parent folder assigned |
+| Primary health care and UHC | Reflection and output from the mock Rural Health Unit activity | No parent folder assigned |
+| Systems thinking | Map or causal loop diagram with written analysis | No parent folder assigned |
+| Community engagement and social accountability | Community health needs analysis or community-oriented intervention proposal | No parent folder assigned |
+| Professional identity formation | Integrative reflection on learning and growth throughout MED 102 | No parent folder assigned |
 
 Every domain uses these four exact questions:
 
@@ -223,8 +223,60 @@ Future academic levels must remain configurable according to their eventual acad
 
 The following are intentionally not finalized:
 
-- Permanent final names of the twelve folders; current names are temporary configurable display values.
+- Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
 - MED 102 domain-to-folder grouping; current assignments are proposed only.
 - Whether period themes are final folder names or nested learning periods.
 - Any additional artifact file restrictions or limits.
 
+
+## Official academic wording update (13 November 2026)
+
+**Authority note:** The project owner supplied the exact academic wording below as transcribed from `BukSU-COM Portfolio Instructions(4).pdf` and confirmed it as official. The attached PDF was directly inspected. MED 101 and MED 102 wording appears on pp. 4-5; MED 103 headings appear on pp. 6-8. This owner-confirmed wording supersedes the earlier temporary-label statuses below; do not infer any additional wording or parent-folder names.
+
+### Confirmed official section names
+
+**MED 101 - Integrated Basic Sciences**
+
+- 1st Bimonthly
+- 2nd Bimonthly
+- 3rd Bimonthly
+- 4th Bimonthly
+
+**MED 102 - Family, Community, & Preventive Medicine I**
+
+These eight domains are separate, individually identifiable sections:
+
+1. Patient-centered care
+2. Family-focused care
+3. Social determinants of health
+4. Global and national health frameworks
+5. Primary health care and UHC
+6. Systems thinking
+7. Community engagement and social accountability
+8. Professional identity formation
+
+**MED 103 - Medical Humanities I**
+
+- 1st Bimonthly
+- 2nd Bimonthly
+- 3rd Bimonthly
+- 4th Bimonthly
+
+MED 102 contains eight independent official sections. No parent-folder relationship is required or pending.
+
+### Representation in the reviewed database design
+
+The review-only Phase 4 schema can represent the eight official sections without loss: `learning_domains` has its own primary key, stable code, `official_title`, `display_order`, and `subject_id`; `parent_folder_id` is nullable. Therefore, all eight MED 102 domains can be records under MED 102 with no invented parent-folder mapping. `main_folders` separately represents the four folder slots. The schema's data model needs no change solely to preserve the eight domains.
+
+The eight MED 102 domains are direct sections under the subject; no parent-folder clarification is required. The UI must expose all eight sections directly.
+
+## Direct source cross-check (13 November 2026)
+
+?   ?   ??? Eight independent MED 102 domains
+## Official structure source update (13 November 2026)
+
+The Phase 4 schema supports the eight independent domains as subject-linked learning_domains with nullable parent_folder_id; no schema change is required.
+
+## Current MED 102 structure (13 November 2026)
+
+The official instructions PDF, section 2.2 (pp. 5-6), defines eight independent MED 102 domains, with required evidence, competency descriptions, one shared four-question reflection guide, and pertinent artifacts. MED 102 has no four-parent-folder requirement. Earlier proposed-parent and unresolved-grouping text in this document is superseded. See docs/phase-2-academic-content/03_MED102_STRUCTURE_FINALIZATION.md for exact wording and the database representation review.

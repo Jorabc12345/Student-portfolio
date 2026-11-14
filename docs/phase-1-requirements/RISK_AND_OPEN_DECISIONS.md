@@ -9,7 +9,7 @@
 | RISK-003 | Public or guessable artifact URLs expose confidential files. | High | Use private Supabase Storage with restrictive Storage policies, short-lived signed URLs, and authorized downloads; do not expose unrestricted public file URLs. | Must control before implementation |
 | RISK-004 | Patient-identifiable information is uploaded. | High | Display confidentiality guidance, require student responsibility, validate files where possible, and define reporting/removal procedures. | Operational decision required |
 | RISK-005 | Incorrect transcription or alteration of academic questions causes non-compliance. | High | Treat the original PDF as academic authority and maintain content traceability and review checks. | Stage 2 controlled; preserve during implementation |
-| RISK-006 | Incorrect folder names or MED 102 grouping misrepresents the curriculum. | High | Use provisional labels only and block final mapping until client approval. | Open |
+| RISK-006 | Incorrect MED 102 structure misrepresents the curriculum. | Resolved | Use the eight official domains as independent sections; no parent grouping. | Closed by official PDF review |
 | RISK-007 | Unauthorized instructor authorization grants access to the wrong portfolio. | High | Require explicit student portfolio grants, PostgreSQL RLS/Storage policy checks, and audit authorization changes where approved. | Open |
 | RISK-008 | File type or size decisions cause unsafe or unusable uploads. | Medium | Confirm allowed formats, maximum size, content validation, and storage limits before upload implementation. | Open |
 | RISK-009 | Data or artifacts are lost through inadequate backup and recovery. | High | Approve backup frequency, retention, restore testing, and recovery ownership before production. | Open |
@@ -26,7 +26,7 @@ These are not re-asked client decisions; they are the unresolved items carried f
 | OD-001 | Exact names of the four MED 101 folders | Required for final navigation and content labels | Use provisional labels; do not finalize names |
 | OD-002 | Exact names of the four MED 102 folders | Required for final navigation and content labels | Use provisional labels |
 | OD-003 | Exact names of the four MED 103 folders | Required for final navigation and content labels | Use provisional labels |
-| OD-004 | Mapping of eight MED 102 domains to four folders | Prevents incorrect academic grouping | Preserve domains independently; assign none until approved |
+| OD-004 | MED 102 independent-domain structure | Preserve eight distinct official domains | Confirmed from the official instructions PDF; no parent mapping required | Resolved |
 | OD-005 | Which faculty members are authorized and who assigns them | Controls portfolio confidentiality | No access without explicit assignment |
 | OD-006 | Whether faculty see the entire assigned portfolio or selected sections | Defines read-only visibility scope | Restrict to explicitly authorized content; exact granularity pending |
 | OD-007 | Account creation and password-recovery process | Affects onboarding and support | Use Supabase Auth; provisioning and recovery workflow remain open |
@@ -43,7 +43,7 @@ These are not re-asked client decisions; they are the unresolved items carried f
 
 - Individual portfolio.
 - Level 1 with exactly MED 101, MED 102, and MED 103.
-- Four main folders per subject and twelve total.
+- Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
 - Student full management of their own portfolio.
 - Faculty authenticated read-only access.
 - No faculty comments, feedback, editing, deletion, uploading, or grading.
@@ -79,3 +79,6 @@ Technical choices must not override an unresolved academic or client decision. T
 - Additional feedback workflows beyond the approved separate instructor review/feedback model.
 - More advanced progress and reporting features after calculation rules are approved.
 
+## Current MED 102 structure (13 November 2026)
+
+The official instructions PDF, section 2.2 (pp. 5-6), defines eight independent MED 102 domains, with required evidence, competency descriptions, one shared four-question reflection guide, and pertinent artifacts. MED 102 has no four-parent-folder requirement. Earlier proposed-parent and unresolved-grouping text in this document is superseded. See docs/phase-2-academic-content/03_MED102_STRUCTURE_FINALIZATION.md for exact wording and the database representation review.

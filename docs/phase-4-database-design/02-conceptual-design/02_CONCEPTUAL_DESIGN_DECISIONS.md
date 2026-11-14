@@ -22,7 +22,7 @@ Feedback may apply to an entire portfolio, a review, one reflection, or one arti
 
 ## 6. Academic Structure Is Data-Driven
 
-The model preserves three Level 1 subjects, four folders per subject, eight separately accessible MED 102 domains, official MED 101/MED 103 requirements, and separate global sections. Future levels are records rather than hard-coded tables.
+The model preserves three Level 1 subjects, four Bimonthly sections in MED 101 and MED 103, eight independently accessible MED 102 domains, official content, and separate global sections.
 
 ## 7. Storage Is Separate
 

@@ -30,13 +30,13 @@ Free Plan risks are acknowledged: database/storage/egress quotas, possible inact
 ## 3. Academic Validation
 
 - Exactly three Level 1 subjects: validated.
-- Four main folders per subject: validated.
+- Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
 - Twelve total main subject folders: validated.
 - Eight MED 102 domains remain separately identifiable: validated.
 - MED 101 and MED 103 reflection content remains source-controlled: validated.
 - Home Page, PLO Attainment, and Final Musings remain separate global sections: validated.
 - Future levels remain configurable: validated.
-- MED 102 parent-folder grouping and some display names remain provisional: correctly flagged.
+- MED 102 structure is confirmed as eight independent domains with no parent-folder grouping.
 
 No academic content was changed or invented.
 
@@ -72,7 +72,7 @@ Frontend controls are treated as usability only.
 | Client faculty assignment/revocation workflow requires operational definition | High | Confirm trusted process |
 | Exact artifact limits and retention policy open | High | Confirm policy before implementation |
 | Scheduled backup destination and restore procedure open | High | Confirm schedule, destination, and tests |
-| MED 102 parent grouping provisional | Medium | Obtain academic/client confirmation |
+| MED 102 parent grouping | Not required; eight independent domains confirmed | Resolved from official instructions PDF |
 | MED 103 shorter navigation labels require client approval | Medium | Confirm labels before content configuration |
 | Basic audit events and completion rules need definition | Medium | Define events and rules |
 | Free Plan quotas may be exceeded | High | Monitor and stop for budget decision before paid use |
@@ -90,3 +90,7 @@ Database design may begin after approval using conceptual resources and relation
 - Stage 2 system architecture, component design, academic hierarchy, data flow, and diagrams.
 - Stage 3 authentication, role matrix, RLS design, Storage security, authorization flows, and privacy design.
 - This report, traceability matrix, and final decision register.
+
+## Current MED 102 structure (13 November 2026)
+
+The official instructions PDF, section 2.2 (pp. 5-6), defines eight independent MED 102 domains, with required evidence, competency descriptions, one shared four-question reflection guide, and pertinent artifacts. MED 102 has no four-parent-folder requirement. Earlier proposed-parent and unresolved-grouping text in this document is superseded. See docs/phase-2-academic-content/03_MED102_STRUCTURE_FINALIZATION.md for exact wording and the database representation review.

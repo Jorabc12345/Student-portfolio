@@ -7,13 +7,13 @@
 ## Academic Validation
 
 - Three Level 1 subjects: supported.
-- Four folders per subject and twelve total: supported by configurable data and seed checks.
+- Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
 - Eight MED 102 domains: supported as separate accessible records.
 - MED 101 and MED 103 prompts: represented through protected prompt configuration.
 - Home Page, PLO Attainment, and Final Musings: separate global sections.
 - Future levels: supported without new schema tables.
 - Artifact policy settings: supported as configurable data; exact formats, limits, and retention remain pending.
-- Provisional MED 102 grouping is not treated as approved.
+- MED 102 uses eight independent official domains with no parent-folder grouping.
 
 ## Scenario Validation
 
@@ -43,8 +43,8 @@ Naming, UUID usage, foreign keys, uniqueness, indexes, and future hierarchy supp
 Seed/configuration validation must run before student records are created:
 
 - Exactly three Level 1 subjects with stable codes for MED 101, MED 102, and MED 103.
-- Exactly four main folders per subject and exactly twelve total.
-- Exactly eight distinct MED 102 domain records, each directly accessible and optionally linked to a parent folder.
+- MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains.
+- Exactly eight distinct MED 102 domain records, individually accessible and linked directly to the subject.
 - All required MED 101 and MED 103 reflection prompts, preserving official wording and source references.
 - Exactly eleven PLO records.
 - All five Final Musings prompts under the Level 1 global section.

@@ -74,3 +74,11 @@ These are not confirmed decisions:
 ## 6. Stage 1 Boundary
 
 No code, migration, table, RLS policy, Storage bucket, Auth configuration, Edge Function, hosting deployment, or live Supabase project was created. These risks and questions must be reviewed before Stage 2.
+
+## Academic decision status update (13 November 2026)
+
+The earlier statement that MED 102 parent-folder grouping is final is not an approved decision and is superseded: the owner-confirmed official structure has eight separately identifiable domains, and no four parent-folder relationship is required. Earlier descriptive MED 101/MED 103 display labels are not official; use the owner-confirmed Bimonthly names. Do not invent parent titles or assignments. See the Phase 2 academic wording update and DEC-09.
+
+## Current MED 102 structure (13 November 2026)
+
+The official instructions PDF, section 2.2 (pp. 5-6), defines eight independent MED 102 domains, with required evidence, competency descriptions, one shared four-question reflection guide, and pertinent artifacts. MED 102 has no four-parent-folder requirement. Earlier proposed-parent and unresolved-grouping text in this document is superseded. See docs/phase-2-academic-content/03_MED102_STRUCTURE_FINALIZATION.md for exact wording and the database representation review.

@@ -66,7 +66,7 @@ Storage policies must enforce the corresponding private-file rules. Every table 
 
 Use configurable records for levels, subjects, folders, domains, global sections, reflections, artifacts, PLOs, Final Musings, and faculty assignments. Use stable IDs such as `MED101-F01`; display names remain configurable.
 
-MED 102's eight domains retain separate identities. Artifact-domain and artifact-PLO associations must support many-to-many links without duplicating binaries. The proposed MED 102 parent-folder grouping remains provisional until approved.
+MED 102's eight domains retain separate identities. Artifact-domain and artifact-PLO associations must support many-to-many links without duplicating binaries. MED 102 has eight independent domains and no parent-folder grouping.
 
 ## 6. Edge Function Decision
 
@@ -88,9 +88,17 @@ Earlier project materials included Laravel/MySQL and a prior Firebase direction.
 4. Faculty assignment, revocation, and access expiration workflow.
 5. Artifact file types, size limits, retention, deletion, and sensitive-content review.
 6. Manual backup/export schedule, protected backup destination, and restore testing.
-7. Final MED 102 parent-folder grouping and permanent display names.
+7. Implement direct navigation to the eight confirmed MED 102 domains, with no parent-folder layer.
 8. MED 103 folder/period organization if still unresolved.
 9. Audit logging requirements.
 10. Progress-dashboard completion rules.
 
 No Supabase project, schema, policy, bucket, Function, or application code is created by this decision.
+
+## Academic naming update (13 November 2026)
+
+MED 101 labels, the eight MED 102 domain names, and MED 103 Bimonthly labels are confirmed from the attached official PDF and the user naming decision (pp. 4-8). Keep MED 103 source themes separately. MED 102 parent-folder semantics/navigation are not open decisions; the database design supports eight independent domains without parent assignments.
+
+## Current MED 102 structure (13 November 2026)
+
+The official instructions PDF, section 2.2 (pp. 5-6), defines eight independent MED 102 domains, with required evidence, competency descriptions, one shared four-question reflection guide, and pertinent artifacts. MED 102 has no four-parent-folder requirement. Earlier proposed-parent and unresolved-grouping text in this document is superseded. See docs/phase-2-academic-content/03_MED102_STRUCTURE_FINALIZATION.md for exact wording and the database representation review.

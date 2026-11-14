@@ -9,10 +9,10 @@ These are conceptual relationship requirements. They do not define SQL or physic
 | Auth user to profile | One-to-one | One application profile references one Supabase Auth user |
 | Student to portfolio | One-to-one initially | Each student owns one individual portfolio |
 | Academic level to subject | One-to-many | Level 1 contains exactly three subjects |
-| Subject to main folder | One-to-many | Each initial subject contains exactly four folders |
+| Subject to academic section | One-to-many | MED 101/MED 103 have source periods; MED 102 has eight independent domains |
 | Folder to content context | One-to-many | Folder context contains domains, prompts, reflections, and artifacts |
 | Folder to academic period | One-to-one or one-to-many | Flexible for future structures |
-| Subject/folder to domain | One-to-many or many-to-many | MED 102 domains remain separate; grouping is provisional |
+| Subject/folder to domain | One-to-many or many-to-many | MED 102 domains are eight independent direct sections; no grouping |
 | Portfolio to reflections | One-to-many | A student may create multiple reflections |
 | Reflection to answers | One-to-many | Supports multiple source questions |
 | Portfolio to artifacts | One-to-many | A student may own multiple evidence items |

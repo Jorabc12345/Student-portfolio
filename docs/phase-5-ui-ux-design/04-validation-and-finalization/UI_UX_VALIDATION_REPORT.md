@@ -12,7 +12,7 @@
 - Student access revocation is represented.
 - Instructor review and feedback are separate from student originals.
 - MED 101, MED 102, and MED 103 are represented.
-- Four folders per subject and twelve total are preserved.
+- Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
 - Eight MED 102 domains remain individually accessible.
 - PLO Attainment and Final Musings are separate Level 1 sections.
 - Future levels can use the same hierarchy without expanding Version 1.

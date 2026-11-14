@@ -37,7 +37,7 @@ The initial release contains exactly:
 2. MED 102 – Family, Community, & Preventive Medicine I.
 3. MED 103 – Medical Humanities I.
 
-Each subject has exactly four main folders, producing twelve main subject folders. MED 101 and MED 103 preserve their four bimonthly periods and source reflection questions. MED 102 preserves eight separately identifiable domains; domains must not be collapsed into four database records.
+MED 101 and MED 103 each have four Bimonthly sections. MED 102 has eight separate, directly accessible domains with no parent-folder layer.
 
 Home Page, PLO Attainment, and Final Musings are global Level 1 sections, not subject folders.
 

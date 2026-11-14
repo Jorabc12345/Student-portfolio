@@ -10,9 +10,9 @@ This document translates the official BukSU-COM Level 1 Portfolio Instructions i
 - The client-confirmed structure is the authority for the number of subjects and main folders.
 - There are exactly three Level 1 subjects.
 - Each subject has exactly four main folders.
-- There are exactly twelve main subject folders.
-- Home Page, Program Learning Outcomes, and Final Musings are portfolio-wide sections and are not counted among the twelve subject folders.
-- The four-folder names for all subjects and the MED 102 domain-to-folder mapping remain pending client clarification.
+- Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
+- Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
+- MED 101 and MED 103 use four Bimonthly sections each; MED 102 has eight independent domains with no parent-folder hierarchy.
 - Labels such as **Provisional Folder 1** are placeholders only; they are not proposed academic names.
 
 ## 2. Academic Hierarchy
@@ -119,7 +119,7 @@ The college instructions organize MED 101 into four bimonthly periods. The clien
 
 **Source reference:** Original PDF, pp. 5–6.
 
-MED 102 contains eight required learning domains. The client requires four main folders, but the supplied academic source does not define four folder names or a domain grouping. Therefore, the domains are retained as nested academic content under a provisional four-folder shell. No domain is assigned to a folder in this document.
+MED 102 contains eight independent learning domains directly under the subject. The official source does not require parent folders or domain grouping.
 
 ```mermaid
 flowchart TD
@@ -300,7 +300,7 @@ These alignments are organizational proposals only. They are not client-approved
 1. Approve the exact names of all four MED 101 folders.
 2. Approve the exact names of all four MED 102 folders.
 3. Approve the exact names of all four MED 103 folders.
-4. Approve the mapping of all eight MED 102 domains to the four folders.
+4. No MED 102 domain-to-parent-folder mapping is required; all eight domains are separate sections.
 5. Clarify whether the four-folder structure is intended to represent periods, academic groupings, or another organization for each subject.
 
 ## 10. Validation Checklist
@@ -320,3 +320,6 @@ These alignments are organizational proposals only. They are not client-approved
 - [x] Supporting artifact and academic-integrity requirements are included.
 - [x] No academic folder names or MED 102 domain groupings were invented.
 
+## Current MED 102 structure (13 November 2026)
+
+The official instructions PDF, section 2.2 (pp. 5-6), defines eight independent MED 102 domains, with required evidence, competency descriptions, one shared four-question reflection guide, and pertinent artifacts. MED 102 has no four-parent-folder requirement. Earlier proposed-parent and unresolved-grouping text in this document is superseded. See docs/phase-2-academic-content/03_MED102_STRUCTURE_FINALIZATION.md for exact wording and the database representation review.

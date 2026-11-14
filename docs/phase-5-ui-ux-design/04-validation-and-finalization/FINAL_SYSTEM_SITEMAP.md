@@ -20,8 +20,7 @@ Student
 │   ├── MED 101
 │   │   └── Four Folders
 │   ├── MED 102
-│   │   ├── Four Parent Folders (provisional)
-│   │   └── Eight Learning Domains
+│   │   └── Eight independent learning domains
 │   ├── MED 103
 │   │   └── Four Folders
 │   ├── PLO Attainment
@@ -49,3 +48,7 @@ Client Administrator
 ├── Disable Code
 └── Lifecycle Confirmation
 ```
+
+## Current MED 102 structure (13 November 2026)
+
+The official instructions PDF, section 2.2 (pp. 5-6), defines eight independent MED 102 domains, with required evidence, competency descriptions, one shared four-question reflection guide, and pertinent artifacts. MED 102 has no four-parent-folder requirement. Earlier proposed-parent and unresolved-grouping text in this document is superseded. See docs/phase-2-academic-content/03_MED102_STRUCTURE_FINALIZATION.md for exact wording and the database representation review.

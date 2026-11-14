@@ -8,7 +8,7 @@ Completed:
 - Version 1 page and screen inventory.
 - Student, instructor, and administrator journeys.
 - Role-specific navigation requirements.
-- Academic navigation preserving twelve folders and eight separately accessible MED 102 domains.
+- Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
 - Loading, empty, validation, upload, authorization, privacy, and unsaved-change states.
 - Accessibility, responsive, privacy, and medical-academic experience requirements.
 - Conflicts between earlier Phase 3 documentation and the revised instructor review/feedback model.

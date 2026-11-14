@@ -9,7 +9,7 @@ The current workspace contains the Phase 1–4 documentation, but no separate `M
 ## Validation Results
 
 - Technology: passed; no Firebase or MySQL components found in the reviewed active documents.
-- Academic hierarchy: passed structurally; all eight MED 102 domains remain separately accessible. The four-folder grouping and some display labels remain provisional.
+- Academic hierarchy: passed structurally; all eight MED 102 domains remain separately accessible. No MED 102 parent-folder grouping is required; eight independent domains are the confirmed structure.
 - Relationships: passed; many-to-many relationships use junction tables.
 - Security readiness: conditional; RLS and Storage policies are still implementation requirements.
 - Integrity: conditional; cross-context ownership checks need policy/function/testing support.
@@ -37,3 +37,7 @@ The current workspace contains the Phase 1–4 documentation, but no separate `M
 ## Completion Boundary
 
 No SQL was executed. No tables, migrations, policies, live Supabase resources, subscriptions, or application code were created.
+
+## Current MED 102 structure (13 November 2026)
+
+The official instructions PDF, section 2.2 (pp. 5-6), defines eight independent MED 102 domains, with required evidence, competency descriptions, one shared four-question reflection guide, and pertinent artifacts. MED 102 has no four-parent-folder requirement. Earlier proposed-parent and unresolved-grouping text in this document is superseded. See docs/phase-2-academic-content/03_MED102_STRUCTURE_FINALIZATION.md for exact wording and the database representation review.

@@ -18,9 +18,9 @@ Instructor registration is permitted only when the current client-issued shared 
 
 ## Academic Validation
 
-Level 1 contains exactly three subjects and twelve folders. MED 102 contains eight separate, directly accessible domains even when grouped under four folders. MED 101 and MED 103 questions remain configuration data. Home Page, PLO Attainment, and Final Musings remain global sections. Future levels are represented as data.
+Level 1 contains three subjects. MED 101 and MED 103 each have four Bimonthly sections. MED 102 contains eight separate, directly accessible domains with no parent folders. MED 101 and MED 103 questions remain configuration data. Home Page, PLO Attainment, and Final Musings remain global sections. Future levels are represented as data.
 
-The four-folder MED 102 grouping and some display labels remain provisional and must not be seeded as approved academic decisions.
+MED 102 has no four-folder grouping; seed only its eight official independent domains.
 
 ## Security Boundary
 
@@ -29,3 +29,7 @@ RLS and Storage policies must enforce ownership, verified instructor status, act
 ## Free Plan and Operations
 
 The design avoids duplicate binaries and unnecessary tables, but still requires quotas, monitoring, manual backup/export, restore testing, and explicit retention policies. Backups must have an institutionally approved owner, secure storage destination, schedule, restoration authority, and restore-test cadence. Free Plan use is not guaranteed to remain cost-free indefinitely.
+
+## Academic structure clarification (13 November 2026)
+
+The official PDF was directly inspected at section 2.2, pages 5-6. The eight domains are independent subject-linked records; no parent-folder decision remains open.

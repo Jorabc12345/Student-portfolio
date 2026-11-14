@@ -1,4 +1,5 @@
-import { useState } from "react";
+﻿import { useEffect, useState, type ReactNode } from "react";
+import { ArrowLeft, ArrowRight, Bell, BookOpenText, FolderOpen, House, Layers3, LogOut, Menu, Target, UserRound, X } from "lucide-react";
 import HomePage from "../pages/HomePage";
 import {
   AcademicFolder,
@@ -11,8 +12,11 @@ import ReflectionEditor from "../pages/ReflectionEditor";
 import ArtifactsPage from "../pages/ArtifactsPage";
 import PLOPage from "../pages/PLOPage";
 import FinalMusingsPage from "../pages/FinalMusingsPage";
-import AccessPage from "../pages/AccessPage";
-import FeedbackPage from "../pages/FeedbackPage";
+import LoginPage from "../pages/LoginPage";
+import ResetPasswordPage from "../pages/ResetPasswordPage";
+import ProfilePage from "../pages/ProfilePage";
+import { supabase } from "../services/supabase";
+import collegeOfMedicineLogo from "../assets/college-of-medicine-logo.jpg";
 
 type Page =
   | "home"
@@ -21,14 +25,54 @@ type Page =
   | "plos"
   | "final-musings"
   | "artifacts"
-  | "feedback"
-  | "access"
   | "profile";
 
 function App() {
+  const [sessionReady, setSessionReady] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [isPortfolioOwner, setIsPortfolioOwner] = useState(false);
+  const [accountEmail, setAccountEmail] = useState("");
+  const [accountName, setAccountName] = useState("");
+  const [accountProgram, setAccountProgram] = useState("Doctor of Medicine · Level 1");
   const [page, setPage] = useState<Page>("home");
   const [selectedSubject, setSelectedSubject] = useState(level1Subjects[0]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    supabase.auth.getSession().then(({ data }) => {
+      if (active) {
+        setAuthenticated(Boolean(data.session));
+        setIsPortfolioOwner(Boolean(
+          data.session?.user.email_confirmed_at &&
+          data.session.user.email?.trim().toLowerCase() === import.meta.env.VITE_PORTFOLIO_OWNER_EMAIL?.trim().toLowerCase(),
+        ));
+        setAccountEmail(data.session?.user.email ?? "");
+        setAccountName(String(data.session?.user.user_metadata.full_name ?? data.session?.user.email ?? "My portfolio"));
+        setAccountProgram(String(data.session?.user.user_metadata.program ?? "Doctor of Medicine · Level 1"));
+        setSessionReady(true);
+      }
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setAuthenticated(Boolean(session));
+      setIsPortfolioOwner(Boolean(
+        session?.user.email_confirmed_at &&
+        session.user.email?.trim().toLowerCase() === import.meta.env.VITE_PORTFOLIO_OWNER_EMAIL?.trim().toLowerCase(),
+      ));
+      setAccountEmail(session?.user.email ?? "");
+      setAccountName(String(session?.user.user_metadata.full_name ?? session?.user.email ?? "My portfolio"));
+      setAccountProgram(String(session?.user.user_metadata.program ?? "Doctor of Medicine · Level 1"));
+      setSessionReady(true);
+    });
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  if (!sessionReady) return <div className="auth-loading" aria-label="Loading portfolio" />;
+  if (window.location.pathname === "/reset-password") return <ResetPasswordPage />;
+  if (!authenticated) return <LoginPage />;
 
   const navigate = (nextPage: Page) => {
     setPage(nextPage);
@@ -44,49 +88,42 @@ function App() {
       />
       <aside className={`sidebar ${mobileMenuOpen ? "open" : ""}`}>
         <div className="brand">
-          <div className="brand-mark">B</div>
+          <img className="brand-mark" src={collegeOfMedicineLogo} alt="BukSU College of Medicine seal" />
           <div>
             <strong>My Portfolio</strong>
             <span>BukSU College of Medicine</span>
           </div>
         </div>
-        <div className="profile-chip">
-          <div className="avatar">NAM</div>
+        <button
+          type="button"
+          className="profile-chip profile-home-link"
+          onClick={() => navigate("home")}
+          aria-label="Go to portfolio home"
+        >
+          <div className="avatar">{accountName.slice(0, 3).toUpperCase()}</div>
           <div>
-            <strong>Nour-Aliah N. Macarampat</strong>
-            <span>Student portfolio</span>
+            <strong>{isPortfolioOwner ? accountName : "Portfolio viewer"}</strong>
+            <span>{accountEmail}</span>
           </div>
-        </div>
+        </button>
         <nav aria-label="Portfolio navigation">
           <NavItem
             label="Home"
             active={page === "home"}
             onClick={() => navigate("home")}
-            icon="⌂"
+            icon={<House size={18} aria-hidden="true" />}
           />
           <NavItem
             label="Level 1"
-            active={page === "level"}
+            active={page === "level" || page === "subject" || page === "plos" || page === "final-musings"}
             onClick={() => navigate("level")}
-            icon="▦"
+            icon={<Layers3 size={18} aria-hidden="true" />}
           />
           <NavItem
             label="Artifacts"
             active={page === "artifacts"}
             onClick={() => navigate("artifacts")}
-            icon="▤"
-          />
-          <NavItem
-            label="Reviews & feedback"
-            active={page === "feedback"}
-            onClick={() => navigate("feedback")}
-            icon="◌"
-          />
-          <NavItem
-            label="Instructor access"
-            active={page === "access"}
-            onClick={() => navigate("access")}
-            icon="♧"
+            icon={<FolderOpen size={18} aria-hidden="true" />}
           />
         </nav>
         <div className="sidebar-bottom">
@@ -94,10 +131,10 @@ function App() {
             label="Profile & settings"
             active={page === "profile"}
             onClick={() => navigate("profile")}
-            icon="⚙"
+            icon={<UserRound size={18} aria-hidden="true" />}
           />
-          <button className="sign-out">
-            Sign out <span>↗</span>
+          <button className="sign-out" onClick={() => void supabase.auth.signOut()}>
+            Sign out <LogOut size={16} aria-hidden="true" />
           </button>
         </div>
       </aside>
@@ -110,7 +147,7 @@ function App() {
             aria-expanded={mobileMenuOpen}
             onClick={() => setMobileMenuOpen((isOpen) => !isOpen)}
           >
-            ☰
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
           <div className="breadcrumb">
             <span>Portfolio</span>
@@ -118,16 +155,13 @@ function App() {
             <strong>{pageTitle(page)}</strong>
           </div>
           <div className="topbar-actions">
-            <span className="save-status">● All changes saved</span>
-            <button className="icon-button" aria-label="Notifications">
-              ♢
-            </button>
+            <button className="icon-button" aria-label="Notifications"><Bell size={18} aria-hidden="true" /></button>
           </div>
         </header>
-        <div className="page-wrap">
-          {page === "home" && <HomePage onNavigate={navigate} />}
-          {page === "plos" && <PLOPage />}
-          {page === "final-musings" && <FinalMusingsPage />}
+        <div className={`page-wrap ${isPortfolioOwner ? "" : "read-only-portfolio"}`}>
+          {page === "home" && <HomePage readOnly={!isPortfolioOwner} />}
+          {page === "plos" && <PLOPage readOnly={!isPortfolioOwner} onBack={() => navigate("level")} />}
+          {page === "final-musings" && <FinalMusingsPage readOnly={!isPortfolioOwner} onBack={() => navigate("level")} />}
           {page === "level" && (
             <LevelPage
               onSelectSubject={(subject) => {
@@ -142,12 +176,19 @@ function App() {
               key={selectedSubject.code}
               subject={selectedSubject}
               onBack={() => navigate("level")}
+              readOnly={!isPortfolioOwner}
             />
           )}
-          {page === "artifacts" && <ArtifactsPage />}
-          {page === "feedback" && <FeedbackPage />}
-          {page === "access" && <AccessPage />}
-          {page === "profile" && <ProfilePage />}
+          {page === "artifacts" && <ArtifactsPage readOnly={!isPortfolioOwner} />}
+          {page === "profile" && <ProfilePage
+            name={accountName}
+            email={accountEmail}
+            program={accountProgram}
+            onProfileUpdated={(name, program) => {
+              setAccountName(name);
+              setAccountProgram(program);
+            }}
+          />}
         </div>
       </main>
     </div>
@@ -161,7 +202,7 @@ function NavItem({
   onClick,
 }: {
   label: string;
-  icon: string;
+  icon: ReactNode;
   active: boolean;
   onClick: () => void;
 }) {
@@ -197,18 +238,18 @@ function LevelPage({
             <span className="code-pill">{subject.code}</span>
             <h2>{subject.name}</h2>
             <p>{subject.progress}</p>
-            <span className="text-button">Open subject page →</span>
+            <span className="text-button">Open subject page <ArrowRight size={14} aria-hidden="true" /></span>
           </button>
         ))}
       </div>
       <div className="level-global-grid">
         <button className="global-item" onClick={() => onNavigate("plos")}>
-          <span>✦</span>
+          <Target size={20} aria-hidden="true" />
           <strong>PLO Attainment</strong>
           <small>Document your growth across 11 outcomes</small>
         </button>
         <button className="global-item" onClick={() => onNavigate("final-musings")}>
-          <span>✧</span>
+          <BookOpenText size={20} aria-hidden="true" />
           <strong>Final Musings</strong>
           <small>Look back on your Level 1 journey</small>
         </button>
@@ -217,7 +258,7 @@ function LevelPage({
   );
 }
 
-function SubjectPage({ subject, onBack }: { subject: Level1Subject; onBack: () => void }) {
+function SubjectPage({ subject, onBack, readOnly }: { subject: Level1Subject; onBack: () => void; readOnly: boolean }) {
   const [selectedFolderId, setSelectedFolderId] = useState(subject.folders[0].id);
   const [selectedDomainId, setSelectedDomainId] = useState(subject.domains?.[0]?.id);
   const [reflectionTarget, setReflectionTarget] = useState<{
@@ -233,7 +274,7 @@ function SubjectPage({ subject, onBack }: { subject: Level1Subject; onBack: () =
     <>
       <div className="page-intro">
         <button className="back-button" onClick={onBack}>
-          ← Back to Level 1 subjects
+          <ArrowLeft size={16} aria-hidden="true" /> Back to Level 1 subjects
         </button>
         <p className="eyebrow">Level 1 subject</p>
         <h1>{subject.code}</h1>
@@ -246,7 +287,7 @@ function SubjectPage({ subject, onBack }: { subject: Level1Subject; onBack: () =
             <h2>{subject.name}</h2>
             <p>{subject.progress}</p>
           </div>
-          <button className="secondary-button">Edit subject notes</button>
+          {!readOnly && <button className="secondary-button">Edit subject notes</button>}
         </div>
         <div className="folder-grid">
           {subject.folders.map((folder, index) => (
@@ -260,7 +301,7 @@ function SubjectPage({ subject, onBack }: { subject: Level1Subject; onBack: () =
               <span className="folder-number">0{index + 1}</span>
               <h3>{folder.name}</h3>
               <p>{folder.description}</p>
-              <span className="text-button">Open section →</span>
+              <span className="text-button">Open section <ArrowRight size={14} aria-hidden="true" /></span>
             </button>
           ))}
         </div>
@@ -284,7 +325,7 @@ function SubjectPage({ subject, onBack }: { subject: Level1Subject; onBack: () =
                   onClick={() => setSelectedDomainId(domain.id)}
                 >
                   <strong>{domain.name}</strong>
-                  <small>View reflection and required evidence →</small>
+                  <small>View reflection and required evidence <ArrowRight size={13} aria-hidden="true" /></small>
                 </button>
               ))}
             </div>
@@ -292,6 +333,7 @@ function SubjectPage({ subject, onBack }: { subject: Level1Subject; onBack: () =
               <DomainDetail
                 name={selectedDomain.name}
                 evidence={selectedDomain.evidence}
+                readOnly={readOnly}
                 onStartReflection={(question, questionIndex) =>
                   setReflectionTarget({
                     context: `MED 102 - ${selectedDomain.name}`,
@@ -306,6 +348,7 @@ function SubjectPage({ subject, onBack }: { subject: Level1Subject; onBack: () =
         {subject.code !== "MED 102" && (
           <FolderDetail
             folder={selectedFolder}
+            readOnly={readOnly}
             onStartReflection={(question, questionIndex) =>
               setReflectionTarget({
                 context: `${subject.code} - ${selectedFolder.name}`,
@@ -331,9 +374,11 @@ function SubjectPage({ subject, onBack }: { subject: Level1Subject; onBack: () =
 function FolderDetail({
   folder,
   onStartReflection,
+  readOnly,
 }: {
   folder: AcademicFolder;
   onStartReflection: (question: AcademicQuestion, questionIndex: number) => void;
+  readOnly: boolean;
 }) {
   return (
     <section className="academic-detail">
@@ -343,12 +388,12 @@ function FolderDetail({
           <h2>{folder.name}</h2>
           <p>Official CERAE reflection prompts and supporting evidence requirements.</p>
         </div>
-        <button
+        {!readOnly && <button
           className="secondary-button"
           onClick={() => folder.questions[0] && onStartReflection(folder.questions[0], 0)}
         >
           Start reflection
-        </button>
+        </button>}
       </div>
       <div className="question-list">
         {folder.questions.map((question, index) => (
@@ -358,12 +403,12 @@ function FolderDetail({
               <h3>{question.prompt}</h3>
               {question.evidence && <p className="evidence-note">{question.evidence}</p>}
             </div>
-            <button
+            {!readOnly && <button
               className="text-button question-action"
               onClick={() => onStartReflection(question, index)}
             >
-              Write response →
-            </button>
+              Write response <ArrowRight size={14} aria-hidden="true" />
+            </button>}
           </article>
         ))}
       </div>
@@ -387,10 +432,12 @@ function DomainDetail({
   name,
   evidence,
   onStartReflection,
+  readOnly,
 }: {
   name: string;
   evidence: string;
   onStartReflection: (question: AcademicQuestion, questionIndex: number) => void;
+  readOnly: boolean;
 }) {
   return (
     <section className="academic-detail">
@@ -400,12 +447,12 @@ function DomainDetail({
           <h2>{name}</h2>
           <p>Complete the four official reflection questions for this domain.</p>
         </div>
-        <button
+        {!readOnly && <button
           className="secondary-button"
           onClick={() => onStartReflection(med102Questions[0], 0)}
         >
           Start reflection
-        </button>
+        </button>}
       </div>
       <div className="question-list">
         {med102Questions.map((question, index) => (
@@ -415,12 +462,12 @@ function DomainDetail({
               <h3>{question.prompt}</h3>
               <p className="evidence-note">{question.evidence}</p>
             </div>
-            <button
+            {!readOnly && <button
               className="text-button question-action"
               onClick={() => onStartReflection(question, index)}
             >
-              Write response →
-            </button>
+              Write response <ArrowRight size={14} aria-hidden="true" />
+            </button>}
           </article>
         ))}
       </div>
@@ -432,33 +479,6 @@ function DomainDetail({
   );
 }
 
-function ProfilePage() {
-  return (
-    <>
-      <div className="page-intro">
-        <p className="eyebrow">Account</p>
-        <h1>Profile & settings</h1>
-        <p>Manage your personal information and portfolio preferences.</p>
-      </div>
-      <div className="settings-card">
-        <label>
-          Full name
-          <input value="Nour-Aliah N. Macarampat" readOnly />
-        </label>
-        <label>
-          Email address
-          <input value="juan.santos@buksu.edu.ph" readOnly />
-        </label>
-        <label>
-          Program
-          <input value="Doctor of Medicine · Level 1" readOnly />
-        </label>
-        <button className="primary-button">Edit profile</button>
-      </div>
-    </>
-  );
-}
-
 function pageTitle(page: Page) {
   return {
     home: "Home",
@@ -467,10 +487,10 @@ function pageTitle(page: Page) {
     plos: "PLO Attainment",
     "final-musings": "Final Musings",
     artifacts: "Artifacts",
-    feedback: "Reviews & feedback",
-    access: "Instructor access",
     profile: "Profile & settings",
   }[page];
 }
 
 export default App;
+
+

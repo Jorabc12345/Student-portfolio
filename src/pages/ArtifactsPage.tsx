@@ -1,5 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { level1Subjects } from "../data/level1Content";
+import { getPortfolioItem, setPortfolioItem } from "../services/portfolioStorage";
 
 type ArtifactRecord = {
   id: string;
@@ -32,7 +33,7 @@ const ACCEPTED_TYPES = [
 const PLOS = Array.from({ length: 11 }, (_, index) => `PLO ${index + 1}`);
 
 function loadArtifacts(): ArtifactRecord[] {
-  const savedArtifacts = localStorage.getItem(STORAGE_KEY);
+  const savedArtifacts = getPortfolioItem(STORAGE_KEY);
 
   if (!savedArtifacts) {
     return [];
@@ -50,7 +51,7 @@ function formatFileSize(bytes: number) {
   return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
 }
 
-export default function ArtifactsPage() {
+export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean }) {
   const [artifacts, setArtifacts] = useState(loadArtifacts);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [form, setForm] = useState({
@@ -82,7 +83,7 @@ export default function ArtifactsPage() {
       plo: artifact.plo,
       uploadedAt: artifact.uploadedAt,
     }));
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(storedArtifacts));
+    setPortfolioItem(STORAGE_KEY, JSON.stringify(storedArtifacts));
   }, [artifacts]);
 
   const updateForm = (field: keyof typeof form, value: string | boolean) => {
@@ -212,19 +213,12 @@ export default function ArtifactsPage() {
         <h1>Artifacts</h1>
         <p>Keep academic evidence private, organized, and connected to your learning.</p>
       </div>
-      <div className="notice yellow-note artifact-warning">
-        <strong>Patient confidentiality warning</strong>
-        <span>
-          Do not upload patient names, faces, dates, record numbers, or any other identifying
-          details. Use de-identified academic evidence only.
-        </span>
-      </div>
       {(message || error) && (
         <div className={`home-alert ${error ? "error-alert" : "success-alert"}`} role="status">
           {error || message}
         </div>
       )}
-      <section className="artifact-upload-card">
+      {!readOnly && <section className="artifact-upload-card">
         <div className="section-heading">
           <div>
             <p className="eyebrow">Add evidence</p>
@@ -334,7 +328,7 @@ export default function ArtifactsPage() {
         <button className="primary-button compact-button" onClick={uploadArtifact}>
           Upload privately
         </button>
-      </section>
+      </section>}
       <section className="list-card artifact-list">
         <div className="list-header">
           <div>
@@ -384,9 +378,7 @@ export default function ArtifactsPage() {
                   </a>
                 </>
               )}
-              <button className="danger-button" onClick={() => deleteArtifact(artifact)}>
-                Delete
-              </button>
+              {!readOnly && <button className="danger-button" onClick={() => deleteArtifact(artifact)}>Delete</button>}
             </article>
           ))
         )}

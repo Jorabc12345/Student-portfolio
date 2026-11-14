@@ -40,7 +40,7 @@ Supabase is the approved backend direction. Laravel, MySQL, Firebase, and anothe
 - Level 1 contains exactly MED 101, MED 102, and MED 103.
 - Each subject has four main folders, for twelve total subject folders.
 - Stable IDs such as `MED101-F01` must remain independent from configurable display names.
-- MED 102 retains eight separate learning domains. The approved Phase 2 mapping is authoritative for current relationships; provisional groupings must remain labeled provisional.
+- MED 102 retains eight separate, individually identifiable learning-domain sections using the owner-confirmed official names. No domain-to-folder grouping or MED 102 parent-folder name is approved; a domain parent-folder link is optional until its UI treatment is decided.
 - One artifact may be associated with multiple domains and PLOs without duplicate uploads.
 - Home Page, PLO Attainment, and Final Musings are separate Level 1 portfolio sections, not additional subject folders.
 - Future levels and academic structures must be configurable.
@@ -177,3 +177,7 @@ The project must monitor quotas and prevent silent growth. If project requiremen
 - Do not install packages.
 - Do not change the approved Supabase stack.
 - Do not invent academic content or finalize provisional mappings.
+
+## Current MED 102 structure (13 November 2026)
+
+The official instructions PDF, section 2.2 (pp. 5-6), defines eight independent MED 102 domains, with required evidence, competency descriptions, one shared four-question reflection guide, and pertinent artifacts. MED 102 has no four-parent-folder requirement. Earlier proposed-parent and unresolved-grouping text in this document is superseded. See docs/phase-2-academic-content/03_MED102_STRUCTURE_FINALIZATION.md for exact wording and the database representation review.

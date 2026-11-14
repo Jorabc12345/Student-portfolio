@@ -33,7 +33,7 @@ Controls the current shared instructor invitation code by generating, replacing,
 - Private authenticated access with clear ownership boundaries.
 - Calm academic presentation suitable for medical students and faculty review.
 - Prompts must preserve official wording and context.
-- MED 102 domains remain separately navigable even under four folders.
+- MED 102 has eight separately navigable domains and no parent folders.
 - Uploads must communicate file rules, progress, failure, and privacy.
 - Instructor review/feedback must be visually distinct from student-authored content.
 - Access grants and revocations must be understandable and explicit.

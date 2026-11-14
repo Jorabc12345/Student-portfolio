@@ -171,7 +171,7 @@ Gaps:
 | Artifact limits/retention/deletion | Partial | UI mentions policy, but values and retention/deletion behavior remain pending. |
 | RLS/Storage enforcement | Partial | Security is documented in Phase 4, but UI audit cannot validate implementation or negative tests. |
 | Three Level 1 subjects | Passed structurally | Subject names are present in navigation documentation. |
-| Four folders per subject | Partial | Count is preserved, but authoritative names are not carried into Phase 5. |
+| Academic structure | Four MED 101/103 periods and eight independent MED 102 domains | Confirmed; no MED 102 parent folders |
 | Eight MED 102 domains | Partial | Individual access is preserved, but domain names are missing. |
 | Eleven PLOs | Partial | Count is referenced, but statements and mappings are absent from UI documents. |
 | Five Final Musings questions | Partial | Count is referenced, but official questions are absent from UI documents. |
@@ -205,8 +205,8 @@ The documentation correctly limits the role to shared invitation-code operations
 Validated structurally:
 
 - MED 101, MED 102, and MED 103 are represented.
-- Four main folders per subject are represented by count.
-- Twelve total folders are acknowledged.
+- Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
+- Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
 - Eight MED 102 domains remain individually accessible.
 - PLO Attainment and Final Musings remain separate Level 1 sections.
 
@@ -320,3 +320,7 @@ Incomplete or requiring correction:
 The Phase 5 documentation is a strong structural foundation and all 31 expected deliverables exist. It should not be marked **COMPLETE** because critical academic content is not represented with authoritative labels/questions, primary source verification is unavailable, the high-fidelity designs are specification-only, and important security and lifecycle decisions remain unresolved.
 
 After the required corrections are completed and reviewed, Phase 5 can be re-audited for a final **COMPLETE** decision and implementation handoff to Phase 6.
+
+## Current MED 102 structure (13 November 2026)
+
+The official instructions PDF, section 2.2 (pp. 5-6), defines eight independent MED 102 domains, with required evidence, competency descriptions, one shared four-question reflection guide, and pertinent artifacts. MED 102 has no four-parent-folder requirement. Earlier proposed-parent and unresolved-grouping text in this document is superseded. See docs/phase-2-academic-content/03_MED102_STRUCTURE_FINALIZATION.md for exact wording and the database representation review.

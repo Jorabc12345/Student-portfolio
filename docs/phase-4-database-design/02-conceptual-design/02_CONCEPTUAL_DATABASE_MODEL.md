@@ -18,7 +18,7 @@ This conceptual model applies the revised student-authorized instructor access m
 
 `ACADEMIC_LEVEL`, `SUBJECT`, `MAIN_FOLDER`, `ACADEMIC_PERIOD`, `LEARNING_DOMAIN`, `CONTENT_PROMPT`, `GLOBAL_SECTION`, and `PROGRAM_LEARNING_OUTCOME`.
 
-Level 1 has three subjects and twelve folders. MED 102 has eight independent domains that remain accessible even when grouped under four folders.
+Level 1 has three subjects. MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent folders.
 
 ### Student content
 

@@ -40,7 +40,7 @@ Private Storage buckets hold binaries. PostgreSQL stores metadata and associatio
 | Student dashboard and Home Page | Portfolio identity, introduction, learning philosophy, My Why, The Good Doctor, progress presentation |
 | Faculty dashboard | List and open only explicitly authorized portfolios; no write controls |
 | Academic content | Configurable levels, subjects, folders, domains, prompts, and global sections |
-| Subject navigation | Level 1 subjects and twelve main folders; domain-aware navigation |
+| Academic structure | Four MED 101/103 periods and eight independent MED 102 domains |
 | Reflection management | Source prompt display, student response CRUD, evidence links |
 | Artifact management | Metadata, private upload, replacement/deletion, domain/PLO associations |
 | PLO Attainment | Eleven PLO records, student evidence links, descriptions, and reflections |

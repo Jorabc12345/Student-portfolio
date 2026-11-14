@@ -8,9 +8,9 @@
 
 | Source | Finding | Planning consequence |
 |---|---|---|
-| `MASTER_PROJECT_ROADMAP.md` | Not present in the workspace. Reconciliation records also report the referenced `MASTER_PROJECT_ROADMAP.md.docx` unavailable. | Roadmap phase numbers and completion claims cannot be verified. Restore the authoritative file before claiming roadmap alignment. |
-| Approved SRS | Not present in the current workspace. `SOURCE_REVIEW_NOTES.md` records that `Approved_SRS_BukSU_COM_Digital_Portfolio.md` was supplied and reviewed during an earlier phase, but that source file is not currently available. | The current assessment uses the retained Phase 1–6 requirements and source-review notes as secondary evidence; it is not a direct SRS audit. |
-| Original BukSU-COM Level 1 Portfolio Instructions PDF | No PDF is present in the current workspace. `SOURCE_REVIEW_NOTES.md` records an earlier review of `BukSU-COM Portfolio Instructions.pdf` and summarizes page-level content, but the PDF itself is unavailable for direct comparison. | Academic content in code and secondary notes is present, but fidelity to the original PDF cannot be independently verified. Do not invent or silently amend content. |
+| UPDATED PROJECT ROADMAP.pdf v2.0 | Supplied by owner; cover states Pending Client Approval; contains 18 named phases. | Use as current mapping baseline pending formal approval; Phase 7 gate and permissions need reconciliation. |
+| UPDATED SRS.pdf v2.0 | Supplied by owner; cover states Pending Client Approval. | Direct SRS source is available for crosswalk; do not claim formal approval until recorded. |
+| BukSU-COM Portfolio Instructions.pdf | Supplied and reviewed; Phase 2 records cite pages 4-8. | Use with SRS v2.0 for exact academic/source crosswalk. |
 | Phase 3 System Architecture | Available under `docs/phase-3-system-architecture/`. | Use the finalized Supabase architecture as the technical baseline, while resolving the recorded legacy no-feedback wording conflict. |
 | Phase 4 Database Design | Available under `docs/phase-4-database-design/`, including final schema reference and validation. | Schema is a review-only design artifact; the validation report says no SQL was executed. |
 | Phase 5 UI/UX Design | Available, including `PHASE_5_COMPLETION_AUDIT.md`. | Audit result is **NEEDS REVISION**; visual, source-content, and policy gates remain. |
@@ -23,7 +23,7 @@ The root `.env` file exists, so the older Phase 6 statement that no `.env` file 
 
 The application is a React/Vite single-page prototype with navigation and screens for Home, Level 1, subject details, PLO Attainment, Final Musings, Artifacts, Reviews & feedback, Instructor access, and Profile/settings. The source also includes a responsive sidebar and subject/domain/folder views.
 
-Academic data in `src/data/level1Content.ts` currently contains three Level 1 subjects, four main folders per subject, eight individually named MED 102 domains, the four shared MED 102 questions, eleven PLO statements, and five Final Musings prompts. MED 101's fourth period has three questions. The MED 102 folder names are explicitly described in code as proposed parent groupings. Code presence verifies that these records exist; it does not establish fidelity to the unavailable PDF/SRS or client approval of provisional labels.
+The prototype academic data in src/data/level1Content.ts contains three subjects, four period/folder records for MED 101 and MED 103, four proposed MED 102 parent cards, eight distinct MED 102 domains, four shared questions, eleven PLO statements, and five Final Musings prompts. The four MED 102 cards are a prototype implementation detail, not an approved academic requirement. The source-confirmed requirement is eight independent domains with their own evidence and competency descriptions, shared questions, and pertinent artifacts.
 
 Current interactions are prototype behavior:
 
@@ -44,7 +44,7 @@ The order below is dependency-based, not a claim about the unavailable roadmap's
 
 1. Restore the approved SRS, `MASTER_PROJECT_ROADMAP.md`, and original Level 1 PDF (or obtain explicitly approved authoritative replacements).
 2. Reconcile requirements and roadmap technology statements with the accepted React/Vite + Supabase baseline recorded in the documentation reconciliation report.
-3. Verify academic labels, prompts, PLO text and evidence requirements against the original PDF. Preserve source page references and record client decisions for provisional MED 102 grouping and other open labels.
+3. Use the inspected official PDF to verify academic labels, prompts, PLO text, domain evidence, and competencies. Preserve source page references. MED 102 has eight independent sections and no parent-folder layer.
 4. Reconcile Phase 3 legacy statements that deny instructor feedback with the revised Phase 4/5 model and the existing feedback prototype. Keep feedback separate from student-owned content.
 
 **Exit evidence:** source files available; traceability updated with stable requirement IDs/page references; conflicts and decisions recorded; no academic text inferred from placeholders.
@@ -92,7 +92,7 @@ Obtain recorded decisions for account provisioning/password recovery; instructor
 
 | Requirement area | Current evidence | Remaining implementation/decision |
 |---|---|---|
-| Academic Level 1 structure and prompts | Static data in `src/data/level1Content.ts`; Phase 1 and Phase 4 criteria; Phase 5 audit says source verification incomplete. | Compare against restored PDF/SRS; approve provisional MED 102 parent folders and labels; use authoritative names/questions. |
+| Academic Level 1 structure and prompts | Static data in src/data/level1Content.ts; Phase 1 and Phase 4 criteria; Phase 5 audit says source verification incomplete. | Replace proposed MED 102 parent cards with eight independent source-defined domains and use official evidence, competencies, questions and artifact requirement. |
 | Home Page and profile | Editable Home sections saved locally; profile is read-only demo data. | Persist to authenticated student account; complete profile edit and identity source. |
 | Reflections | Question editor saves draft locally; status, PLO and artifact-name fields are local metadata. | Database persistence, complete artifact association, owner edit/delete, explicit save lifecycle and instructor read-only behavior. |
 | Artifacts | Browser file checks, simulated progress, metadata in localStorage, ephemeral object URLs. | Supabase private Storage and metadata/associations; authorized signed URLs; approved limits/retention/deletion; production error/retry. |
@@ -107,7 +107,7 @@ Obtain recorded decisions for account provisioning/password recovery; instructor
 
 ## 5. Open source/documentation caveats
 
-- The available documentation is not a substitute for the missing SRS, roadmap or original portfolio instructions. Where the available docs contain requirements, this plan cites them as provisional evidence and calls out gaps rather than filling them in.
+- The SRS and roadmap were unavailable when this assessment was drafted. The owner later supplied v2.0 PDFs; see the source update below. Requirement-by-requirement crosswalk remains to be completed.
 - Phase 1 traceability text includes older faculty restrictions that disallow feedback, while later architecture/database documents and the current demo include separate instructor feedback. The reconciliation/conflict report already records this; the authoritative decision must be reflected consistently before implementation.
 - Phase 5 completion audit reports **NEEDS REVISION**. Phase 4 and Phase 6 validation reports are conditional and describe intended designs/setup, not deployed backend behavior.
 - `FINAL_DATABASE_SCHEMA.sql` explicitly identifies itself as review-only. Do not run it as a migration without controlled review, source reconciliation and authorization.
@@ -141,8 +141,8 @@ Statuses below describe the current workspace implementation, not whether a desi
 | 7 | Row Level Security (RLS) | **Not implemented** | No migrations or policy definitions were found in the project tree; no live database policies were applied or tested. Security designs exist in `docs/phase-3-system-architecture/03_DATABASE_RLS_SECURITY_DESIGN.md` and Phase 4 readiness artifacts, but `docs/phase-6-development-environment/04-validation-and-finalization/SUPABASE_ENVIRONMENT_READINESS_REPORT.md` explicitly says RLS was not tested. |
 | 8 | Private Supabase Storage and artifact uploads | **Partially implemented** | `src/pages/ArtifactsPage.tsx` validates a local file, simulates progress, creates a temporary object URL and stores metadata locally; it does not call Supabase Storage. Phase 3 specifies private buckets and signed URLs in `docs/phase-3-system-architecture/03_PRIVATE_STORAGE_SECURITY.md`; no bucket/policy implementation is present, and Phase 6 readiness says Storage and signed URLs were not tested. |
 | 9 | Home Page content management | **Partially implemented** | `src/pages/HomePage.tsx` edits and saves the portfolio sections to browser localStorage, so the local demo flow exists. It is not scoped to an authenticated student or persisted to Supabase. The page content keys and local save behavior are in that component; production content requirements are also in `docs/phase-1-requirements/SCOPE_AND_ACCEPTANCE_CRITERIA.md` (AC-009–AC-010). |
-| 10 | MED 101, MED 102, and MED 103 academic structures | **Partially implemented** | `src/data/level1Content.ts` contains all three subjects, four main folders per subject, and eight MED 102 domains. MED 102 parent-folder names are explicitly proposed groupings in that file, so final labels/grouping are not approved. The Phase 5 audit also says academic names are under-specified in UI documentation (`docs/phase-5-ui-ux-design/PHASE_5_COMPLETION_AUDIT.md`). |
-| 11 | Official reflection questions and instructions | **Cannot be verified due to missing information** | Prompt text is present in `src/data/level1Content.ts`, including MED 101/103 questions and four shared MED 102 questions. However, the original Level 1 PDF and approved SRS are unavailable, so their official wording and instructions cannot be source-checked. The Phase 5 audit records this exact gap (`docs/phase-5-ui-ux-design/PHASE_5_COMPLETION_AUDIT.md`); the Phase 1 traceability matrix's cited PDF pages are not independently verifiable here. |
+| 10 | MED 101, MED 102, and MED 103 academic structures | **Partially implemented** | Prototype contains four proposed MED 102 parent cards plus eight separate domains. Required MED 102 structure is eight independent sections with source-required evidence, competencies, shared reflection questions, and artifacts. Parent cards and proposed domain 5 wording need correction. |
+| 11 | Official reflection questions and instructions | **Partially implemented** | The earlier source crosswalk was incomplete. The official instructions PDF and SRS v2.0 are now supplied; compare implemented prompts/instructions against those sources. Phase 5 audit records historic source-content gaps. |
 | 12 | Artifact management | **Partially implemented** | `src/pages/ArtifactsPage.tsx` supports local selection, metadata, acknowledgement checks, a prototype 10 MB/type allowlist, preview/download object URLs and delete confirmation. No real upload, private Storage, authorization check, durable binary storage or retention process exists. The prototype report `docs/implementation-reports/ARTIFACT_MANAGEMENT_IMPLEMENTATION_REPORT.md` confirms local metadata/object URL behavior and lists Supabase integration as future work. Exact format/size/retention/deletion policy requires approval (`docs/phase-4-database-design/04-validation-and-finalization/PHASE_4_VALIDATION_REPORT.md`). |
 | 13 | PLO evidence management | **Partially implemented** | `src/pages/PLOPage.tsx` displays eleven outcomes, associates a locally stored artifact record and saves description/significance/reflection locally. It is not backed by Supabase and does not itself provide a production evidence association. Required relationships and no-automatic-attainment constraint are documented in `docs/phase-1-requirements/SCOPE_AND_ACCEPTANCE_CRITERIA.md` (AC-032–AC-035). |
 | 14 | Final Musings | **Partially implemented** | `src/pages/FinalMusingsPage.tsx` shows the five entries from `src/data/level1Content.ts` and saves/edits responses in localStorage. Durable authenticated persistence and production ownership/view permissions are not implemented. |
@@ -156,10 +156,10 @@ Statuses below describe the current workspace implementation, not whether a desi
 ### Assessment summary
 
 - **Complete and verified:** 0 of 20 requirements.
-- **Partially implemented:** 13 of 20 requirements (prototype or local-only workflows exist).
+- **Partially implemented:** 14 of 20 requirements (prototype or local-only workflows exist, or source/content reconciliation is incomplete).
 - **Not implemented:** 5 of 20 requirements.
 - **Requires client approval:** 1 of 20 requirements.
-- **Cannot be verified due to missing information:** 1 of 20 requirements.
+- **Cannot be verified due to missing information:** This count reflects the original assessment snapshot. Updated SRS/roadmap v2.0 have since been supplied; refresh requirement statuses against these sources.
 
 Client approval is called out separately for item 20 because the operational choices determine the implementation. Other items also have unresolved policy/source dependencies noted in their evidence.
 
@@ -167,9 +167,9 @@ Client approval is called out separately for item 20 because the operational cho
 
 ### Search result and source limitation
 
-I searched the current workspace, including hidden/ignored files while excluding dependency/build output, for filenames matching SRS, roadmap, PDF, DOC, or DOCX. No approved SRS, original portfolio PDF, or roadmap source file was found. The historical claim in `docs/phase-1-requirements/SOURCE_REVIEW_NOTES.md` that the files were supplied and reviewed is evidence of a prior review, not proof that those originals remain available now. `docs/project-documentation-reconciliation/DOCUMENTATION_RECONCILIATION_SUMMARY.md` and `DOCUMENTATION_CONFLICT_REPORT.md` likewise state that the SRS and roadmap were unavailable during reconciliation.
+At the assessment date, the workspace lacked the SRS and roadmap. On 13 November 2026 the owner supplied UPDATED SRS.pdf v2.0 and UPDATED PROJECT ROADMAP.pdf v2.0; both covers say Pending Client Approval. Earlier reconciliation reports describe the earlier source state.
 
-The Phase 1 source-review notes retain detailed summaries of the PDF and cite its printed pages. They also state that the PDF's MED 101 questions are preserved in SRS Section 5.2. These are useful secondary records, but without the source files I cannot authenticate their completeness, exact wording, approval status, or the SRS's full requirement set. In particular, the existence of summaries does not justify reconstructing omitted SRS sections.
+Phase 1 source-review notes remain secondary evidence. The supplied SRS v2.0 and official instructions PDF can now be directly crosswalked; earlier statements that they were unavailable are superseded.
 
 ### Technology references
 
@@ -203,3 +203,11 @@ Please provide or restore these original files in the project workspace:
 2. The original `BukSU-COM Portfolio Instructions.pdf` (or identify an approved authoritative replacement).
 
 Once available, compare their exact requirements and academic wording against the retained Phase 1 summaries, current React content, and Phase 3–5 decisions. Until then, no missing requirements or PDF wording are inferred.
+
+## Official PDF review update (13 November 2026)
+
+The attached `BukSU-COM Portfolio Instructions.pdf` was inspected directly for the academic structure. The owner-confirmed bare MED 101 and MED 103 section labels and eight MED 102 domains are reflected in the planning documents. The PDF gives MED 103 full headings with `(CERAE)` and themes; the user-selected bare Bimonthly labels remain the folder names, with source themes kept separately. The PDF does not prescribe four MED 102 parent folders. The reviewed database design can represent four `main_folders` and eight independent `learning_domains` with nullable `parent_folder_id`; the current UI already lists the domains separately but also shows proposed parent cards. A UI revision is required to remove those unapproved parent labels while retaining all eight domains. No application code or schema was changed.
+
+## Source availability update (13 November 2026)
+
+The project owner supplied UPDATED SRS.pdf v2.0, UPDATED PROJECT ROADMAP.pdf v2.0, and BukSU-COM Portfolio Instructions.pdf on 13 November 2026. The SRS and roadmap covers state Pending Client Approval. These are the current review sources replacing earlier SRS/roadmap versions, but are not described as formally approved until approval metadata is recorded. The roadmap names the existing 18 phases; use those names and do not reconstruct or renumber the roadmap. Earlier source inventory statements in this assessment are historical and superseded. The roadmap says Phase 7 is gated on reconciliation and approval; the read-only permission checklist needs correction to reflect the confirmed separate instructor feedback rule.

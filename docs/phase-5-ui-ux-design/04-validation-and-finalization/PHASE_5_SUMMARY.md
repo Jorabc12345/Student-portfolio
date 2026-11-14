@@ -7,7 +7,7 @@ Finalized documentation covers:
 - Sitemap and role-specific information architecture.
 - Student, instructor, and client administrator page inventories.
 - User journeys, navigation, wireframes, visual design, components, responsive behavior, accessibility, and motion.
-- Academic structure with three Level 1 subjects, twelve folders, eight separate MED 102 domains, PLO Attainment, and Final Musings.
+- Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
 - Shared invitation-code registration, student authorization/revocation, instructor reviews, and feedback.
 - Traceability and validation against the approved project direction.
 

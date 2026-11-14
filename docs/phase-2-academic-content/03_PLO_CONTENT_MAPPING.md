@@ -4,7 +4,7 @@ Phase 2 – Stage 3
 
 ## 1. PLO Organization
 
-The portfolio contains one global Program Learning Outcomes section outside the twelve subject folders. It provides documentation areas for all eleven official BukSU-COM PLOs.
+Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
 
 Each PLO entry should support:
 
@@ -80,5 +80,5 @@ PLO evidence must follow the source-wide standards:
 
 ## 7. PLO Navigation Placement
 
-The PLO section is a separate portfolio-wide section. It may link to subject reflections and artifacts, but it is not one of the twelve main subject folders and must not be used to invent a subject-folder mapping.
+Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
 

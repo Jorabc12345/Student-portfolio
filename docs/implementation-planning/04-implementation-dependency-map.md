@@ -1,14 +1,14 @@
 ﻿# Implementation Dependency Map
 
 **Status:** Proposed sequencing derived from the verified assessment and backlog.  
-**Roadmap phase mapping:** Unverified until `MASTER_PROJECT_ROADMAP.md` is restored. â€œPhase 7â€ appears only as a planning reference in the Phase 6 validation report.
+**Roadmap phase mapping:** UPDATED PROJECT ROADMAP.pdf v2.0 names all 18 phases and dependencies; its cover says Pending Client Approval, so mapping follows the supplied baseline pending formal approval.
 
 ## Dependency graph
 
 ```mermaid
 flowchart TD
-  DOC[PLAN-01 Restore approved SRS, PDF, roadmap and crosswalk]
-  A[PLAN-02 Academic content approval]
+  DOC[PLAN-01 Reconcile supplied SRS v2.0, official PDF, roadmap v2.0, and crosswalk]
+  A[PLAN-02 Official academic structure implementation]
   B[PLAN-03 Account and identity workflows]
   C[PLAN-04 Feedback authority/lifecycle]
   D[PLAN-05 Artifact policy and signed URL behavior]
@@ -115,11 +115,20 @@ flowchart TD
 
 `PLAN-01 â†’ (PLAN-03 / PLAN-05 / PLAN-06) â†’ ENV-01 â†’ DB-01 â†’ AUTH-01 â†’ SEC-01 â†’ GRANT-01 â†’ ART-01 and student data slices â†’ INSTR-01 â†’ INSTR-02 â†’ OPS-01 â†’ QA-01`
 
-Academic content approval (PLAN-02) is a parallel prerequisite for final content configuration and reflection acceptance. Feedback authority/lifecycle (PLAN-04) is a prerequisite for feedback schema/policies and INSTR-02. Routing (ROUTE-01) can be developed after auth requirements are clear and before or alongside data-backed screens, but protected routes must use real auth state.
+PLAN-02 implements a source-confirmed structure and is a prerequisite for final content configuration and reflection acceptance; no MED 102 parent-folder approval is required. Feedback authority/lifecycle (PLAN-04) is a prerequisite for feedback schema/policies and INSTR-02. Routing (ROUTE-01) can be developed after auth requirements are clear and before or alongside data-backed screens, but protected routes must use real auth state.
 
 ## External blockers
 
-- Approved SRS, original PDF and roadmap files are not present.
+- Supplied SRS and roadmap v2.0 are current review baselines; both state Pending Client Approval, so formal approval/version metadata remains needed.
 - Client/institution decisions are needed for provisioning, artifact policy, feedback lifecycle, backup/recovery and hosting.
 - Live Supabase verification requires authorized project configuration. No database or Storage mutation is implied by this map.
 
+
+## Requirements Finalization update (13 November 2026)
+
+The graph shows technical ordering, not renewed approval gates. Supplied SRS/roadmap v2.0 provide source content and named phase mapping, pending formal approval. Preserve phases as named. Reconcile stale Phase 1/3/older Phase 4 permissions and the Phase 7 read-only checklist before Phase 7.
+
+
+## Roadmap v2.0 gates
+
+ENV-01 is in Phase 6 and is recorded complete, while remaining Phase 6 work requires verification. Phase 7 Supabase Backend Foundation depends on approved Phases 3, 4, and 6 and must wait for SRS/roadmap/schema/permission reconciliation and approval. The Phase 7 checklist's read-only instructor wording conflicts with the confirmed separate additive feedback rule and requires editorial change control. Phase 8 Auth/Routing follows Phases 5 and 7.

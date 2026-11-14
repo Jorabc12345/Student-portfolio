@@ -19,16 +19,16 @@ Documents produced:
 ## 2. Validated Academic Hierarchy
 
 - Level 1 contains exactly three subjects.
-- Each subject contains exactly four main folder slots.
-- Total main subject folders: twelve.
+- MED 101 and MED 103 each contain four bimonthly sections; MED 102 contains eight independent domains.
+- MED 102 does not have a four-parent-folder layer.
 - MED 101 contains four bimonthly periods.
 - MED 102 contains all eight required learning domains.
 - MED 103 contains four bimonthly periods.
-- Home Page, PLOs, and Final Musings remain global sections outside the twelve folders.
+- Home Page, PLOs, and Final Musings remain separate portfolio-wide sections.
 
 ## 3. Mapping Results
 
-Home Page is in main portfolio navigation. Under Level 1, MED 101, MED 102, and MED 103 are subjects, while Program Learning Outcomes and Final Musings are separate sections. MED 101’s four bimonthly periods are confirmed as the four main folders, each containing CERAE, Reflections, and Artifacts. MED 103 uses stable IDs with temporary display values aligned to its periods. MED 102 uses the supplied stable IDs and proposed display grouping; the grouping is explicitly not client-approved. All eight domains remain separate sections inside their proposed parent folders, and relevant evidence may be cross-referenced across multiple domains. Future-level placement remains configurable.
+Home Page is in main portfolio navigation. Under Level 1, MED 101, MED 102, and MED 103 are subjects, while Program Learning Outcomes and Final Musings are separate sections. MED 101’s four bimonthly periods are confirmed as the four main folders, each containing CERAE, Reflections, and Artifacts. MED 103 uses the four user-confirmed Bimonthly section labels, with PDF themes retained as descriptors. MED 102 has eight separately identifiable official domains. The source does not specify parent folders. Future-level placement remains configurable.
 
 All source reflection questions are preserved in the inventory and reflection mapping documents. The fourth MED 101 period correctly contains three questions, not four.
 
@@ -39,8 +39,8 @@ Supporting evidence is mapped to the relevant learning content. PLO evidence sup
 | Check | Result |
 |---|---|
 | Three Level 1 subjects | Passed |
-| Four folders per subject | Passed |
-| Twelve total folders | Passed |
+| MED 101/MED 103 periods and eight independent MED 102 domains | Passed |
+
 | Four MED 101 periods | Passed |
 | Eight MED 102 domains preserved | Passed |
 | Four MED 103 periods | Passed |
@@ -51,29 +51,28 @@ Supporting evidence is mapped to the relevant learning content. PLO evidence sup
 | Five Final Musings questions included | Passed |
 | Global sections kept separate | Passed |
 | Patient confidentiality and integrity requirements retained | Passed |
-| Unapproved mappings marked provisional | Passed |
+| MED 102 parent-folder assumption removed | Passed |
 
 No contradictory folder assignment, missing domain, missing period, missing PLO, or missing Final Musings question was found in the Phase 2 documents.
 
-## 5. Remaining Client Decisions
+## 5. MED 102 Structure Status
 
-Client confirmation is still required for:
-
-1. Permanent approval or replacement of the temporary MED 101 display names.
-2. Permanent approval or replacement of the temporary MED 102 display names.
-3. Permanent approval or replacement of the temporary MED 103 display names.
-4. Approval or revision of the proposed assignment of all eight MED 102 domains to the four folders.
-5. Whether MED 103 periods are final folders or nested learning periods.
-
-Technical and operational decisions listed in Phase 1, such as faculty assignment scope, upload limits, hosting, backups, and retention, also remain separate open decisions.
+The official PDF confirms eight independent domains with their evidence, competencies, shared reflection guide, and pertinent-artifact requirement. No parent-folder or domain-grouping decision remains open. See the finalization record for exact text.
 
 ## 6. Blueprint Completion and Phase 3 Readiness
 
-The academic content blueprint is complete as a validated requirements and content baseline. Stable folder IDs are available for references, while names remain configurable display data. It is not a claim that the proposed MED 102 grouping is approved.
 
-Client approval is still required before those provisional relationships are treated as final implementation content. Phase 3 System Architecture Design may be prepared only after explicit client approval or documented deferral of the affected decisions. Phase 2 does not create a database, ERD, API, UI, or application code.
+The official MED 101 and MED 103 section labels and the MED 102 structure are verified against the PDF and user direction. The eight MED 102 domains are direct sections; no four-parent-folder relationship requires approval. Phase 2 does not create a database, ERD, API, UI, or application code.
 
 ## 7. Recommendation
 
 Obtain the confirmations listed above, record the decision in the client confirmation document, and then proceed to Phase 3 architecture design while preserving the source wording, counts, privacy rules, and role permissions.
 
+
+## Official academic wording status update (13 November 2026)
+
+The attached official PDF was inspected at pp. 4-8. MED 102 has eight independent domains; the four recurring questions and pertinent-artifact requirement apply to each domain. Parent-folder slots and their navigation are not requirements.
+
+## Current MED 102 structure (13 November 2026)
+
+The official instructions PDF, section 2.2 (pp. 5-6), defines eight independent MED 102 domains, with required evidence, competency descriptions, one shared four-question reflection guide, and pertinent artifacts. MED 102 has no four-parent-folder requirement. Earlier proposed-parent and unresolved-grouping text in this document is superseded. See docs/phase-2-academic-content/03_MED102_STRUCTURE_FINALIZATION.md for exact wording and the database representation review.

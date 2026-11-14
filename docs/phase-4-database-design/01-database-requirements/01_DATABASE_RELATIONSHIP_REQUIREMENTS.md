@@ -16,7 +16,7 @@
 
 ## Academic Hierarchy
 
-Academic level has many subjects; subject has exactly four Level 1 folder records; folders may have periods and domains. MED 102's eight domains remain independently addressable even when each has an optional parent folder.
+Academic level has subjects; MED 101/MED 103 have period sections and MED 102 has eight direct domain sections linked to the subject.
 
 ## Portfolio Content
 

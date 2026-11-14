@@ -27,12 +27,12 @@
 ## Academic
 
 - Exactly three Level 1 subjects.
-- Exactly four main folders per subject and twelve total.
+- Four Bimonthly sections apply to MED 101 and MED 103; MED 102 consists of eight independent domains.
 - Eight separate MED 102 domain records.
 - Official MED 101 and MED 103 periods/questions are preserved.
 - Eleven PLO records and five Final Musings questions are preserved.
 - Home Page, PLO Attainment, and Final Musings remain global sections.
-- MED 102 grouping remains provisional until approved.
+- MED 102 has eight independent domains; no grouping is required or awaiting approval.
 - Official MED 103 titles remain available while shorter labels may be used in navigation.
 - Future levels are configurable.
 

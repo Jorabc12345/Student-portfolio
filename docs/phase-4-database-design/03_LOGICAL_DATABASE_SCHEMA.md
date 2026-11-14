@@ -20,8 +20,8 @@ This is a logical Supabase PostgreSQL design. The accompanying SQL is a draft re
 - `user_profiles.auth_user_id` references `auth.users.id`.
 - Supabase Auth owns credentials and sessions.
 - Academic configuration is data-driven and supports future levels.
-- Level 1 contains three subjects and four folders per subject.
-- MED 102 contains eight separate, directly accessible domains. A configurable parent-folder reference may group them under four folders, but grouping must not merge or hide domain records.
+- MED 101 and MED 103 each have four Bimonthly sections; MED 102 contains eight independent domains.
+- MED 102 contains eight separate, directly accessible domains. No parent-folder reference or grouping is required; each domain is a directly accessible section.
 - One portfolio has one student owner.
 - Artifacts are stored once in private Storage and linked through junction records.
 - RLS will derive access from ownership and active faculty assignments.
@@ -31,3 +31,7 @@ This is a logical Supabase PostgreSQL design. The accompanying SQL is a draft re
 ## Deletion and Storage
 
 Academic configuration deletion should be restricted. Faculty revocation must not delete content. Artifact deletion must coordinate metadata, relationships, and private Storage cleanup. Storage bytes are never stored as PostgreSQL binary data.
+
+## Current MED 102 structure (13 November 2026)
+
+The official instructions PDF, section 2.2 (pp. 5-6), defines eight independent MED 102 domains, with required evidence, competency descriptions, one shared four-question reflection guide, and pertinent artifacts. MED 102 has no four-parent-folder requirement. Earlier proposed-parent and unresolved-grouping text in this document is superseded. See docs/phase-2-academic-content/03_MED102_STRUCTURE_FINALIZATION.md for exact wording and the database representation review.

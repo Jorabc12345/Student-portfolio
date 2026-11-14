@@ -9,9 +9,9 @@ This matrix links source requirements to functional/non-functional requirements,
 | TR-001 | Portfolio is an individual student portfolio | Client decision; Stage 1 | FR-003, FR-015; NFR-008 | Student Profile; Privacy and File Access | AC-005 | Confirmed |
 | TR-002 | Level 1 is the initial academic coverage | Client decision; Stage 1 | FR-005 | Academic Level Management | AC-012 | Confirmed |
 | TR-003 | Level 1 contains exactly MED 101, MED 102, and MED 103 | Client decision; Stage 1 | FR-006 | Subject Management | AC-012 | Confirmed |
-| TR-004 | Each subject has exactly four main folders; total is twelve | Client decision; Stage 1/2 | FR-007; NFR-013 | Subject Folder Management | AC-013, AC-014 | Confirmed count; names open |
+| TR-004 | MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains | Official PDF; Phase 2 | FR-007, FR-008 | Academic Sections and Learning Domains | AC-013, AC-014, AC-018 | Confirmed; no MED 102 parent folders |
 | TR-005 | MED 101 contains four bimonthly periods and prescribed CERAE questions | PDF pp. 4–5; Stage 2 | FR-008, FR-009 | Learning Periods; Reflections | AC-017, AC-021 | Source requirement |
-| TR-006 | MED 102 retains all eight required domains | PDF pp. 5–6; Stage 2 | FR-008 | Learning Domains | AC-018 | Confirmed content; grouping open |
+| TR-006 | MED 102 retains all eight independent required domains | PDF pp. 5-6; Stage 2 | FR-008 | Learning Domains | AC-018 | Confirmed; no parent grouping |
 | TR-007 | MED 102 uses the four prescribed reflection questions for every domain | PDF pp. 5–6; Stage 2 | FR-009 | Reflections | AC-019 | Source requirement |
 | TR-008 | MED 103 contains four bimonthly periods, themes, and prescribed CERAE questions | PDF pp. 6–8; Stage 2 | FR-008, FR-009 | Learning Periods; Reflections | AC-020 | Source requirement |
 | TR-009 | Home Page contains All About Me, My Learning Philosophy, My Why, and The Good Doctor | PDF p. 4 | FR-003, FR-004 | Profile and Home Page | AC-010 | Source requirement |

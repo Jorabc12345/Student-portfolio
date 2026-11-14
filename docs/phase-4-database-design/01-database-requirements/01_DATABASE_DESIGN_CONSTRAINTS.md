@@ -10,8 +10,8 @@
 
 ## Academic
 
-- Exactly three Level 1 subjects and twelve subject folders in the initial release.
-- Eight MED 102 domains must remain separate and directly accessible, regardless of four-folder grouping.
+- Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
+?   ?   ??? Eight independent MED 102 domains
 - Official MED 101 and MED 103 prompts must be stored as protected configuration.
 - Global sections must not be modeled as subject folders.
 - Future levels must be data-driven.
@@ -35,3 +35,7 @@
 ## Free Plan
 
 Design for bounded storage, database size, egress, inactivity pausing, limited functions, quota warnings, and manual backup/export. The design is not a guarantee of indefinite zero-cost operation.
+
+## Current MED 102 structure (13 November 2026)
+
+The official instructions PDF, section 2.2 (pp. 5-6), defines eight independent MED 102 domains, with required evidence, competency descriptions, one shared four-question reflection guide, and pertinent artifacts. MED 102 has no four-parent-folder requirement. Earlier proposed-parent and unresolved-grouping text in this document is superseded. See docs/phase-2-academic-content/03_MED102_STRUCTURE_FINALIZATION.md for exact wording and the database representation review.

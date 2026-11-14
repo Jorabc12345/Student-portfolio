@@ -10,7 +10,7 @@ Phase 3 documentation is **conditionally complete**. The architecture is suffici
 
 The approved target is React/Vite with Tailwind CSS, Framer Motion, and Lucide React, using Supabase Free Plan PostgreSQL, Authentication, private Storage, PostgreSQL RLS, and narrowly scoped Edge Functions. Frontend hosting remains a free-tier provider decision.
 
-The design supports Level 1's three subjects, twelve main folders, eight separate MED 102 domains, reflections, artifacts, eleven PLOs, Final Musings, private student ownership, authorized faculty read-only access, and future academic levels.
+Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
 
 ## 3. Validation Results
 
@@ -58,3 +58,7 @@ Proceed to Phase 4 only after approval. Begin with a conceptual database design 
 - Provisional academic mapping status.
 
 Do not create migrations or implement the application until the Phase 4 design is reviewed.
+
+## Current MED 102 structure (13 November 2026)
+
+The official instructions PDF, section 2.2 (pp. 5-6), defines eight independent MED 102 domains, with required evidence, competency descriptions, one shared four-question reflection guide, and pertinent artifacts. MED 102 has no four-parent-folder requirement. Earlier proposed-parent and unresolved-grouping text in this document is superseded. See docs/phase-2-academic-content/03_MED102_STRUCTURE_FINALIZATION.md for exact wording and the database representation review.

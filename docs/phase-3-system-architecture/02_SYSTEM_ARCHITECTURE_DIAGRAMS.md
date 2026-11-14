@@ -81,7 +81,7 @@ flowchart TD
     MED101[MED 101]
     MED102[MED 102]
     MED103[MED 103]
-    Folders[Four Main Folders per Subject]
+Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
     Domains[MED 102: Eight Separate Domains]
     Content[Learning Content]
     Reflections[Reflections]

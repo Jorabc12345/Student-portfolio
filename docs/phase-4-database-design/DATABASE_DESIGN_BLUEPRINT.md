@@ -19,7 +19,7 @@ The proposed logical model contains 30 tables:
 
 ## Academic Model
 
-Level 1 contains exactly three subjects and twelve subject folders. MED 101 and MED 103 use four bimonthly folders. MED 102 retains eight separately accessible and separately identifiable domains, even when those domains are grouped under four parent folders. The parent-folder grouping remains provisional and must never merge the eight domain records. Home Page, PLO Attainment, and Final Musings are global Level 1 sections, not subject folders. Future levels are represented as rows rather than new tables.
+Level 1 contains three subjects. MED 101 and MED 103 each have four Bimonthly sections. MED 102 has eight separate, individually accessible domains and no parent-folder layer. Home Page, PLO Attainment, and Final Musings are global Level 1 sections, not subject folders. Future levels are represented as rows rather than new tables.
 
 ## Relationships
 
@@ -36,3 +36,7 @@ Artifacts use private Storage and metadata containing bucket, object path, filen
 ## Finalization Boundary
 
 The relational structure is sufficiently stable for Phase 5 planning, but implementation must not hard-code the provisional MED 102 grouping, final MED 103 labels, content workflow, completion calculation, artifact retention, or audit retention until the responsible approvers decide them.
+
+## Current MED 102 structure (13 November 2026)
+
+The official instructions PDF, section 2.2 (pp. 5-6), defines eight independent MED 102 domains, with required evidence, competency descriptions, one shared four-question reflection guide, and pertinent artifacts. MED 102 has no four-parent-folder requirement. Earlier proposed-parent and unresolved-grouping text in this document is superseded. See docs/phase-2-academic-content/03_MED102_STRUCTURE_FINALIZATION.md for exact wording and the database representation review.

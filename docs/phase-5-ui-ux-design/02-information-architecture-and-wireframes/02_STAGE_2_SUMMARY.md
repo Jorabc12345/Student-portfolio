@@ -9,7 +9,7 @@ Completed the information architecture and low-fidelity wireframe planning for:
 - Complete role-specific sitemap and navigation structures.
 - Desktop, tablet, and mobile layout wireframes.
 
-The design preserves three Level 1 subjects, four folders per subject, twelve total folders, and eight separately accessible MED 102 domains. Provisional MED 102 grouping is labeled as provisional.
+The design preserves three Level 1 subjects, four Bimonthly sections each for MED 101 and MED 103, and eight separately accessible MED 102 domains. MED 102 has no parent-folder layer.
 
 ## Unresolved Decisions
 

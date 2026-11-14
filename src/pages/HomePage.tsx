@@ -1,4 +1,5 @@
 import { ChangeEvent, useEffect, useState } from "react";
+import { getPortfolioItem, setPortfolioItem } from "../services/portfolioStorage";
 
 type HomePageContent = {
   introduction: string;
@@ -21,7 +22,7 @@ const emptyContent: HomePageContent = {
 };
 
 function loadHomePage(): HomePageContent {
-  const savedContent = localStorage.getItem(STORAGE_KEY);
+  const savedContent = getPortfolioItem(STORAGE_KEY);
 
   if (!savedContent) {
     return emptyContent;
@@ -35,11 +36,7 @@ function loadHomePage(): HomePageContent {
   }
 }
 
-export default function HomePage({
-  onNavigate,
-}: {
-  onNavigate: (page: "level" | "access") => void;
-}) {
+export default function HomePage({ readOnly = false }: { readOnly?: boolean }) {
   const [content, setContent] = useState(loadHomePage);
   const [draft, setDraft] = useState(content);
   const [isEditing, setIsEditing] = useState(false);
@@ -88,7 +85,7 @@ export default function HomePage({
     const savedContent = { ...draft, updatedAt: new Date().toISOString() };
 
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(savedContent));
+      setPortfolioItem(STORAGE_KEY, JSON.stringify(savedContent));
       setContent(savedContent);
       setDraft(savedContent);
       setIsEditing(false);
@@ -140,9 +137,7 @@ export default function HomePage({
               <span aria-hidden="true">✦</span>
               <strong>Add your portrait</strong>
               <small>Your three-quarter portrait will appear here.</small>
-              <button className="text-button" onClick={beginEditing}>
-                Upload portrait →
-              </button>
+              {!readOnly && <button className="text-button" onClick={beginEditing}>Upload portrait →</button>}
             </div>
           )}
         </div>
@@ -155,6 +150,7 @@ export default function HomePage({
             <EmptySection
               message="Write a brief personal introduction to begin your Home Page."
               onEdit={beginEditing}
+              readOnly={readOnly}
             />
           )}
         </div>
@@ -172,7 +168,7 @@ export default function HomePage({
               : "This Home Page has not been completed yet."}
           </p>
         </div>
-        {!isEditing ? (
+        {readOnly ? null : !isEditing ? (
           <button className="primary-button compact-button" onClick={beginEditing}>
             Edit Home Page
           </button>
@@ -197,7 +193,7 @@ export default function HomePage({
       {isEditing ? (
         <HomePageEditor draft={draft} updateDraft={updateDraft} onPortrait={handlePortrait} />
       ) : (
-        <HomePagePreview content={content} onEdit={beginEditing} onNavigate={onNavigate} />
+        <HomePagePreview content={content} onEdit={beginEditing} readOnly={readOnly} />
       )}
     </>
   );
@@ -279,11 +275,11 @@ function HomePageEditor({
 function HomePagePreview({
   content,
   onEdit,
-  onNavigate,
+  readOnly,
 }: {
   content: HomePageContent;
   onEdit: () => void;
-  onNavigate: (page: "level" | "access") => void;
+  readOnly: boolean;
 }) {
   return (
     <>
@@ -292,22 +288,19 @@ function HomePagePreview({
           title="My Learning Philosophy"
           value={content.learningPhilosophy}
           onEdit={onEdit}
+          readOnly={readOnly}
         />
-        <ReflectionPreview title="My Why" value={content.myWhy} onEdit={onEdit} />
-        <ReflectionPreview title="The Good Doctor" value={content.theGoodDoctor} onEdit={onEdit} />
+        <ReflectionPreview title="My Why" value={content.myWhy} onEdit={onEdit} readOnly={readOnly} />
+        <ReflectionPreview title="The Good Doctor" value={content.theGoodDoctor} onEdit={onEdit} readOnly={readOnly} />
       </div>
       <section className="privacy-note">
         <span className="note-icon">✦</span>
         <div>
-          <strong>Your Home Page is private</strong>
+          <strong>Your portfolio is private</strong>
           <p>
-            Only you can manage this content. Authorized instructors can read it and provide
-            separate guidance.
+            Signed-in visitors can view this portfolio. Only its owner can edit entries or upload artifacts.
           </p>
         </div>
-        <button className="text-button" onClick={() => onNavigate("access")}>
-          Manage access →
-        </button>
       </section>
     </>
   );
@@ -329,10 +322,12 @@ function ReflectionPreview({
   title,
   value,
   onEdit,
+  readOnly,
 }: {
   title: string;
   value: string;
   onEdit: () => void;
+  readOnly: boolean;
 }) {
   return (
     <article className="reflection-preview">
@@ -344,19 +339,20 @@ function ReflectionPreview({
         <EmptySection
           message={`Add your ${title.toLowerCase()} to complete this section.`}
           onEdit={onEdit}
+          readOnly={readOnly}
         />
       )}
     </article>
   );
 }
 
-function EmptySection({ message, onEdit }: { message: string; onEdit: () => void }) {
+function EmptySection({ message, onEdit, readOnly = false }: { message: string; onEdit: () => void; readOnly?: boolean }) {
   return (
     <div className="empty-section">
       <p>{message}</p>
-      <button className="text-button" onClick={onEdit}>
+      {!readOnly && <button className="text-button" onClick={onEdit}>
         Start writing →
-      </button>
+      </button>}
     </div>
   );
 }

@@ -39,7 +39,7 @@ Phase 4 Stage 3 review draft for Supabase PostgreSQL. No statement in this docum
 
 ## Academic Rules
 
-Level 1 is seeded with exactly three subjects and twelve folders only after final academic names/groupings are confirmed. MED 102 has eight separate `learning_domains` records and remains accessible by domain even when grouped under four folders. Future levels add data rows.
+Level 1 is seeded with MED 101, MED 102, and MED 103 after source content is verified. MED 102 contains eight independent learning_domains records linked to the subject, with no parent-folder layer. Future levels add data rows.
 
 Artifact formats, maximum size, retention duration, and permanent-deletion enablement are represented by `artifact_policy_settings`. Exact policy values remain pending institutional approval.
 
@@ -68,3 +68,7 @@ Potential `SECURITY DEFINER` helpers should be narrowly scoped, search-path safe
 ## Backup and Restore Requirement
 
 Backups must include PostgreSQL data, Storage objects, Auth/configuration exports where supported, RLS/Storage policy definitions, and seed/configuration data. The owner, secure destination, schedule, restoration authority, and restore-test cadence remain pending institutional approval.
+
+## Current MED 102 structure (13 November 2026)
+
+The official instructions PDF, section 2.2 (pp. 5-6), defines eight independent MED 102 domains, with required evidence, competency descriptions, one shared four-question reflection guide, and pertinent artifacts. MED 102 has no four-parent-folder requirement. Earlier proposed-parent and unresolved-grouping text in this document is superseded. See docs/phase-2-academic-content/03_MED102_STRUCTURE_FINALIZATION.md for exact wording and the database representation review.

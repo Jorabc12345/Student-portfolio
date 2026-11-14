@@ -27,7 +27,7 @@ Passwords, tokens, and authentication secrets remain owned by Supabase Auth.
 - `global_section`
 - `program_learning_outcome`
 
-Academic IDs and display labels are separate. Level 1 is seeded with three subjects and four folders per subject, while future levels use the same configurable relationships.
+Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
 
 ## 3. Portfolio Content
 

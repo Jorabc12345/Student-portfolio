@@ -11,7 +11,7 @@ The original college instructions remain authoritative for academic content, ref
 - Individual student portfolio.
 - Initial coverage: Level 1.
 - Exactly three Level 1 subjects.
-- Exactly four main folders per subject and twelve total.
+- Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
 - Mandatory authentication.
 - Private portfolio access.
 - Student full management of their own content.
@@ -38,7 +38,7 @@ flowchart TD
     C --> C1[4 main folders]
 ```
 
-### Subjects and twelve main folders
+Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
 
 | Subject | Main folders | Academic content |
 |---|---:|---|
@@ -47,7 +47,7 @@ flowchart TD
 | MED 103 – Medical Humanities I | 4 | Four themed bimonthly periods with CERAE questions and source-specified evidence |
 | **Total** | **12** | **Level 1 subject folders** |
 
-Stable folder IDs and temporary display values are now recorded for all twelve folders. MED 101 and MED 103 use period-aligned display values. MED 102 uses a proposed display grouping that is not yet client-approved; all eight domains remain separate sections inside their parent folders.
+Current structure: MED 101 and MED 103 each have four Bimonthly sections; MED 102 has eight independent domains and no parent-folder layer.
 
 ## 4. Roles
 
@@ -125,7 +125,7 @@ The requirements support adding later academic levels, subjects, folders, learni
 ## 10. Outstanding Client Decisions
 
 1. Permanent approval or replacement of the temporary display names for all four folders under each subject.
-2. Approval or revision of MED 102’s proposed mapping of eight domains into four folders.
+2. MED 102 has eight independent official domains; no parent-folder mapping is required.
 3. Faculty authorization list and assignment process.
 4. Whether faculty view the entire assigned portfolio or selected sections.
 5. Account creation and password recovery.
@@ -151,5 +151,5 @@ Requirements documentation completion does not mean all implementation decisions
 
 ## 12. Recommendation for Phase 2
 
-Proceed to Phase 2 only after developer/client review of this requirements baseline and resolution or explicit deferral of the folder names, MED 102 mapping, faculty authorization scope, artifact restrictions, operational storage/backup decisions, and dashboard behavior. Phase 2 should begin with approved technical design work; it should not silently decide unresolved academic requirements.
+Proceed to Phase 2 after review of the current requirements baseline. MED 102 has eight confirmed independent domains; the remaining listed policy decisions are separate client/institution approvals.
 
