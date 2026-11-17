@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { level1Subjects, programLearningOutcomes } from "../data/level1Content";
+import { useConfirmationDialog } from "../components/useConfirmationDialog";
 import {
   getPortfolioItem,
   setPortfolioItem,
@@ -74,6 +75,7 @@ export default function PLOPage({ readOnly = false, onBack }: { readOnly?: boole
   const [error, setError] = useState("");
   const [validationAttempted, setValidationAttempted] = useState(false);
   const [artifacts, setArtifacts] = useState(loadArtifacts);
+  const { requestConfirmation, confirmationDialog } = useConfirmationDialog();
   const selectedPlo = programLearningOutcomes[selectedPloIndex];
   const selectedEvidence = savedEvidence[String(selectedPloIndex)];
   const selectedArtifact = artifacts.find((artifact) => artifact.id === selectedEvidence?.artifactId);
@@ -136,9 +138,20 @@ export default function PLOPage({ readOnly = false, onBack }: { readOnly?: boole
     );
   }
 
-  const selectPlo = (index: number) => {
-    if (isDirty && !window.confirm("Discard your unsaved PLO evidence changes?")) {
-      return;
+  const selectPlo = async (index: number) => {
+    if (isDirty) {
+      const confirmed = await requestConfirmation({
+        eyebrow: "Unsaved PLO evidence",
+        title: "Discard your changes?",
+        description:
+          "Your current evidence record hasn’t been saved. Switching outcomes will discard those edits.",
+        confirmLabel: "Discard changes",
+        cancelLabel: "Keep editing",
+        destructive: true,
+      });
+      if (!confirmed) {
+        return;
+      }
     }
     setSelectedPloIndex(index);
     setValidationAttempted(false);
@@ -218,7 +231,7 @@ export default function PLOPage({ readOnly = false, onBack }: { readOnly?: boole
               <button
                 className={`plo-item ${selectedPloIndex === index ? "selected" : ""}`}
                 key={plo}
-                onClick={() => selectPlo(index)}
+                onClick={() => void selectPlo(index)}
               >
                 <span>PLO {index + 1}</span>
                 <strong>{plo}</strong>
@@ -356,6 +369,7 @@ export default function PLOPage({ readOnly = false, onBack }: { readOnly?: boole
           </div>
         </section>
       </div>
+      {confirmationDialog}
     </>
   );
 }

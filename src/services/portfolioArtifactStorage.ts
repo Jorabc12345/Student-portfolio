@@ -2,7 +2,7 @@ import { supabase } from "./supabase";
 
 const bucketName = "portfolio-artifacts";
 
-export async function uploadPortfolioArtifact(file: File, artifactId: string) {
+export async function uploadPortfolioArtifact(file: File, artifactId: string, fileIndex = 0) {
   const {
     data: { user },
     error: userError,
@@ -16,7 +16,8 @@ export async function uploadPortfolioArtifact(file: File, artifactId: string) {
     throw new Error("Sign in as the portfolio owner before uploading an artifact.");
   }
 
-  const path = `${user.id}/${artifactId}/file`;
+  const safeFileName = file.name.replace(/[^\w.-]/g, "_") || "artifact";
+  const path = `${user.id}/${artifactId}/${fileIndex}-${safeFileName}`;
   const { error } = await supabase.storage.from(bucketName).upload(path, file, {
     cacheControl: "3600",
     contentType: file.type,
@@ -30,8 +31,9 @@ export async function uploadPortfolioArtifact(file: File, artifactId: string) {
   return { path, publicUrl: data.publicUrl };
 }
 
-export async function deletePortfolioArtifact(path: string) {
-  const { error } = await supabase.storage.from(bucketName).remove([path]);
+export async function deletePortfolioArtifact(paths: string | string[]) {
+  const pathsToDelete = Array.isArray(paths) ? paths : [paths];
+  const { error } = await supabase.storage.from(bucketName).remove(pathsToDelete);
 
   if (error) {
     throw error;

@@ -1,5 +1,6 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
+import { useConfirmationDialog } from "../components/useConfirmationDialog";
 import {
   getPortfolioItem,
   setPortfolioItem,
@@ -72,6 +73,7 @@ export default function HomePage({ readOnly = false }: { readOnly?: boolean }) {
   const [portraitRemoved, setPortraitRemoved] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const { requestConfirmation, confirmationDialog } = useConfirmationDialog();
   const [portraitError, setPortraitError] = useState("");
   const isEditing = editingTarget !== null;
   const isDirty = JSON.stringify(content) !== JSON.stringify(draft);
@@ -173,9 +175,19 @@ export default function HomePage({ readOnly = false }: { readOnly?: boolean }) {
     };
   }, [content, readOnly]);
 
-  const beginEditing = (target: HomePageEditTarget) => {
-    if (isDirty && !window.confirm("Discard your unsaved Home Page changes?")) {
-      return;
+  const beginEditing = async (target: HomePageEditTarget) => {
+    if (isDirty) {
+      const confirmed = await requestConfirmation({
+        eyebrow: "Unsaved Home Page",
+        title: "Discard your changes?",
+        description: "Your Home Page edits haven’t been saved. Switching sections will discard them.",
+        confirmLabel: "Discard changes",
+        cancelLabel: "Keep editing",
+        destructive: true,
+      });
+      if (!confirmed) {
+        return;
+      }
     }
 
     setDraft(content);
@@ -187,9 +199,19 @@ export default function HomePage({ readOnly = false }: { readOnly?: boolean }) {
     setEditingTarget(target);
   };
 
-  const cancelEditing = () => {
-    if (isDirty && !window.confirm("Discard your unsaved Home Page changes?")) {
-      return;
+  const cancelEditing = async () => {
+    if (isDirty) {
+      const confirmed = await requestConfirmation({
+        eyebrow: "Unsaved Home Page",
+        title: "Discard your changes?",
+        description: "Your Home Page edits haven’t been saved. Leaving now will discard them.",
+        confirmLabel: "Discard changes",
+        cancelLabel: "Keep editing",
+        destructive: true,
+      });
+      if (!confirmed) {
+        return;
+      }
     }
 
     setDraft(content);
@@ -318,33 +340,36 @@ export default function HomePage({ readOnly = false }: { readOnly?: boolean }) {
 
   if (editingTarget === "profile") {
     return (
-      <section className="home-profile-editor-page">
-        <button className="back-button" onClick={cancelEditing}>
-          <ArrowLeft size={16} aria-hidden="true" />
-          Back to Home
-        </button>
-        <div className="page-intro">
-          <p className="eyebrow">Homepage profile</p>
-          <h1>Edit introduction & portrait</h1>
-          <p>Update your personal introduction and profile portrait.</p>
-        </div>
-        {(message || error) && (
-          <div className={`home-alert ${error ? "error-alert" : "success-alert"}`} role="status">
-            {error || message}
+      <>
+        <section className="home-profile-editor-page">
+          <button className="back-button" onClick={cancelEditing}>
+            <ArrowLeft size={16} aria-hidden="true" />
+            Back to Home
+          </button>
+          <div className="page-intro">
+            <p className="eyebrow">Homepage profile</p>
+            <h1>Edit introduction & portrait</h1>
+            <p>Update your personal introduction and profile portrait.</p>
           </div>
-        )}
-        <ProfileIntroductionEditor
-          draft={draft}
-          portraitUrl={draftPortraitUrl}
-          portraitError={portraitError}
-          saving={saving}
-          syncingLegacyPortrait={syncingLegacyPortrait}
-          updateDraft={updateDraft}
-          onPortrait={handlePortrait}
-          onCancel={cancelEditing}
-          onSave={() => void saveChanges()}
-        />
-      </section>
+          {(message || error) && (
+            <div className={`home-alert ${error ? "error-alert" : "success-alert"}`} role="status">
+              {error || message}
+            </div>
+          )}
+          <ProfileIntroductionEditor
+            draft={draft}
+            portraitUrl={draftPortraitUrl}
+            portraitError={portraitError}
+            saving={saving}
+            syncingLegacyPortrait={syncingLegacyPortrait}
+            updateDraft={updateDraft}
+            onPortrait={handlePortrait}
+            onCancel={cancelEditing}
+            onSave={() => void saveChanges()}
+          />
+        </section>
+        {confirmationDialog}
+      </>
     );
   }
 
@@ -422,6 +447,7 @@ export default function HomePage({ readOnly = false }: { readOnly?: boolean }) {
         onSave={() => void saveChanges()}
         readOnly={readOnly}
       />
+      {confirmationDialog}
     </>
   );
 }

@@ -1,5 +1,6 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { AlertCircle, ArrowLeft, Save } from "lucide-react";
+import { ChangeEvent, useEffect, useState } from "react";
+import { ArrowLeft, Save } from "lucide-react";
+import { useConfirmationDialog } from "../components/useConfirmationDialog";
 import { AcademicQuestion } from "../data/level1Content";
 import {
   getPortfolioItem,
@@ -37,11 +38,11 @@ const emptyDraft: ReflectionDraft = {
   updatedAt: null,
 };
 
-function storageKey(context: string, questionIndex: number) {
+function storageKey(context: string, questionIndex: number | string) {
   return `buksu-reflection-${context}-${questionIndex}`;
 }
 
-function loadDraft(context: string, questionIndex: number): ReflectionDraft {
+function loadDraft(context: string, questionIndex: number | string): ReflectionDraft {
   const savedDraft = getPortfolioItem(storageKey(context, questionIndex));
 
   if (!savedDraft) {
@@ -72,7 +73,7 @@ export default function ReflectionEditor({
 }: {
   context: string;
   question: AcademicQuestion;
-  questionIndex: number;
+  questionIndex: number | string;
   onClose: () => void;
 }) {
   const [savedDraft, setSavedDraft] = useState(() => loadDraft(context, questionIndex));
@@ -81,15 +82,18 @@ export default function ReflectionEditor({
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [validationAttempted, setValidationAttempted] = useState(false);
-  const [showDiscardDialog, setShowDiscardDialog] = useState(false);
-  const dialogRef = useRef<HTMLElement>(null);
-  const keepEditingButtonRef = useRef<HTMLButtonElement>(null);
-  const closeTriggerRef = useRef<HTMLElement | null>(null);
+  const { requestConfirmation, confirmationDialog } = useConfirmationDialog();
   const isDirty = JSON.stringify(savedDraft) !== JSON.stringify(draft);
   const integrityError =
     validationAttempted && !draft.academicIntegrityAcknowledged
       ? "Confirm this acknowledgement before saving."
       : "";
+  const questionNumber =
+    typeof questionIndex === "number"
+      ? questionIndex + 1
+      : /^\d+$/.test(questionIndex)
+        ? Number(questionIndex) + 1
+        : null;
 
   useEffect(() => {
     if (!isDirty) {
@@ -117,44 +121,6 @@ export default function ReflectionEditor({
       }),
     [context, questionIndex, savedDraft],
   );
-
-  useEffect(() => {
-    if (!showDiscardDialog) {
-      return;
-    }
-
-    keepEditingButtonRef.current?.focus();
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        dismissDiscardDialog();
-        return;
-      }
-
-      if (event.key !== "Tab") {
-        return;
-      }
-
-      const buttons =
-        dialogRef.current?.querySelectorAll<HTMLButtonElement>("button:not(:disabled)");
-      if (!buttons?.length) {
-        return;
-      }
-
-      const firstButton = buttons[0];
-      const lastButton = buttons[buttons.length - 1];
-      if (event.shiftKey && document.activeElement === firstButton) {
-        event.preventDefault();
-        lastButton.focus();
-      } else if (!event.shiftKey && document.activeElement === lastButton) {
-        event.preventDefault();
-        firstButton.focus();
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [showDiscardDialog]);
 
   const updateDraft = <K extends keyof ReflectionDraft>(field: K, value: ReflectionDraft[K]) => {
     setDraft((current) => ({ ...current, [field]: value }));
@@ -187,23 +153,20 @@ export default function ReflectionEditor({
     }
   };
 
-  const closeEditor = () => {
+  const closeEditor = async () => {
     if (isDirty) {
-      closeTriggerRef.current =
-        document.activeElement instanceof HTMLElement ? document.activeElement : null;
-      setShowDiscardDialog(true);
-      return;
+      const confirmed = await requestConfirmation({
+        eyebrow: "Unsaved reflection",
+        title: "Leave this reflection?",
+        description: "Your changes haven’t been saved. If you leave now, they’ll be lost.",
+        confirmLabel: "Discard changes",
+        cancelLabel: "Keep editing",
+        destructive: true,
+      });
+      if (!confirmed) {
+        return;
+      }
     }
-    onClose();
-  };
-
-  const dismissDiscardDialog = () => {
-    setShowDiscardDialog(false);
-    window.requestAnimationFrame(() => closeTriggerRef.current?.focus());
-  };
-
-  const discardChanges = () => {
-    setShowDiscardDialog(false);
     onClose();
   };
 
@@ -227,7 +190,9 @@ export default function ReflectionEditor({
       </div>
 
       <div className="official-question">
-        <span>Official question {questionIndex + 1}</span>
+        <span>
+          {questionNumber ? `Official question ${questionNumber}` : "Reflection question"}
+        </span>
         <h3>{question.prompt}</h3>
         {question.evidence && <p>{question.evidence}</p>}
       </div>
@@ -333,44 +298,7 @@ export default function ReflectionEditor({
           {saving ? "Saving…" : "Save reflection"}
         </button>
       </div>
-      {showDiscardDialog && (
-        <div className="confirmation-backdrop">
-          <section
-            ref={dialogRef}
-            className="confirmation-dialog"
-            role="alertdialog"
-            aria-modal="true"
-            aria-labelledby="discard-reflection-title"
-            aria-describedby="discard-reflection-description"
-          >
-            <div className="confirmation-dialog-heading">
-              <span className="confirmation-dialog-icon" aria-hidden="true">
-                <AlertCircle size={22} />
-              </span>
-              <div>
-                <p className="eyebrow">Unsaved changes</p>
-                <h2 id="discard-reflection-title">Leave this reflection?</h2>
-              </div>
-            </div>
-            <p className="confirmation-dialog-description" id="discard-reflection-description">
-              Your changes haven’t been saved. If you leave now, they’ll be lost.
-            </p>
-            <div className="confirmation-dialog-actions">
-              <button type="button" className="danger-button" onClick={discardChanges}>
-                Discard changes
-              </button>
-              <button
-                ref={keepEditingButtonRef}
-                type="button"
-                className="primary-button compact-button"
-                onClick={dismissDiscardDialog}
-              >
-                Keep editing
-              </button>
-            </div>
-          </section>
-        </div>
-      )}
+      {confirmationDialog}
     </section>
   );
 }

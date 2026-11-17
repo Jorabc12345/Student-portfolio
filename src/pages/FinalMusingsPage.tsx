@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ArrowLeft, Check } from "lucide-react";
+import { useConfirmationDialog } from "../components/useConfirmationDialog";
 import { finalMusingsQuestions } from "../data/level1Content";
 import {
   getPortfolioItem,
@@ -38,6 +39,7 @@ export default function FinalMusingsPage({
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const { requestConfirmation, confirmationDialog } = useConfirmationDialog();
   const isEditing = editingIndex !== null;
   const isDirty = JSON.stringify(savedResponses) !== JSON.stringify(draftResponses);
   const completedCount = savedResponses.filter((response) => response.trim()).length;
@@ -71,9 +73,20 @@ export default function FinalMusingsPage({
     [savedResponses],
   );
 
-  const startEditing = (index: number) => {
-    if (isDirty && !window.confirm("Discard your unsaved Final Musings changes?")) {
-      return;
+  const startEditing = async (index: number) => {
+    if (isDirty) {
+      const confirmed = await requestConfirmation({
+        eyebrow: "Unsaved Final Musings",
+        title: "Discard your changes?",
+        description:
+          "Your current response hasn’t been saved. Switching questions will discard those edits.",
+        confirmLabel: "Discard changes",
+        cancelLabel: "Keep editing",
+        destructive: true,
+      });
+      if (!confirmed) {
+        return;
+      }
     }
 
     setDraftResponses(savedResponses);
@@ -82,9 +95,19 @@ export default function FinalMusingsPage({
     setError("");
   };
 
-  const cancelEditing = () => {
-    if (isDirty && !window.confirm("Discard your unsaved Final Musings changes?")) {
-      return;
+  const cancelEditing = async () => {
+    if (isDirty) {
+      const confirmed = await requestConfirmation({
+        eyebrow: "Unsaved Final Musings",
+        title: "Discard your changes?",
+        description: "Your response hasn’t been saved. Leaving now will discard those edits.",
+        confirmLabel: "Discard changes",
+        cancelLabel: "Keep editing",
+        destructive: true,
+      });
+      if (!confirmed) {
+        return;
+      }
     }
 
     setDraftResponses(savedResponses);
@@ -216,6 +239,7 @@ export default function FinalMusingsPage({
           </p>
         </div>
       </div>
+      {confirmationDialog}
     </>
   );
 }

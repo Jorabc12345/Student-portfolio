@@ -1,6 +1,7 @@
 export type AcademicQuestion = {
   prompt: string;
   evidence?: string;
+  reflectionId?: string;
 };
 
 export type AcademicFolder = {
@@ -15,6 +16,9 @@ export type LearningDomain = {
   id: string;
   name: string;
   evidence: string;
+  description?: string;
+  questions?: AcademicQuestion[];
+  isCustom?: boolean;
 };
 
 export type Level1Subject = {
@@ -165,32 +169,9 @@ export const level1Subjects: Level1Subject[] = [
     folders: [
       {
         id: "MED102-F01",
-        name: "Patient & Family-Centered Care",
+        name: "Domain Required Evidence Competency demonstrated with evidence",
         description:
-          "Explore patient-centered and family-focused care through dedicated learning domains.",
-        questions: [],
-        evidence: [],
-      },
-      {
-        id: "MED102-F02",
-        name: "Health & Social Determinants",
-        description:
-          "Explore social determinants and the local and global frameworks that shape health.",
-        questions: [],
-        evidence: [],
-      },
-      {
-        id: "MED102-F03",
-        name: "Healthcare Systems & Primary Care",
-        description: "Explore primary health care, Universal Health Care, and systems thinking.",
-        questions: [],
-        evidence: [],
-      },
-      {
-        id: "MED102-F04",
-        name: "Community & Professional Development",
-        description:
-          "Explore community engagement, social accountability, and professional identity.",
+          "Review required evidence and the competencies demonstrated across MED 102 domains.",
         questions: [],
         evidence: [],
       },

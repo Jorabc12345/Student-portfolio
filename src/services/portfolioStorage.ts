@@ -26,10 +26,7 @@ export function getPortfolioItem(key: string) {
   return localStorage.getItem(key);
 }
 
-export function subscribeToPortfolioItem(
-  key: string,
-  onUpdate: (value: string) => void,
-) {
+export function subscribeToPortfolioItem(key: string, onUpdate: (value: string) => void) {
   const listener = (event: Event) => {
     const update = (event as CustomEvent<PortfolioItemUpdate>).detail;
     if (update?.key === key) {
@@ -48,6 +45,25 @@ export function subscribeToPortfolioUpdates() {
       "postgres_changes",
       { event: "*", schema: "public", table: "portfolio_items" },
       (payload) => {
+        if (payload.eventType === "DELETE") {
+          const row = payload.old as Partial<PortfolioItemRow>;
+          if (typeof row.key !== "string") {
+            return;
+          }
+
+          try {
+            localStorage.removeItem(row.key);
+          } catch (cacheError) {
+            console.error(
+              "Unable to remove a deleted portfolio item from the local cache.",
+              cacheError,
+            );
+          }
+
+          dispatchPortfolioItemUpdate(row.key, "");
+          return;
+        }
+
         const row = payload.new as Partial<PortfolioItemRow>;
         if (typeof row.key !== "string" || typeof row.value !== "string") {
           return;
@@ -80,16 +96,12 @@ export async function initializePortfolioStorage(isOwner: boolean) {
     throw error;
   }
 
-  const remoteItems = new Map(
-    (data as PortfolioItemRow[]).map(({ key, value }) => [key, value]),
-  );
+  const remoteItems = new Map((data as PortfolioItemRow[]).map(({ key, value }) => [key, value]));
   const localItems = Object.keys(localStorage)
     .filter((key) => key.startsWith(PORTFOLIO_KEY_PREFIX))
     .map((key) => [key, localStorage.getItem(key)] as const)
     .filter((item): item is readonly [string, string] => item[1] !== null);
-  const itemsToSeed = isOwner
-    ? localItems.filter(([key]) => !remoteItems.has(key))
-    : [];
+  const itemsToSeed = isOwner ? localItems.filter(([key]) => !remoteItems.has(key)) : [];
 
   if (itemsToSeed.length > 0) {
     const { error: seedError } = await supabase.from("portfolio_items").upsert(
@@ -124,10 +136,9 @@ export async function setPortfolioItem(key: string, value: string) {
     throw new Error("Portfolio content keys must start with buksu-.");
   }
 
-  const { error } = await supabase.from("portfolio_items").upsert(
-    { key, value, updated_at: new Date().toISOString() },
-    { onConflict: "key" },
-  );
+  const { error } = await supabase
+    .from("portfolio_items")
+    .upsert({ key, value, updated_at: new Date().toISOString() }, { onConflict: "key" });
 
   if (error) {
     throw error;
@@ -137,6 +148,46 @@ export async function setPortfolioItem(key: string, value: string) {
     localStorage.setItem(key, value);
     dispatchPortfolioItemUpdate(key, value);
   } catch (cacheError) {
-    console.warn("The shared portfolio was saved, but its local cache could not be updated.", cacheError);
+    console.warn(
+      "The shared portfolio was saved, but its local cache could not be updated.",
+      cacheError,
+    );
   }
+}
+
+export async function deletePortfolioItems(keys: string[]) {
+  const uniqueKeys = [...new Set(keys)];
+  if (uniqueKeys.some((key) => !key.startsWith(PORTFOLIO_KEY_PREFIX))) {
+    throw new Error("Portfolio content keys must start with buksu-.");
+  }
+  if (uniqueKeys.length === 0) {
+    return [];
+  }
+
+  const { data, error } = await supabase
+    .from("portfolio_items")
+    .delete()
+    .in("key", uniqueKeys)
+    .select("key");
+
+  if (error) {
+    throw error;
+  }
+
+  const deletedKeys = (data ?? [])
+    .map((row) => row.key)
+    .filter((key): key is string => typeof key === "string");
+  for (const key of deletedKeys) {
+    try {
+      localStorage.removeItem(key);
+    } catch (cacheError) {
+      console.error(
+        "The portfolio item was deleted but its local cache could not be cleared.",
+        cacheError,
+      );
+    }
+    dispatchPortfolioItemUpdate(key, "");
+  }
+
+  return deletedKeys;
 }

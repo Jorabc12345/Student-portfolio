@@ -1,5 +1,7 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
+import { ArrowLeft, Download, FileText, X } from "lucide-react";
 import { level1Subjects } from "../data/level1Content";
+import { useConfirmationDialog } from "../components/useConfirmationDialog";
 import {
   getPortfolioItem,
   setPortfolioItem,
@@ -9,6 +11,14 @@ import {
   deletePortfolioArtifact,
   uploadPortfolioArtifact,
 } from "../services/portfolioArtifactStorage";
+
+type ArtifactFileRecord = {
+  fileName: string;
+  fileType: string;
+  fileSize: number;
+  storagePath?: string;
+  objectUrl?: string;
+};
 
 type ArtifactRecord = {
   id: string;
@@ -23,10 +33,12 @@ type ArtifactRecord = {
   uploadedAt: string;
   storagePath?: string;
   objectUrl?: string;
+  files?: ArtifactFileRecord[];
 };
 
 const STORAGE_KEY = "buksu-artifacts";
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const MAX_FILES_PER_ARTIFACT = 5;
 const ACCEPTED_TYPES = [
   "application/pdf",
   "application/msword",
@@ -60,9 +72,27 @@ function formatFileSize(bytes: number) {
   return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
 }
 
+function getArtifactFiles(artifact: ArtifactRecord): ArtifactFileRecord[] {
+  return artifact.files?.length
+    ? artifact.files
+    : [
+        {
+          fileName: artifact.fileName,
+          fileType: artifact.fileType,
+          fileSize: artifact.fileSize,
+          storagePath: artifact.storagePath,
+          objectUrl: artifact.objectUrl,
+        },
+      ];
+}
+
 export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean }) {
   const [artifacts, setArtifacts] = useState(loadArtifacts);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<{
+    artifactTitle: string;
+    file: ArtifactFileRecord;
+  } | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -80,6 +110,9 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
   const [error, setError] = useState("");
   const [validationAttempted, setValidationAttempted] = useState(false);
   const [fileError, setFileError] = useState("");
+  const { requestConfirmation, confirmationDialog } = useConfirmationDialog();
+
+  const closePreview = useCallback(() => setPreview(null), []);
 
   useEffect(
     () =>
@@ -95,33 +128,44 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
     setError("");
   };
 
-  const handleFile = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0] ?? null;
+  const handleFiles = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files ?? []);
     event.target.value = "";
-    setSelectedFile(null);
+    setSelectedFiles([]);
     setFileError("");
     setError("");
 
-    if (!file) {
+    if (files.length === 0) {
       return;
     }
 
-    if (!ACCEPTED_TYPES.includes(file.type)) {
+    if (files.some((file) => !ACCEPTED_TYPES.includes(file.type))) {
       setFileError(
-        "This file type is not supported. Choose a PDF, office document, image, or presentation.",
+        "One or more file types are not supported. Choose photos, PDFs, or office documents.",
       );
       return;
     }
 
-    if (file.size > MAX_FILE_SIZE) {
-      setFileError("This file is larger than the 10 MB limit.");
+    if (files.length > MAX_FILES_PER_ARTIFACT) {
+      setFileError(`Choose no more than ${MAX_FILES_PER_ARTIFACT} photos for one artifact.`);
       return;
     }
 
-    setSelectedFile(file);
+    if (files.length > 1 && files.some((file) => !file.type.startsWith("image/"))) {
+      setFileError("Choose only photos together, or upload one document by itself.");
+      return;
+    }
+
+    const oversizedFile = files.find((file) => file.size > MAX_FILE_SIZE);
+    if (oversizedFile) {
+      setFileError(`${oversizedFile.name} is larger than the 10 MB limit.`);
+      return;
+    }
+
+    setSelectedFiles(files);
     setForm((current) => ({
       ...current,
-      title: current.title || file.name.replace(/\.[^/.]+$/, ""),
+      title: current.title || files[0].name.replace(/\.[^/.]+$/, ""),
     }));
   };
 
@@ -130,7 +174,7 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
     setError("");
     setMessage("");
     if (
-      !selectedFile ||
+      selectedFiles.length === 0 ||
       !form.title.trim() ||
       !form.confidentiality ||
       !form.references ||
@@ -142,29 +186,40 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
     }
 
     setUploading(true);
-    let uploadedPath: string | null = null;
+    const uploadedFiles: ArtifactFileRecord[] = [];
     try {
       const id = crypto.randomUUID();
-      const uploadedFile = await uploadPortfolioArtifact(selectedFile, id);
-      uploadedPath = uploadedFile.path;
+      for (const [index, file] of selectedFiles.entries()) {
+        const uploadedFile = await uploadPortfolioArtifact(file, id, index);
+        uploadedFiles.push({
+          fileName: file.name,
+          fileType: file.type,
+          fileSize: file.size,
+          storagePath: uploadedFile.path,
+          objectUrl: uploadedFile.publicUrl,
+        });
+      }
+
+      const firstFile = uploadedFiles[0];
       const artifact: ArtifactRecord = {
         id,
-        fileName: selectedFile.name,
+        fileName: firstFile.fileName,
         title: form.title.trim(),
         description: form.description.trim(),
-        fileType: selectedFile.type,
-        fileSize: selectedFile.size,
+        fileType: firstFile.fileType,
+        fileSize: firstFile.fileSize,
         subject: form.subject,
         domain: form.domain,
         plo: form.plo,
         uploadedAt: new Date().toISOString(),
-        storagePath: uploadedFile.path,
-        objectUrl: uploadedFile.publicUrl,
+        storagePath: firstFile.storagePath,
+        objectUrl: firstFile.objectUrl,
+        files: uploadedFiles,
       };
       const nextArtifacts = [artifact, ...artifacts];
       await setPortfolioItem(STORAGE_KEY, JSON.stringify(nextArtifacts));
       setArtifacts(nextArtifacts);
-      setSelectedFile(null);
+      setSelectedFiles([]);
       setFileError("");
       setValidationAttempted(false);
       setMessage("Artifact uploaded and shared publicly.");
@@ -183,9 +238,12 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
     } catch (uploadError: unknown) {
       console.error("Unable to upload the portfolio artifact.", uploadError);
       let cleanupMessage = "";
-      if (uploadedPath) {
+      const uploadedPaths = uploadedFiles
+        .map((file) => file.storagePath)
+        .filter((path): path is string => Boolean(path));
+      if (uploadedPaths.length > 0) {
         try {
-          await deletePortfolioArtifact(uploadedPath);
+          await deletePortfolioArtifact(uploadedPaths);
         } catch (cleanupError) {
           console.error("Unable to remove the unlisted uploaded artifact.", cleanupError);
           cleanupMessage = " The uploaded file may still be publicly accessible; please contact the site owner to remove it.";
@@ -202,15 +260,25 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
   };
 
   const deleteArtifact = async (artifact: ArtifactRecord) => {
-    if (!window.confirm(`Delete "${artifact.title}"? This action cannot be undone.`)) {
+    const confirmed = await requestConfirmation({
+      eyebrow: "Delete artifact",
+      title: "Remove this evidence?",
+      description: `"${artifact.title}" and its attached files will be permanently removed from the portfolio.`,
+      confirmLabel: "Delete artifact",
+      destructive: true,
+    });
+    if (!confirmed) {
       return;
     }
 
     setError("");
     setMessage("");
     try {
-      if (artifact.storagePath) {
-        await deletePortfolioArtifact(artifact.storagePath);
+      const storagePaths = getArtifactFiles(artifact)
+        .map((file) => file.storagePath)
+        .filter((path): path is string => Boolean(path));
+      if (storagePaths.length > 0) {
+        await deletePortfolioArtifact(storagePaths);
       }
       const nextArtifacts = artifacts.filter((item) => item.id !== artifact.id);
       await setPortfolioItem(STORAGE_KEY, JSON.stringify(nextArtifacts));
@@ -229,7 +297,14 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
   const selectedSubject = level1Subjects.find((subject) => subject.code === form.subject);
   const domains = selectedSubject?.domains ?? [];
   const fileValidationMessage =
-    fileError || (validationAttempted && !selectedFile ? "Choose a file before uploading." : "");
+    fileError ||
+    (validationAttempted && selectedFiles.length === 0
+      ? "Choose 1–5 photos or one document before uploading."
+      : "");
+  const selectedFilesLabel =
+    selectedFiles.length > 1
+      ? `${selectedFiles.length} photos selected`
+      : selectedFiles[0]?.name || "Choose 1–5 photos or one document";
   const titleValidationMessage =
     validationAttempted && !form.title.trim() ? "Add a title for this artifact." : "";
   const acknowledgementValidationMessage = validationAttempted
@@ -260,16 +335,29 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
         </div>
         <div className="artifact-file-field">
           <label className={`artifact-file-picker ${fileValidationMessage ? "has-error" : ""}`}>
-            <span>{selectedFile ? selectedFile.name : "Choose a file to upload"}</span>
-            <small>PDF, office documents, presentations, or images · maximum 10 MB</small>
+            <span>{selectedFilesLabel}</span>
+            <small>
+              Add 1–5 photos to this artifact, or upload one PDF or office document. Maximum 10 MB
+              per file.
+            </small>
             <input
               type="file"
               accept={ACCEPTED_TYPES.join(",")}
-              onChange={handleFile}
+              multiple
+              onChange={handleFiles}
               aria-invalid={Boolean(fileValidationMessage)}
               aria-describedby={fileValidationMessage ? "artifact-file-error" : undefined}
             />
           </label>
+          {selectedFiles.length > 0 && (
+            <ul className="artifact-selected-files" aria-label="Selected artifact files">
+              {selectedFiles.map((file, index) => (
+                <li key={`${file.name}-${file.lastModified}-${index}`}>
+                  {file.name} · {formatFileSize(file.size)}
+                </li>
+              ))}
+            </ul>
+          )}
           {fileValidationMessage && (
             <small className="field-validation-error" id="artifact-file-error">
               {fileValidationMessage}
@@ -412,44 +500,245 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
             </p>
           </div>
         ) : (
-          artifacts.map((artifact) => (
-            <article className="artifact-row" key={artifact.id}>
-              <span className="file-icon">
-                {artifact.fileType.startsWith("image/") ? "IMG" : "DOC"}
-              </span>
-              <div className="artifact-row-copy">
-                <strong>{artifact.title}</strong>
-                <small>
-                  {artifact.fileName} · {formatFileSize(artifact.fileSize)} · {artifact.subject}
-                </small>
-                {artifact.description && <p>{artifact.description}</p>}
-                <small>
-                  {artifact.domain || "No domain"} · {artifact.plo || "No PLO"} ·{" "}
-                  {new Date(artifact.uploadedAt).toLocaleDateString()}
-                </small>
-              </div>
-              <span className="artifact-state">{artifact.objectUrl ? "Public" : "File needs re-upload"}</span>
-              {artifact.objectUrl && (
-                <>
-                  <a
-                    className="text-button"
-                    href={artifact.objectUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Preview
-                  </a>
-                  <a className="text-button" href={artifact.objectUrl} download={artifact.fileName}>
-                    Download
-                  </a>
-                </>
-              )}
-              {!readOnly && <button className="danger-button" onClick={() => deleteArtifact(artifact)}>Delete</button>}
-            </article>
-          ))
+          artifacts.map((artifact) => {
+            const files = getArtifactFiles(artifact);
+            const photoFiles = files.filter((file) => file.fileType.startsWith("image/"));
+            const documentFiles = files.filter((file) => !file.fileType.startsWith("image/"));
+            const totalFileSize = files.reduce((total, file) => total + file.fileSize, 0);
+
+            return (
+              <article className="artifact-row" key={artifact.id}>
+                <span className="file-icon">{photoFiles.length > 0 ? "IMG" : "DOC"}</span>
+                <div className="artifact-row-copy">
+                  <strong>{artifact.title}</strong>
+                  <small>
+                    {files.length === 1
+                      ? `${files[0].fileName} · ${formatFileSize(files[0].fileSize)} · ${artifact.subject}`
+                      : `${photoFiles.length} photos · ${formatFileSize(totalFileSize)} total · ${artifact.subject}`}
+                  </small>
+                  {artifact.description && <p>{artifact.description}</p>}
+                  <small>
+                    {artifact.domain || "No domain"} · {artifact.plo || "No PLO"} ·{" "}
+                    {new Date(artifact.uploadedAt).toLocaleDateString()}
+                  </small>
+                  {photoFiles.length > 0 && (
+                    <div className="artifact-photo-grid">
+                      {photoFiles.map((file, index) => (
+                        <div
+                          className="artifact-photo-card"
+                          key={`${file.storagePath ?? file.fileName}-${index}`}
+                        >
+                          {file.objectUrl ? (
+                            <>
+                              <button
+                                type="button"
+                                className="artifact-photo-preview"
+                                onClick={() => setPreview({ artifactTitle: artifact.title, file })}
+                                aria-label={`Preview ${file.fileName}`}
+                              >
+                                <img src={file.objectUrl} alt="" loading="lazy" />
+                                <span>{file.fileName}</span>
+                              </button>
+                              <a
+                                className="text-button"
+                                href={file.objectUrl}
+                                download={file.fileName}
+                              >
+                                Download
+                              </a>
+                            </>
+                          ) : (
+                            <span className="artifact-missing-file">{file.fileName}</span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {documentFiles.map((file, index) => (
+                    <div
+                      className="artifact-document-actions"
+                      key={`${file.storagePath ?? file.fileName}-${index}`}
+                    >
+                      <small>{file.fileName} · {formatFileSize(file.fileSize)}</small>
+                      {file.objectUrl ? (
+                        <>
+                          <button
+                            type="button"
+                            className="text-button"
+                            onClick={() => setPreview({ artifactTitle: artifact.title, file })}
+                          >
+                            Preview
+                          </button>
+                          <a
+                            className="text-button"
+                            href={file.objectUrl}
+                            download={file.fileName}
+                          >
+                            Download
+                          </a>
+                        </>
+                      ) : (
+                        <span className="artifact-missing-file">File needs re-upload</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <span className="artifact-state">
+                  {files.every((file) => file.objectUrl) ? "Public" : "File needs re-upload"}
+                </span>
+                {!readOnly && (
+                  <button className="danger-button" onClick={() => deleteArtifact(artifact)}>
+                    Delete
+                  </button>
+                )}
+              </article>
+            );
+          })
         )}
       </section>
+      {confirmationDialog}
+      {preview && (
+        <ArtifactPreviewDialog
+          artifactTitle={preview.artifactTitle}
+          file={preview.file}
+          onClose={closePreview}
+        />
+      )}
     </>
+  );
+}
+
+function ArtifactPreviewDialog({
+  artifactTitle,
+  file,
+  onClose,
+}: {
+  artifactTitle: string;
+  file: ArtifactFileRecord;
+  onClose: () => void;
+}) {
+  const dialogRef = useRef<HTMLElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const previouslyFocused =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeButtonRef.current?.focus();
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      if (previouslyFocused?.isConnected) {
+        previouslyFocused.focus();
+      }
+    };
+  }, []);
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      onClose();
+      return;
+    }
+
+    if (event.key !== "Tab") {
+      return;
+    }
+
+    const focusableElements =
+      dialogRef.current?.querySelectorAll<HTMLElement>(
+        "button:not(:disabled), a[href], [tabindex]:not([tabindex='-1'])",
+      );
+    if (!focusableElements?.length) {
+      return;
+    }
+
+    const first = focusableElements[0];
+    const last = focusableElements[focusableElements.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
+
+  const isImage = file.fileType.startsWith("image/");
+  const isPdf = file.fileType === "application/pdf";
+
+  return (
+    <div className="artifact-preview-backdrop">
+      <section
+        ref={dialogRef}
+        className="artifact-preview-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="artifact-preview-title"
+        onKeyDown={handleKeyDown}
+      >
+        <header className="artifact-preview-header">
+          <div className="artifact-preview-heading">
+            <p className="eyebrow">Previewing artifact</p>
+            <h2 id="artifact-preview-title">{file.fileName}</h2>
+            <small>{artifactTitle}</small>
+          </div>
+          <div className="artifact-preview-actions">
+            {file.objectUrl && (
+              <a className="artifact-preview-download" href={file.objectUrl} download={file.fileName}>
+                <Download size={16} aria-hidden="true" />
+                Download
+              </a>
+            )}
+            <button
+              ref={closeButtonRef}
+              type="button"
+              className="artifact-preview-close"
+              onClick={onClose}
+              aria-label="Close preview"
+            >
+              <X size={20} aria-hidden="true" />
+            </button>
+          </div>
+        </header>
+        <div className="artifact-preview-stage">
+          {file.objectUrl && isImage ? (
+            <img className="artifact-preview-image" src={file.objectUrl} alt={file.fileName} />
+          ) : file.objectUrl && isPdf ? (
+            <iframe
+              className="artifact-preview-document"
+              src={file.objectUrl}
+              title={`Preview of ${file.fileName}`}
+            />
+          ) : (
+            <div className="artifact-preview-unavailable">
+              <span className="artifact-preview-file-icon" aria-hidden="true">
+                <FileText size={28} />
+              </span>
+              <h3>Preview isn’t available for this file type</h3>
+              <p>
+                This file is still safely stored with the artifact. Download it to open it in a
+                compatible app.
+              </p>
+              {file.objectUrl && (
+                <a className="artifact-preview-download" href={file.objectUrl} download={file.fileName}>
+                  <Download size={16} aria-hidden="true" />
+                  Download file
+                </a>
+              )}
+            </div>
+          )}
+        </div>
+        <footer className="artifact-preview-footer">
+          <span>{formatFileSize(file.fileSize)}</span>
+          <button type="button" className="artifact-preview-back" onClick={onClose}>
+            <ArrowLeft size={16} aria-hidden="true" />
+            Back to artifacts
+          </button>
+        </footer>
+      </section>
+    </div>
   );
 }
 
