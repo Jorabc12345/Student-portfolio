@@ -1,6 +1,10 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { AcademicQuestion } from "../data/level1Content";
-import { getPortfolioItem, setPortfolioItem } from "../services/portfolioStorage";
+import {
+  getPortfolioItem,
+  setPortfolioItem,
+  subscribeToPortfolioItem,
+} from "../services/portfolioStorage";
 
 type ReflectionStatus = "draft" | "published";
 
@@ -68,6 +72,7 @@ export default function ReflectionEditor({
 }) {
   const [savedDraft, setSavedDraft] = useState(() => loadDraft(context, questionIndex));
   const [draft, setDraft] = useState(savedDraft);
+  const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const isDirty = JSON.stringify(savedDraft) !== JSON.stringify(draft);
@@ -86,29 +91,50 @@ export default function ReflectionEditor({
     return () => window.removeEventListener("beforeunload", warnBeforeLeaving);
   }, [isDirty]);
 
+  useEffect(
+    () =>
+      subscribeToPortfolioItem(storageKey(context, questionIndex), () => {
+        const previousDraft = savedDraft;
+        const updatedDraft = loadDraft(context, questionIndex);
+        setSavedDraft(updatedDraft);
+        setDraft((current) =>
+          JSON.stringify(current) === JSON.stringify(previousDraft) ? updatedDraft : current,
+        );
+      }),
+    [context, questionIndex, savedDraft],
+  );
+
   const updateDraft = <K extends keyof ReflectionDraft>(field: K, value: ReflectionDraft[K]) => {
     setDraft((current) => ({ ...current, [field]: value }));
     setMessage("");
     setError("");
   };
 
-  const saveDraft = () => {
+  const saveDraft = async () => {
     if (!draft.academicIntegrityAcknowledged) {
       setError("Please acknowledge academic integrity before saving this reflection.");
       return;
     }
 
     const nextDraft = { ...draft, updatedAt: new Date().toISOString() };
-
+    setSaving(true);
+    setError("");
+    setMessage("");
     try {
-      setPortfolioItem(storageKey(context, questionIndex), JSON.stringify(nextDraft));
+      await setPortfolioItem(storageKey(context, questionIndex), JSON.stringify(nextDraft));
       setSavedDraft(nextDraft);
       setDraft(nextDraft);
       setMessage("Reflection saved successfully.");
       setError("");
-    } catch (storageError) {
-      console.error("Unable to save the reflection.", storageError);
-      setError("This reflection could not be saved on this device. Please try again.");
+    } catch (saveError: unknown) {
+      console.error("Unable to save the reflection.", saveError);
+      setError(
+        `This reflection could not be saved to the shared portfolio. ${
+          saveError instanceof Error ? saveError.message : String(saveError)
+        }`,
+      );
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -197,9 +223,9 @@ export default function ReflectionEditor({
       </div>
 
       <div className="reflection-warning">
-        <strong>Privacy and academic integrity</strong>
+        <strong>Public sharing and academic integrity</strong>
         <p>
-          Keep this portfolio private and remove patient names, faces, identifying dates, record
+          Saved reflections are public. Remove patient names, faces, identifying dates, record
           numbers, and other confidential information from your response and artifacts.
         </p>
         <label className="integrity-check">
@@ -219,8 +245,12 @@ export default function ReflectionEditor({
         <button className="secondary-button" onClick={closeEditor}>
           Cancel
         </button>
-        <button className="primary-button compact-button" onClick={saveDraft}>
-          Save reflection
+        <button
+          className="primary-button compact-button"
+          onClick={() => void saveDraft()}
+          disabled={saving}
+        >
+          {saving ? "Saving…" : "Save reflection"}
         </button>
       </div>
     </section>

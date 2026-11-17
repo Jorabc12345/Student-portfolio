@@ -1,4 +1,5 @@
 ﻿import { useEffect, useState, type ReactNode } from "react";
+import type { Session } from "@supabase/supabase-js";
 import { ArrowLeft, ArrowRight, Bell, BookOpenText, FolderOpen, House, Layers3, LogOut, Menu, Target, UserRound, X } from "lucide-react";
 import HomePage from "../pages/HomePage";
 import {
@@ -16,6 +17,12 @@ import LoginPage from "../pages/LoginPage";
 import ResetPasswordPage from "../pages/ResetPasswordPage";
 import ProfilePage from "../pages/ProfilePage";
 import { supabase } from "../services/supabase";
+import {
+  getPortfolioItem,
+  initializePortfolioStorage,
+  subscribeToPortfolioItem,
+  subscribeToPortfolioUpdates,
+} from "../services/portfolioStorage";
 import collegeOfMedicineLogo from "../assets/college-of-medicine-logo.jpg";
 
 type Page =
@@ -27,8 +34,36 @@ type Page =
   | "artifacts"
   | "profile";
 
+function isConfiguredPortfolioOwner(session: Session | null) {
+  const ownerEmail = import.meta.env.VITE_PORTFOLIO_OWNER_EMAIL?.trim().toLowerCase();
+  return Boolean(
+    session?.user.email_confirmed_at &&
+    ownerEmail &&
+    session.user.email?.trim().toLowerCase() === ownerEmail,
+  );
+}
+
+function formatPortfolioError(error: unknown) {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (typeof error === "object" && error !== null) {
+    const errorFields = error as Record<string, unknown>;
+    const message = typeof errorFields.message === "string" ? errorFields.message : "";
+    const code = typeof errorFields.code === "string" ? errorFields.code : "";
+    if (message) {
+      return code ? `${message} (${code})` : message;
+    }
+  }
+
+  return String(error);
+}
+
 function App() {
   const [sessionReady, setSessionReady] = useState(false);
+  const [portfolioReady, setPortfolioReady] = useState(false);
+  const [portfolioLoadError, setPortfolioLoadError] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
   const [isPortfolioOwner, setIsPortfolioOwner] = useState(false);
   const [accountEmail, setAccountEmail] = useState("");
@@ -41,28 +76,44 @@ function App() {
 
   useEffect(() => {
     let active = true;
-    supabase.auth.getSession().then(({ data }) => {
-      if (active) {
-        setAuthenticated(Boolean(data.session));
-        setIsPortfolioOwner(Boolean(
-          data.session?.user.email_confirmed_at &&
-          data.session.user.email?.trim().toLowerCase() === import.meta.env.VITE_PORTFOLIO_OWNER_EMAIL?.trim().toLowerCase(),
-        ));
-        setAccountEmail(data.session?.user.email ?? "");
-        setAccountName(String(data.session?.user.user_metadata.full_name ?? data.session?.user.email ?? "My portfolio"));
-        setAccountProgram(String(data.session?.user.user_metadata.program ?? "Doctor of Medicine · Level 1"));
-        setSessionReady(true);
-      }
-    });
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const updateAccount = (session: Session | null) => {
       setAuthenticated(Boolean(session));
-      setIsPortfolioOwner(Boolean(
-        session?.user.email_confirmed_at &&
-        session.user.email?.trim().toLowerCase() === import.meta.env.VITE_PORTFOLIO_OWNER_EMAIL?.trim().toLowerCase(),
-      ));
+      setIsPortfolioOwner(isConfiguredPortfolioOwner(session));
       setAccountEmail(session?.user.email ?? "");
       setAccountName(String(session?.user.user_metadata.full_name ?? session?.user.email ?? "My portfolio"));
       setAccountProgram(String(session?.user.user_metadata.program ?? "Doctor of Medicine · Level 1"));
+    };
+
+    void (async () => {
+      try {
+        const { data, error } = await supabase.auth.getSession();
+        if (error) {
+          throw error;
+        }
+
+        if (!active) {
+          return;
+        }
+
+        updateAccount(data.session);
+        await initializePortfolioStorage(isConfiguredPortfolioOwner(data.session));
+        if (active) {
+          setPortfolioLoadError("");
+          setPortfolioReady(true);
+          setSessionReady(true);
+        }
+      } catch (loadError: unknown) {
+        if (active) {
+          console.error("Unable to load shared portfolio data.", loadError);
+          setPortfolioLoadError(formatPortfolioError(loadError));
+          setPortfolioReady(true);
+          setSessionReady(true);
+        }
+      }
+    })();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      updateAccount(session);
       setSessionReady(true);
     });
     return () => {
@@ -72,20 +123,68 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (!portfolioReady || portfolioLoadError) {
+      return;
+    }
+
+    return subscribeToPortfolioUpdates();
+  }, [portfolioLoadError, portfolioReady]);
+
+  useEffect(() => {
     const updatePath = () => setPathname(window.location.pathname);
     window.addEventListener("popstate", updatePath);
     return () => window.removeEventListener("popstate", updatePath);
   }, []);
 
-  if (!sessionReady) return <div className="auth-loading" aria-label="Loading portfolio" />;
+  const finishOwnerSignIn = async () => {
+    setPortfolioReady(false);
+    setPortfolioLoadError("");
+
+    try {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) {
+        throw error;
+      }
+
+      const ownerSession = data.session;
+      if (!ownerSession || !isConfiguredPortfolioOwner(ownerSession)) {
+        throw new Error("The signed-in account is not configured as the portfolio owner.");
+      }
+
+      setAuthenticated(true);
+      setIsPortfolioOwner(true);
+      setAccountEmail(ownerSession.user.email ?? "");
+      setAccountName(String(ownerSession.user.user_metadata.full_name ?? ownerSession.user.email ?? "My portfolio"));
+      setAccountProgram(String(ownerSession.user.user_metadata.program ?? "Doctor of Medicine · Level 1"));
+      await initializePortfolioStorage(true);
+      setPortfolioReady(true);
+      window.history.replaceState({}, "", "/admin");
+      setPathname("/admin");
+    } catch (loadError: unknown) {
+      console.error("Unable to initialize the owner's shared portfolio.", loadError);
+      setPortfolioLoadError(
+        formatPortfolioError(loadError),
+      );
+      setPortfolioReady(true);
+    }
+  };
+
+  if (!sessionReady || !portfolioReady) return <div className="auth-loading" aria-label="Loading portfolio" />;
+  if (portfolioLoadError) {
+    return (
+      <main className="admin-denied">
+        <h1>Portfolio data could not be loaded</h1>
+        <p>{portfolioLoadError}</p>
+        <p>Check that the Supabase portfolio-sync setup has been applied, then reload this page.</p>
+        <button className="primary-button" onClick={() => window.location.reload()}>Retry</button>
+      </main>
+    );
+  }
   if (pathname === "/reset-password") return <ResetPasswordPage />;
   const isAdminRoute = pathname.replace(/\/$/, "") === "/admin";
   const ownerMode = isAdminRoute && authenticated && isPortfolioOwner;
   if (isAdminRoute && !authenticated) {
-    return <LoginPage onSignedIn={() => {
-      window.history.replaceState({}, "", "/admin");
-      setPathname("/admin");
-    }} />;
+    return <LoginPage onSignedIn={() => void finishOwnerSignIn()} />;
   }
   if (isAdminRoute && authenticated && !isPortfolioOwner) {
     return (
@@ -360,6 +459,7 @@ function SubjectPage({ subject, onBack, readOnly }: { subject: Level1Subject; on
             {selectedDomain && (
               <DomainDetail
                 name={selectedDomain.name}
+                context={`MED 102 - ${selectedDomain.name}`}
                 evidence={selectedDomain.evidence}
                 readOnly={readOnly}
                 onStartReflection={(question, questionIndex) =>
@@ -376,6 +476,7 @@ function SubjectPage({ subject, onBack, readOnly }: { subject: Level1Subject; on
         {subject.code !== "MED 102" && (
           <FolderDetail
             folder={selectedFolder}
+            context={`${subject.code} - ${selectedFolder.name}`}
             readOnly={readOnly}
             onStartReflection={(question, questionIndex) =>
               setReflectionTarget({
@@ -401,10 +502,12 @@ function SubjectPage({ subject, onBack, readOnly }: { subject: Level1Subject; on
 
 function FolderDetail({
   folder,
+  context,
   onStartReflection,
   readOnly,
 }: {
   folder: AcademicFolder;
+  context: string;
   onStartReflection: (question: AcademicQuestion, questionIndex: number) => void;
   readOnly: boolean;
 }) {
@@ -430,6 +533,7 @@ function FolderDetail({
             <div>
               <h3>{question.prompt}</h3>
               {question.evidence && <p className="evidence-note">{question.evidence}</p>}
+              <SavedReflection context={context} questionIndex={index} />
             </div>
             {!readOnly && <button
               className="text-button question-action"
@@ -458,11 +562,13 @@ function FolderDetail({
 
 function DomainDetail({
   name,
+  context,
   evidence,
   onStartReflection,
   readOnly,
 }: {
   name: string;
+  context: string;
   evidence: string;
   onStartReflection: (question: AcademicQuestion, questionIndex: number) => void;
   readOnly: boolean;
@@ -489,6 +595,7 @@ function DomainDetail({
             <div>
               <h3>{question.prompt}</h3>
               <p className="evidence-note">{question.evidence}</p>
+              <SavedReflection context={context} questionIndex={index} />
             </div>
             {!readOnly && <button
               className="text-button question-action"
@@ -504,6 +611,49 @@ function DomainDetail({
         <p>{evidence}</p>
       </div>
     </section>
+  );
+}
+
+function SavedReflection({ context, questionIndex }: { context: string; questionIndex: number }) {
+  const key = `buksu-reflection-${context}-${questionIndex}`;
+  const readResponse = () => {
+    const savedResponse = getPortfolioItem(key);
+    if (!savedResponse) {
+      return "";
+    }
+
+    try {
+      const reflection = JSON.parse(savedResponse) as { response?: string };
+      return reflection.response?.trim() ?? "";
+    } catch (error) {
+      console.error("Unable to read a saved public reflection.", error);
+      return "";
+    }
+  };
+  const [response, setResponse] = useState(readResponse);
+
+  useEffect(
+    () =>
+      subscribeToPortfolioItem(key, (savedResponse) => {
+        try {
+          const reflection = JSON.parse(savedResponse) as { response?: string };
+          setResponse(reflection.response?.trim() ?? "");
+        } catch (error) {
+          console.error("Unable to read a saved public reflection.", error);
+          setResponse("");
+        }
+      }),
+    [key],
+  );
+
+  if (!response) {
+    return null;
+  }
+
+  return (
+    <div className="readonly-evidence">
+      <p><strong>Student reflection</strong><br />{response}</p>
+    </div>
   );
 }
 

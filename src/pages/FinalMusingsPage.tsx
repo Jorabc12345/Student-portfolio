@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { finalMusingsQuestions } from "../data/level1Content";
-import { getPortfolioItem, setPortfolioItem } from "../services/portfolioStorage";
+import {
+  getPortfolioItem,
+  setPortfolioItem,
+  subscribeToPortfolioItem,
+} from "../services/portfolioStorage";
 
 const STORAGE_KEY = "buksu-final-musings";
 
@@ -44,6 +48,21 @@ export default function FinalMusingsPage({ readOnly = false, onBack }: { readOnl
     return () => window.removeEventListener("beforeunload", warnBeforeLeaving);
   }, [isDirty, isEditing]);
 
+  useEffect(
+    () =>
+      subscribeToPortfolioItem(STORAGE_KEY, () => {
+        const previousResponses = savedResponses;
+        const updatedResponses = loadResponses();
+        setSavedResponses(updatedResponses);
+        setDraftResponses((current) =>
+          JSON.stringify(current) === JSON.stringify(previousResponses)
+            ? updatedResponses
+            : current,
+        );
+      }),
+    [savedResponses],
+  );
+
   const startEditing = () => {
     setDraftResponses(savedResponses);
     setIsEditing(true);
@@ -61,17 +80,23 @@ export default function FinalMusingsPage({ readOnly = false, onBack }: { readOnl
     setError("");
   };
 
-  const saveResponses = () => {
+  const saveResponses = async () => {
+    setError("");
+    setMessage("");
     try {
-      setPortfolioItem(STORAGE_KEY, JSON.stringify(draftResponses));
+      await setPortfolioItem(STORAGE_KEY, JSON.stringify(draftResponses));
       setSavedResponses(draftResponses);
       setDraftResponses(draftResponses);
       setIsEditing(false);
       setError("");
       setMessage("Final Musings saved successfully.");
-    } catch (storageError) {
-      console.error("Unable to save Final Musings.", storageError);
-      setError("Final Musings could not be saved on this device. Please try again.");
+    } catch (saveError: unknown) {
+      console.error("Unable to save Final Musings.", saveError);
+      setError(
+        `Final Musings could not be saved to the shared portfolio. ${
+          saveError instanceof Error ? saveError.message : String(saveError)
+        }`,
+      );
     }
   };
 
@@ -86,7 +111,7 @@ export default function FinalMusingsPage({ readOnly = false, onBack }: { readOnl
       <div className="final-musings-toolbar">
         <div>
           <strong>{completedCount} of 5 questions answered</strong>
-          <p>These reflections remain part of your private portfolio.</p>
+          <p>Saved reflections are visible to portfolio visitors.</p>
         </div>
         {readOnly ? null : !isEditing ? (
           <button className="primary-button compact-button" onClick={startEditing}>
@@ -97,7 +122,7 @@ export default function FinalMusingsPage({ readOnly = false, onBack }: { readOnl
             <button className="secondary-button" onClick={cancelEditing}>
               Cancel
             </button>
-            <button className="primary-button compact-button" onClick={saveResponses}>
+            <button className="primary-button compact-button" onClick={() => void saveResponses()}>
               Save Final Musings
             </button>
           </div>
@@ -143,10 +168,10 @@ export default function FinalMusingsPage({ readOnly = false, onBack }: { readOnl
       <div className="privacy-note">
         <span className="note-icon">✦</span>
         <div>
-          <strong>Keep your reflection private and authentic</strong>
+          <strong>Share your reflection responsibly</strong>
           <p>
-            These responses should represent your own work. Do not include confidential patient
-            information, and acknowledge sources, collaborators, and required AI use.
+            These public responses should represent your own work. Do not include confidential
+            patient information, and acknowledge sources, collaborators, and required AI use.
           </p>
         </div>
       </div>

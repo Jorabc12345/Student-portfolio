@@ -1,6 +1,14 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { level1Subjects } from "../data/level1Content";
-import { getPortfolioItem, setPortfolioItem } from "../services/portfolioStorage";
+import {
+  getPortfolioItem,
+  setPortfolioItem,
+  subscribeToPortfolioItem,
+} from "../services/portfolioStorage";
+import {
+  deletePortfolioArtifact,
+  uploadPortfolioArtifact,
+} from "../services/portfolioArtifactStorage";
 
 type ArtifactRecord = {
   id: string;
@@ -13,6 +21,7 @@ type ArtifactRecord = {
   domain: string;
   plo: string;
   uploadedAt: string;
+  storagePath?: string;
   objectUrl?: string;
 };
 
@@ -66,25 +75,17 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
     permissions: false,
     aiUse: false,
   });
-  const [progress, setProgress] = useState(0);
+  const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const storedArtifacts = artifacts.map((artifact) => ({
-      id: artifact.id,
-      fileName: artifact.fileName,
-      title: artifact.title,
-      description: artifact.description,
-      fileType: artifact.fileType,
-      fileSize: artifact.fileSize,
-      subject: artifact.subject,
-      domain: artifact.domain,
-      plo: artifact.plo,
-      uploadedAt: artifact.uploadedAt,
-    }));
-    setPortfolioItem(STORAGE_KEY, JSON.stringify(storedArtifacts));
-  }, [artifacts]);
+  useEffect(
+    () =>
+      subscribeToPortfolioItem(STORAGE_KEY, () => {
+        setArtifacts(loadArtifacts());
+      }),
+    [],
+  );
 
   const updateForm = (field: keyof typeof form, value: string | boolean) => {
     setForm((current) => ({ ...current, [field]: value }));
@@ -121,7 +122,7 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
     }));
   };
 
-  const uploadArtifact = () => {
+  const uploadArtifact = async () => {
     if (!selectedFile) {
       setError("Choose a file before uploading.");
       return;
@@ -145,22 +146,16 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
       return;
     }
 
-    setProgress(10);
     setMessage("");
     setError("");
-    const progressTimer = window.setInterval(() => {
-      setProgress((current) => {
-        if (current >= 100) {
-          window.clearInterval(progressTimer);
-          return 100;
-        }
-        return Math.min(current + 15, 100);
-      });
-    }, 100);
-
-    window.setTimeout(() => {
+    setUploading(true);
+    let uploadedPath: string | null = null;
+    try {
+      const id = crypto.randomUUID();
+      const uploadedFile = await uploadPortfolioArtifact(selectedFile, id);
+      uploadedPath = uploadedFile.path;
       const artifact: ArtifactRecord = {
-        id: crypto.randomUUID(),
+        id,
         fileName: selectedFile.name,
         title: form.title.trim(),
         description: form.description.trim(),
@@ -170,12 +165,14 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
         domain: form.domain,
         plo: form.plo,
         uploadedAt: new Date().toISOString(),
-        objectUrl: URL.createObjectURL(selectedFile),
+        storagePath: uploadedFile.path,
+        objectUrl: uploadedFile.publicUrl,
       };
-      setArtifacts((current) => [artifact, ...current]);
+      const nextArtifacts = [artifact, ...artifacts];
+      await setPortfolioItem(STORAGE_KEY, JSON.stringify(nextArtifacts));
+      setArtifacts(nextArtifacts);
       setSelectedFile(null);
-      setProgress(100);
-      setMessage("Artifact uploaded to this private prototype portfolio.");
+      setMessage("Artifact uploaded and shared publicly.");
       setForm((current) => ({
         ...current,
         title: "",
@@ -188,19 +185,50 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
         permissions: false,
         aiUse: false,
       }));
-    }, 800);
+    } catch (uploadError: unknown) {
+      console.error("Unable to upload the portfolio artifact.", uploadError);
+      let cleanupMessage = "";
+      if (uploadedPath) {
+        try {
+          await deletePortfolioArtifact(uploadedPath);
+        } catch (cleanupError) {
+          console.error("Unable to remove the unlisted uploaded artifact.", cleanupError);
+          cleanupMessage = " The uploaded file may still be publicly accessible; please contact the site owner to remove it.";
+        }
+      }
+      setError(
+        `The artifact could not be uploaded to the shared portfolio. ${
+          uploadError instanceof Error ? uploadError.message : String(uploadError)
+        }${cleanupMessage}`,
+      );
+    } finally {
+      setUploading(false);
+    }
   };
 
-  const deleteArtifact = (artifact: ArtifactRecord) => {
+  const deleteArtifact = async (artifact: ArtifactRecord) => {
     if (!window.confirm(`Delete "${artifact.title}"? This action cannot be undone.`)) {
       return;
     }
 
-    if (artifact.objectUrl) {
-      URL.revokeObjectURL(artifact.objectUrl);
+    setError("");
+    setMessage("");
+    try {
+      if (artifact.storagePath) {
+        await deletePortfolioArtifact(artifact.storagePath);
+      }
+      const nextArtifacts = artifacts.filter((item) => item.id !== artifact.id);
+      await setPortfolioItem(STORAGE_KEY, JSON.stringify(nextArtifacts));
+      setArtifacts(nextArtifacts);
+      setMessage("Artifact deleted from the shared portfolio.");
+    } catch (deleteError: unknown) {
+      console.error("Unable to delete the portfolio artifact.", deleteError);
+      setError(
+        `The artifact could not be fully deleted. ${
+          deleteError instanceof Error ? deleteError.message : String(deleteError)
+        }`,
+      );
     }
-    setArtifacts((current) => current.filter((item) => item.id !== artifact.id));
-    setMessage("Artifact deleted.");
   };
 
   const selectedSubject = level1Subjects.find((subject) => subject.code === form.subject);
@@ -211,7 +239,7 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
       <div className="page-intro">
         <p className="eyebrow">Your evidence</p>
         <h1>Artifacts</h1>
-        <p>Keep academic evidence private, organized, and connected to your learning.</p>
+        <p>Share your evidence with portfolio visitors. Do not upload confidential or patient-identifying material.</p>
       </div>
       {(message || error) && (
         <div className={`home-alert ${error ? "error-alert" : "success-alert"}`} role="status">
@@ -224,7 +252,7 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
             <p className="eyebrow">Add evidence</p>
             <h2>Upload an artifact</h2>
           </div>
-          <span className="private-label">Private by default</span>
+          <span className="private-label">Public portfolio</span>
         </div>
         <label className="artifact-file-picker">
           <span>{selectedFile ? selectedFile.name : "Choose a file to upload"}</span>
@@ -311,7 +339,7 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
           <Acknowledgement
             checked={form.permissions}
             onChange={(value) => updateForm("permissions", value)}
-            text="I have permission to include and share this academic artifact privately."
+            text="I have permission to share this academic artifact publicly on my portfolio."
           />
           <Acknowledgement
             checked={form.aiUse}
@@ -319,14 +347,18 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
             text="I have disclosed any artificial-intelligence use required by academic policy."
           />
         </div>
-        {progress > 0 && progress < 100 && (
-          <div className="upload-progress" aria-label={`Upload progress ${progress}%`}>
-            <div style={{ width: `${progress}%` }} />
-            <span>Preparing private upload... {progress}%</span>
+        {uploading && (
+          <div className="upload-progress" aria-label="Uploading artifact">
+            <div style={{ width: "100%" }} />
+            <span>Uploading and saving to the shared portfolio…</span>
           </div>
         )}
-        <button className="primary-button compact-button" onClick={uploadArtifact}>
-          Upload privately
+        <button
+          className="primary-button compact-button"
+          onClick={() => void uploadArtifact()}
+          disabled={uploading}
+        >
+          {uploading ? "Uploading…" : "Upload artifact"}
         </button>
       </section>}
       <section className="list-card artifact-list">
@@ -335,7 +367,7 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
             <p className="eyebrow">Your evidence</p>
             <h2>Uploaded artifacts</h2>
           </div>
-          <span className="private-label">{artifacts.length} private</span>
+          <span className="private-label">{artifacts.length} public</span>
         </div>
         {artifacts.length === 0 ? (
           <div className="empty-guidance">
@@ -362,7 +394,7 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
                   {new Date(artifact.uploadedAt).toLocaleDateString()}
                 </small>
               </div>
-              <span className="artifact-state">Private</span>
+              <span className="artifact-state">{artifact.objectUrl ? "Public" : "File needs re-upload"}</span>
               {artifact.objectUrl && (
                 <>
                   <a

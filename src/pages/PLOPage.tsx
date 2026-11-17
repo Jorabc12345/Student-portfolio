@@ -1,7 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { level1Subjects, programLearningOutcomes } from "../data/level1Content";
-import { getPortfolioItem, setPortfolioItem } from "../services/portfolioStorage";
+import {
+  getPortfolioItem,
+  setPortfolioItem,
+  subscribeToPortfolioItem,
+} from "../services/portfolioStorage";
 
 type ArtifactOption = {
   id: string;
@@ -65,9 +69,10 @@ export default function PLOPage({ readOnly = false, onBack }: { readOnly?: boole
   const [selectedPloIndex, setSelectedPloIndex] = useState(0);
   const [savedEvidence, setSavedEvidence] = useState(loadEvidence);
   const [draft, setDraft] = useState<PLOEvidence>(savedEvidence["0"] ?? emptyEvidence);
+  const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const artifacts = useMemo(loadArtifacts, []);
+  const [artifacts, setArtifacts] = useState(loadArtifacts);
   const selectedPlo = programLearningOutcomes[selectedPloIndex];
   const selectedEvidence = savedEvidence[String(selectedPloIndex)];
   const selectedArtifact = artifacts.find((artifact) => artifact.id === selectedEvidence?.artifactId);
@@ -76,10 +81,37 @@ export default function PLOPage({ readOnly = false, onBack }: { readOnly?: boole
     JSON.stringify(draft);
 
   useEffect(() => {
-    setDraft(savedEvidence[String(selectedPloIndex)] ?? emptyEvidence);
+    if (!isDirty) {
+      setDraft(savedEvidence[String(selectedPloIndex)] ?? emptyEvidence);
+    }
     setMessage("");
     setError("");
-  }, [savedEvidence, selectedPloIndex]);
+  }, [isDirty, savedEvidence, selectedPloIndex]);
+
+  useEffect(
+    () =>
+      subscribeToPortfolioItem(STORAGE_KEY, () => {
+        const previousEvidence = savedEvidence;
+        const updatedEvidence = loadEvidence();
+        const savedSelection = previousEvidence[String(selectedPloIndex)] ?? emptyEvidence;
+        const updatedSelection = updatedEvidence[String(selectedPloIndex)] ?? emptyEvidence;
+        setSavedEvidence(updatedEvidence);
+        setDraft((current) =>
+          JSON.stringify(current) === JSON.stringify(savedSelection)
+            ? updatedSelection
+            : current,
+        );
+      }),
+    [savedEvidence, selectedPloIndex],
+  );
+
+  useEffect(
+    () =>
+      subscribeToPortfolioItem("buksu-artifacts", () => {
+        setArtifacts(loadArtifacts());
+      }),
+    [],
+  );
 
   if (readOnly) {
     return (
@@ -106,7 +138,7 @@ export default function PLOPage({ readOnly = false, onBack }: { readOnly?: boole
     setError("");
   };
 
-  const saveEvidence = () => {
+  const saveEvidence = async () => {
     if (
       !draft.artifactId ||
       !draft.description.trim() ||
@@ -117,15 +149,30 @@ export default function PLOPage({ readOnly = false, onBack }: { readOnly?: boole
       return;
     }
 
+    const savedRecord = { ...draft, updatedAt: new Date().toISOString() };
     const nextEvidence = {
       ...savedEvidence,
-      [String(selectedPloIndex)]: { ...draft, updatedAt: new Date().toISOString() },
+      [String(selectedPloIndex)]: savedRecord,
     };
 
-    setPortfolioItem(STORAGE_KEY, JSON.stringify(nextEvidence));
-    setSavedEvidence(nextEvidence);
-    setMessage("PLO evidence saved. Attainment remains a student and faculty review decision.");
     setError("");
+    setMessage("");
+    setSaving(true);
+    try {
+      await setPortfolioItem(STORAGE_KEY, JSON.stringify(nextEvidence));
+      setSavedEvidence(nextEvidence);
+      setDraft(savedRecord);
+      setMessage("PLO evidence saved. Attainment remains a student and faculty review decision.");
+    } catch (saveError: unknown) {
+      console.error("Unable to save PLO evidence.", saveError);
+      setError(
+        `PLO evidence could not be saved to the shared portfolio. ${
+          saveError instanceof Error ? saveError.message : String(saveError)
+        }`,
+      );
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -181,7 +228,7 @@ export default function PLOPage({ readOnly = false, onBack }: { readOnly?: boole
               value={draft.artifactId}
               onChange={(event) => updateDraft("artifactId", event.target.value)}
             >
-              <option value="">Select a private artifact</option>
+              <option value="">Select an artifact</option>
               {artifacts.map((artifact) => (
                 <option value={artifact.id} key={artifact.id}>
                   {artifact.title} · {artifact.subject}
@@ -191,7 +238,7 @@ export default function PLOPage({ readOnly = false, onBack }: { readOnly?: boole
           </label>
           {artifacts.length === 0 && (
             <p className="field-note">
-              Upload a private artifact first to associate supporting evidence.
+              Upload an artifact first to associate supporting evidence.
             </p>
           )}
           <label>
@@ -252,8 +299,12 @@ export default function PLOPage({ readOnly = false, onBack }: { readOnly?: boole
             </p>
           )}
           <div className="plo-actions">
-            <button className="primary-button compact-button" onClick={saveEvidence}>
-              Save PLO evidence
+            <button
+              className="primary-button compact-button"
+              onClick={() => void saveEvidence()}
+              disabled={saving}
+            >
+              {saving ? "Saving…" : "Save PLO evidence"}
             </button>
           </div>
         </section>

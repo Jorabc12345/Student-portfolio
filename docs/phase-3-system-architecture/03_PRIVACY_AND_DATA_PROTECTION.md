@@ -4,13 +4,16 @@
 
 The portfolio is private academic data. The architecture must protect student information and prevent patient-identifiable information from entering the system.
 
+For this portfolio, the owner explicitly chose to make all saved content and uploaded artifacts public. This changes the visibility model; it does not permit uploading confidential patient, clinical, or community information.
+
 ## 1. Data Classification
 
 | Data | Classification | Protection |
 |---|---|---|
-| Student profile and portrait | Private personal data | Owner RLS; assigned faculty read only; protected Storage |
-| Reflections and Final Musings | Private academic data | Owner writes; assigned faculty reads; no public access |
-| Artifact metadata and files | Private academic evidence | Owner/assignment checks; private Storage |
+| Student profile details | Public portfolio content by owner choice | Public read; owner-only edits |
+| Portfolio portrait | Public personal image by owner choice | Dedicated public portrait bucket; owner-only upload, replacement, and deletion |
+| Reflections, PLO evidence, and Final Musings | Public portfolio content by owner choice | Public read; owner-only edits |
+| Artifact metadata and files | Public portfolio content by owner choice | Public read and file access; owner-only upload and deletion |
 | Faculty assignments | Sensitive authorization data | Trusted provisioning only |
 | Academic prompts and PLO definitions | Institutional configuration | Controlled content management |
 | Auth credentials/tokens | Security-sensitive | Supabase Auth; never log or expose |
@@ -31,9 +34,9 @@ Students remain responsible for permissions, de-identification, academic integri
 
 ## 3. Privacy by Design
 
-- Private portfolio access by default.
-- Least-privilege student and faculty policies.
-- No public artifact bucket.
+- All saved portfolio content and artifact files are public by the owner's explicit choice.
+- Only the configured owner can change portfolio data or upload/delete files.
+- Never store patient-identifying or confidential information in a public section or file.
 - No faculty comments, feedback, grading, or edits.
 - Minimal data returned by list queries.
 - No sensitive content in URLs, client logs, analytics, or error messages.

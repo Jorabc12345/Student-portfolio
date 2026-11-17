@@ -1,61 +1,46 @@
-# Private Storage Security
+# Portfolio Storage Security
 
 ## Phase 3 – Stage 3
 
-This design uses private Supabase Storage buckets. It does not create buckets, Storage policies, or upload code.
+The portfolio owner explicitly chose to make all saved portfolio content and uploaded artifacts public so visitors can view changes without signing in. This supersedes the earlier private-by-default assumption for this portfolio. Never upload patient-identifying information, confidential records, or material that the owner does not have permission to publish.
 
-## 1. Bucket and Path Design
+## 1. Shared Content and Bucket Design
 
-Use a private artifact bucket. Object paths should contain a trusted portfolio identifier and opaque artifact identifier:
+Portfolio text and metadata are stored in `public.portfolio_items`. Anonymous and authenticated visitors can read the rows; only the configured owner can insert, update, or delete them.
 
-```text
-portfolio/{portfolio-id}/artifacts/{artifact-id}/{opaque-file-name}
-```
+The portrait and uploaded artifacts use separate public Storage buckets: `portfolio-portraits` and `portfolio-artifacts`. Public reads are intentional. Storage policies restrict writes and deletes to the configured owner, and artifact paths are scoped under the authenticated owner's user ID.
 
-The path must not use a user-supplied filename as an authorization key. Database metadata must record the owning portfolio and exact object path.
-
-## 2. Proposed File Policy
+## 2. File Policy
 
 These are technical defaults requiring confirmation:
 
-- Accepted formats: PDF, DOCX, PPTX, XLSX, JPG, JPEG, and PNG.
+- Accepted artifact formats: PDF, DOC, DOCX, PPT, PPTX, XLS, XLSX, JPG, PNG, and WebP.
 - Maximum artifact size: 10 MB.
-- Maximum profile image size: 5 MB.
+- Maximum profile image size: 2 MB.
 - Reject executables, scripts, archives, and unknown binary types.
-- Validate MIME type and file signature where practical.
-- Optimize images and strip unnecessary metadata where appropriate.
+- The application checks MIME type and size; uploaded content still requires owner review.
 
-These limits are recommendations, not academic requirements.
+These limits do not make a file safe to publish.
 
-## 3. Upload Authorization
+## 3. Write Authorization
 
 1. Authenticate through Supabase Auth.
-2. Verify the target portfolio belongs to the student through RLS context.
-3. Validate type, size, metadata, and confidentiality acknowledgement.
-4. Permit Storage INSERT only under the student's portfolio path.
-5. Finalize metadata only for the same owner/path.
-6. Reject faculty and unauthenticated uploads.
+2. Restrict database writes and Storage upload/delete operations to the configured owner.
+3. Validate file type, size, and public-sharing acknowledgement.
 
-Frontend validation is an early usability check; Storage policies remain authoritative.
+Frontend validation is an early usability check; database and Storage policies remain authoritative.
 
-## 4. Retrieval Authorization
+## 4. Public Retrieval
 
-- Students may retrieve objects in their own portfolio.
-- Faculty may retrieve objects only for actively assigned portfolios.
-- Unassigned faculty and unauthenticated users receive no object.
-- Do not use public buckets or permanent public URLs.
-- Use authenticated access or short-lived signed URLs after authorization.
-- Suggested signed URL lifetime: five minutes, subject to approval.
+Any visitor can read the saved portfolio rows and fetch files from these two public buckets. Do not store private files in these buckets. If the owner later wants private sections, they need a separate private data path and access policies.
 
 ## 5. Replacement and Deletion
 
-Students may replace or delete only their own artifacts. Replacement verifies ownership before changing object and metadata. Deletion follows the approved retention policy and cleans up metadata/object relationships safely.
+Only the configured owner may replace or delete artifacts. Deletion removes the Storage object and its portfolio metadata.
 
-Faculty cannot replace or delete files.
+## 6. Confidentiality
 
-## 6. Confidentiality Warning
-
-Before upload, warn users not to include patient names, faces or identifiable photographs, medical record numbers, identifying dates, addresses, contact information, or any detail that could identify a patient, family, or community member.
+Before saving or uploading public content, warn the owner not to include patient names, faces or identifiable photographs, medical record numbers, identifying dates, addresses, contact information, or any detail that could identify a patient, family, or community member.
 
 An allowed file type does not make its contents safe.
 
@@ -63,10 +48,9 @@ An allowed file type does not make its contents safe.
 
 | Threat | Mitigation |
 |---|---|
-| Public bucket or URL leakage | Private bucket, policy review, controlled access |
-| Guessed object path | Opaque artifact IDs and Storage policy checks |
-| Cross-portfolio access | Ownership/assignment checks on path and metadata |
-| Faculty write access | Read-only policy; deny insert/update/delete |
+| Unintended content exposure | Public access is an explicit owner decision; warn before saving and never upload confidential material |
+| Unauthorized edits | Database and Storage policies allow writes only for the configured owner |
+| Artifact path misuse | Storage policies scope artifact paths to the authenticated owner's user ID |
 | Malicious file | Restrict formats and size; approved review process |
 | Storage exhaustion | Quotas, limits, optimization, deletion policy, monitoring |
 | Stale signed URL | Short expiration and no permanent sharing |
