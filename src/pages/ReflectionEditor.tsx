@@ -1,4 +1,5 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { AlertCircle, ArrowLeft, Save } from "lucide-react";
 import { AcademicQuestion } from "../data/level1Content";
 import {
   getPortfolioItem,
@@ -6,11 +7,8 @@ import {
   subscribeToPortfolioItem,
 } from "../services/portfolioStorage";
 
-type ReflectionStatus = "draft" | "published";
-
 type ReflectionDraft = {
   response: string;
-  status: ReflectionStatus;
   artifactName: string;
   plo: string;
   academicIntegrityAcknowledged: boolean;
@@ -33,7 +31,6 @@ const PLOS = [
 
 const emptyDraft: ReflectionDraft = {
   response: "",
-  status: "draft",
   artifactName: "",
   plo: "",
   academicIntegrityAcknowledged: false,
@@ -52,7 +49,15 @@ function loadDraft(context: string, questionIndex: number): ReflectionDraft {
   }
 
   try {
-    return { ...emptyDraft, ...JSON.parse(savedDraft) };
+    const parsedDraft = JSON.parse(savedDraft) as Partial<ReflectionDraft> & {
+      status?: unknown;
+    };
+    if (!parsedDraft || typeof parsedDraft !== "object") {
+      return emptyDraft;
+    }
+
+    delete parsedDraft.status;
+    return { ...emptyDraft, ...parsedDraft };
   } catch (error) {
     console.error("Unable to read the saved reflection draft.", error);
     return emptyDraft;
@@ -75,7 +80,16 @@ export default function ReflectionEditor({
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [validationAttempted, setValidationAttempted] = useState(false);
+  const [showDiscardDialog, setShowDiscardDialog] = useState(false);
+  const dialogRef = useRef<HTMLElement>(null);
+  const keepEditingButtonRef = useRef<HTMLButtonElement>(null);
+  const closeTriggerRef = useRef<HTMLElement | null>(null);
   const isDirty = JSON.stringify(savedDraft) !== JSON.stringify(draft);
+  const integrityError =
+    validationAttempted && !draft.academicIntegrityAcknowledged
+      ? "Confirm this acknowledgement before saving."
+      : "";
 
   useEffect(() => {
     if (!isDirty) {
@@ -104,6 +118,44 @@ export default function ReflectionEditor({
     [context, questionIndex, savedDraft],
   );
 
+  useEffect(() => {
+    if (!showDiscardDialog) {
+      return;
+    }
+
+    keepEditingButtonRef.current?.focus();
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        dismissDiscardDialog();
+        return;
+      }
+
+      if (event.key !== "Tab") {
+        return;
+      }
+
+      const buttons =
+        dialogRef.current?.querySelectorAll<HTMLButtonElement>("button:not(:disabled)");
+      if (!buttons?.length) {
+        return;
+      }
+
+      const firstButton = buttons[0];
+      const lastButton = buttons[buttons.length - 1];
+      if (event.shiftKey && document.activeElement === firstButton) {
+        event.preventDefault();
+        lastButton.focus();
+      } else if (!event.shiftKey && document.activeElement === lastButton) {
+        event.preventDefault();
+        firstButton.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [showDiscardDialog]);
+
   const updateDraft = <K extends keyof ReflectionDraft>(field: K, value: ReflectionDraft[K]) => {
     setDraft((current) => ({ ...current, [field]: value }));
     setMessage("");
@@ -111,21 +163,19 @@ export default function ReflectionEditor({
   };
 
   const saveDraft = async () => {
+    setValidationAttempted(true);
+    setError("");
+    setMessage("");
     if (!draft.academicIntegrityAcknowledged) {
-      setError("Please acknowledge academic integrity before saving this reflection.");
       return;
     }
 
     const nextDraft = { ...draft, updatedAt: new Date().toISOString() };
     setSaving(true);
-    setError("");
-    setMessage("");
     try {
       await setPortfolioItem(storageKey(context, questionIndex), JSON.stringify(nextDraft));
-      setSavedDraft(nextDraft);
-      setDraft(nextDraft);
-      setMessage("Reflection saved successfully.");
-      setError("");
+      setSaving(false);
+      onClose();
     } catch (saveError: unknown) {
       console.error("Unable to save the reflection.", saveError);
       setError(
@@ -133,15 +183,27 @@ export default function ReflectionEditor({
           saveError instanceof Error ? saveError.message : String(saveError)
         }`,
       );
-    } finally {
       setSaving(false);
     }
   };
 
   const closeEditor = () => {
-    if (isDirty && !window.confirm("Discard your unsaved reflection changes?")) {
+    if (isDirty) {
+      closeTriggerRef.current =
+        document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      setShowDiscardDialog(true);
       return;
     }
+    onClose();
+  };
+
+  const dismissDiscardDialog = () => {
+    setShowDiscardDialog(false);
+    window.requestAnimationFrame(() => closeTriggerRef.current?.focus());
+  };
+
+  const discardChanges = () => {
+    setShowDiscardDialog(false);
     onClose();
   };
 
@@ -162,9 +224,6 @@ export default function ReflectionEditor({
           <h2>Respond to the official question</h2>
           <p className="reflection-context">{context}</p>
         </div>
-        <button className="secondary-button" onClick={closeEditor}>
-          Close editor
-        </button>
       </div>
 
       <div className="official-question">
@@ -191,16 +250,6 @@ export default function ReflectionEditor({
 
       <div className="reflection-fields-grid">
         <label className="reflection-control">
-          <span>Reflection status</span>
-          <select
-            value={draft.status}
-            onChange={(event) => updateDraft("status", event.target.value as ReflectionStatus)}
-          >
-            <option value="draft">Draft</option>
-            <option value="published">Published</option>
-          </select>
-        </label>
-        <label className="reflection-control">
           <span>Related PLO association</span>
           <select value={draft.plo} onChange={(event) => updateDraft("plo", event.target.value)}>
             <option value="">Select a related PLO (optional)</option>
@@ -218,7 +267,20 @@ export default function ReflectionEditor({
           {draft.artifactName ? "Replace related artifact" : "Attach related artifact"}
           <input type="file" onChange={handleArtifact} />
         </label>
-        {draft.artifactName && <span>{draft.artifactName}</span>}
+        {draft.artifactName && (
+          <div className="artifact-file">
+            <span className="artifact-file-name">{draft.artifactName}</span>
+            <button
+              type="button"
+              className="attachment-remove-button"
+              aria-label="Remove attached artifact"
+              onClick={() => updateDraft("artifactName", "")}
+              disabled={saving}
+            >
+              Remove
+            </button>
+          </div>
+        )}
         <small>Do not attach patient-identifying information.</small>
       </div>
 
@@ -228,31 +290,87 @@ export default function ReflectionEditor({
           Saved reflections are public. Remove patient names, faces, identifying dates, record
           numbers, and other confidential information from your response and artifacts.
         </p>
-        <label className="integrity-check">
+        <label className={`integrity-check ${integrityError ? "has-error" : ""}`}>
           <input
             type="checkbox"
             checked={draft.academicIntegrityAcknowledged}
             onChange={(event) => updateDraft("academicIntegrityAcknowledged", event.target.checked)}
+            aria-invalid={Boolean(integrityError)}
+            aria-describedby={integrityError ? "reflection-integrity-error" : undefined}
           />
           <span>
             I confirm that this reflection represents my own work and that I have respected
             confidentiality, permissions, citations, collaborators, and academic integrity.
           </span>
         </label>
+        {integrityError && (
+          <small
+            className="field-validation-error integrity-validation-error"
+            id="reflection-integrity-error"
+          >
+            {integrityError}
+          </small>
+        )}
       </div>
 
       <div className="reflection-editor-actions">
-        <button className="secondary-button" onClick={closeEditor}>
+        <button
+          type="button"
+          className="reflection-cancel-button"
+          onClick={closeEditor}
+          disabled={saving}
+        >
+          <ArrowLeft size={16} aria-hidden="true" />
           Cancel
         </button>
         <button
-          className="primary-button compact-button"
+          type="button"
+          className="reflection-save-button"
           onClick={() => void saveDraft()}
           disabled={saving}
         >
+          <Save size={16} aria-hidden="true" />
           {saving ? "Saving…" : "Save reflection"}
         </button>
       </div>
+      {showDiscardDialog && (
+        <div className="confirmation-backdrop">
+          <section
+            ref={dialogRef}
+            className="confirmation-dialog"
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="discard-reflection-title"
+            aria-describedby="discard-reflection-description"
+          >
+            <div className="confirmation-dialog-heading">
+              <span className="confirmation-dialog-icon" aria-hidden="true">
+                <AlertCircle size={22} />
+              </span>
+              <div>
+                <p className="eyebrow">Unsaved changes</p>
+                <h2 id="discard-reflection-title">Leave this reflection?</h2>
+              </div>
+            </div>
+            <p className="confirmation-dialog-description" id="discard-reflection-description">
+              Your changes haven’t been saved. If you leave now, they’ll be lost.
+            </p>
+            <div className="confirmation-dialog-actions">
+              <button type="button" className="danger-button" onClick={discardChanges}>
+                Discard changes
+              </button>
+              <button
+                ref={keepEditingButtonRef}
+                type="button"
+                className="primary-button compact-button"
+                onClick={dismissDiscardDialog}
+              >
+                Keep editing
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
     </section>
   );
 }

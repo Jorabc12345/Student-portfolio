@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Check } from "lucide-react";
 import { finalMusingsQuestions } from "../data/level1Content";
 import {
   getPortfolioItem,
@@ -25,12 +25,20 @@ function loadResponses(): string[] {
   }
 }
 
-export default function FinalMusingsPage({ readOnly = false, onBack }: { readOnly?: boolean; onBack: () => void }) {
+export default function FinalMusingsPage({
+  readOnly = false,
+  onBack,
+}: {
+  readOnly?: boolean;
+  onBack: () => void;
+}) {
   const [savedResponses, setSavedResponses] = useState(loadResponses);
   const [draftResponses, setDraftResponses] = useState(savedResponses);
-  const [isEditing, setIsEditing] = useState(false);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const isEditing = editingIndex !== null;
   const isDirty = JSON.stringify(savedResponses) !== JSON.stringify(draftResponses);
   const completedCount = savedResponses.filter((response) => response.trim()).length;
 
@@ -63,9 +71,13 @@ export default function FinalMusingsPage({ readOnly = false, onBack }: { readOnl
     [savedResponses],
   );
 
-  const startEditing = () => {
+  const startEditing = (index: number) => {
+    if (isDirty && !window.confirm("Discard your unsaved Final Musings changes?")) {
+      return;
+    }
+
     setDraftResponses(savedResponses);
-    setIsEditing(true);
+    setEditingIndex(index);
     setMessage("");
     setError("");
   };
@@ -76,18 +88,19 @@ export default function FinalMusingsPage({ readOnly = false, onBack }: { readOnl
     }
 
     setDraftResponses(savedResponses);
-    setIsEditing(false);
+    setEditingIndex(null);
     setError("");
   };
 
   const saveResponses = async () => {
     setError("");
     setMessage("");
+    setSaving(true);
     try {
       await setPortfolioItem(STORAGE_KEY, JSON.stringify(draftResponses));
       setSavedResponses(draftResponses);
       setDraftResponses(draftResponses);
-      setIsEditing(false);
+      setEditingIndex(null);
       setError("");
       setMessage("Final Musings saved successfully.");
     } catch (saveError: unknown) {
@@ -97,13 +110,17 @@ export default function FinalMusingsPage({ readOnly = false, onBack }: { readOnl
           saveError instanceof Error ? saveError.message : String(saveError)
         }`,
       );
+    } finally {
+      setSaving(false);
     }
   };
 
   return (
     <>
       <div className="page-intro">
-        <button className="back-button" onClick={onBack}><ArrowLeft size={16} aria-hidden="true" /> Back to Level 1</button>
+        <button className="back-button" onClick={onBack}>
+          <ArrowLeft size={16} aria-hidden="true" /> Back to Level 1
+        </button>
         <p className="eyebrow">Level 1 global section</p>
         <h1>Final Musings</h1>
         <p>Look back on your Level 1 journey and the physician you are becoming.</p>
@@ -113,20 +130,6 @@ export default function FinalMusingsPage({ readOnly = false, onBack }: { readOnl
           <strong>{completedCount} of 5 questions answered</strong>
           <p>Saved reflections are visible to portfolio visitors.</p>
         </div>
-        {readOnly ? null : !isEditing ? (
-          <button className="primary-button compact-button" onClick={startEditing}>
-            {completedCount ? "Edit Final Musings" : "Write Final Musings"}
-          </button>
-        ) : (
-          <div className="toolbar-actions">
-            <button className="secondary-button" onClick={cancelEditing}>
-              Cancel
-            </button>
-            <button className="primary-button compact-button" onClick={() => void saveResponses()}>
-              Save Final Musings
-            </button>
-          </div>
-        )}
       </div>
       {(message || error) && (
         <div className={`home-alert ${error ? "error-alert" : "success-alert"}`} role="status">
@@ -140,26 +143,64 @@ export default function FinalMusingsPage({ readOnly = false, onBack }: { readOnl
               <span>Question {index + 1}</span>
               <h2>{question}</h2>
             </div>
-            {isEditing ? (
-              <textarea
-                aria-label={question}
-                value={draftResponses[index]}
-                onChange={(event) => {
-                  const nextResponses = [...draftResponses];
-                  nextResponses[index] = event.target.value;
-                  setDraftResponses(nextResponses);
-                  setMessage("");
-                  setError("");
-                }}
-                placeholder="Write your reflection in your own words..."
-                rows={7}
-              />
+            {editingIndex === index ? (
+              <div className="final-musing-editor">
+                <textarea
+                  aria-label={question}
+                  value={draftResponses[index]}
+                  onChange={(event) => {
+                    const nextResponses = [...draftResponses];
+                    nextResponses[index] = event.target.value;
+                    setDraftResponses(nextResponses);
+                    setMessage("");
+                    setError("");
+                  }}
+                  placeholder="Write your reflection in your own words..."
+                  rows={7}
+                />
+                <div className="final-musing-actions">
+                  <button
+                    type="button"
+                    className="secondary-button"
+                    onClick={cancelEditing}
+                    disabled={saving}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className="primary-button compact-button"
+                    onClick={() => void saveResponses()}
+                    disabled={saving}
+                  >
+                    {saving ? (
+                      "Saving…"
+                    ) : (
+                      <>
+                        <Check size={16} aria-hidden="true" />
+                        Save response
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
             ) : savedResponses[index] ? (
-              <p className="long-form-copy">{savedResponses[index]}</p>
+              <>
+                <p className="long-form-copy">{savedResponses[index]}</p>
+                {!readOnly && (
+                  <button className="text-button" onClick={() => startEditing(index)}>
+                    Edit response →
+                  </button>
+                )}
+              </>
             ) : (
               <div className="empty-section">
                 <p>This Final Musings response has not been completed yet.</p>
-                {!readOnly && <button className="text-button" onClick={startEditing}>Start writing →</button>}
+                {!readOnly && (
+                  <button className="text-button" onClick={() => startEditing(index)}>
+                    Start writing →
+                  </button>
+                )}
               </div>
             )}
           </article>

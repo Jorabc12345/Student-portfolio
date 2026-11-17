@@ -78,6 +78,8 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [validationAttempted, setValidationAttempted] = useState(false);
+  const [fileError, setFileError] = useState("");
 
   useEffect(
     () =>
@@ -97,6 +99,7 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
     const file = event.target.files?.[0] ?? null;
     event.target.value = "";
     setSelectedFile(null);
+    setFileError("");
     setError("");
 
     if (!file) {
@@ -104,14 +107,14 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
     }
 
     if (!ACCEPTED_TYPES.includes(file.type)) {
-      setError(
+      setFileError(
         "This file type is not supported. Choose a PDF, office document, image, or presentation.",
       );
       return;
     }
 
     if (file.size > MAX_FILE_SIZE) {
-      setError("This file is larger than the 10 MB limit.");
+      setFileError("This file is larger than the 10 MB limit.");
       return;
     }
 
@@ -123,31 +126,21 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
   };
 
   const uploadArtifact = async () => {
-    if (!selectedFile) {
-      setError("Choose a file before uploading.");
-      return;
-    }
-
-    if (!form.title.trim()) {
-      setError("Add a title for this artifact.");
-      return;
-    }
-
+    setValidationAttempted(true);
+    setError("");
+    setMessage("");
     if (
+      !selectedFile ||
+      !form.title.trim() ||
       !form.confidentiality ||
       !form.references ||
       !form.collaborators ||
       !form.permissions ||
       !form.aiUse
     ) {
-      setError(
-        "Complete all confidentiality, permission, collaboration, and AI-use acknowledgements.",
-      );
       return;
     }
 
-    setMessage("");
-    setError("");
     setUploading(true);
     let uploadedPath: string | null = null;
     try {
@@ -172,6 +165,8 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
       await setPortfolioItem(STORAGE_KEY, JSON.stringify(nextArtifacts));
       setArtifacts(nextArtifacts);
       setSelectedFile(null);
+      setFileError("");
+      setValidationAttempted(false);
       setMessage("Artifact uploaded and shared publicly.");
       setForm((current) => ({
         ...current,
@@ -233,6 +228,15 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
 
   const selectedSubject = level1Subjects.find((subject) => subject.code === form.subject);
   const domains = selectedSubject?.domains ?? [];
+  const fileValidationMessage =
+    fileError || (validationAttempted && !selectedFile ? "Choose a file before uploading." : "");
+  const titleValidationMessage =
+    validationAttempted && !form.title.trim() ? "Add a title for this artifact." : "";
+  const acknowledgementValidationMessage = validationAttempted
+    ? "This acknowledgement is required before uploading."
+    : "";
+  const acknowledgementError = (checked: boolean) =>
+    checked ? "" : acknowledgementValidationMessage;
 
   return (
     <>
@@ -254,19 +258,39 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
           </div>
           <span className="private-label">Public portfolio</span>
         </div>
-        <label className="artifact-file-picker">
-          <span>{selectedFile ? selectedFile.name : "Choose a file to upload"}</span>
-          <small>PDF, office documents, presentations, or images · maximum 10 MB</small>
-          <input type="file" accept={ACCEPTED_TYPES.join(",")} onChange={handleFile} />
-        </label>
+        <div className="artifact-file-field">
+          <label className={`artifact-file-picker ${fileValidationMessage ? "has-error" : ""}`}>
+            <span>{selectedFile ? selectedFile.name : "Choose a file to upload"}</span>
+            <small>PDF, office documents, presentations, or images · maximum 10 MB</small>
+            <input
+              type="file"
+              accept={ACCEPTED_TYPES.join(",")}
+              onChange={handleFile}
+              aria-invalid={Boolean(fileValidationMessage)}
+              aria-describedby={fileValidationMessage ? "artifact-file-error" : undefined}
+            />
+          </label>
+          {fileValidationMessage && (
+            <small className="field-validation-error" id="artifact-file-error">
+              {fileValidationMessage}
+            </small>
+          )}
+        </div>
         <div className="artifact-form-grid">
           <label>
             Title
             <input
+              aria-invalid={Boolean(titleValidationMessage)}
+              aria-describedby={titleValidationMessage ? "artifact-title-error" : undefined}
               value={form.title}
               onChange={(event) => updateForm("title", event.target.value)}
               placeholder="Artifact title"
             />
+            {titleValidationMessage && (
+              <small className="field-validation-error" id="artifact-title-error">
+                {titleValidationMessage}
+              </small>
+            )}
           </label>
           <label>
             Subject
@@ -322,27 +346,37 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
         <div className="artifact-acknowledgements">
           <strong>Academic integrity and permissions</strong>
           <Acknowledgement
+            id="artifact-confidentiality"
             checked={form.confidentiality}
+            error={acknowledgementError(form.confidentiality)}
             onChange={(value) => updateForm("confidentiality", value)}
             text="I confirm this file contains no patient-identifying or confidential information."
           />
           <Acknowledgement
+            id="artifact-references"
             checked={form.references}
+            error={acknowledgementError(form.references)}
             onChange={(value) => updateForm("references", value)}
             text="I have acknowledged references and sources used in this artifact."
           />
           <Acknowledgement
+            id="artifact-collaborators"
             checked={form.collaborators}
+            error={acknowledgementError(form.collaborators)}
             onChange={(value) => updateForm("collaborators", value)}
             text="I have identified collaborators and my own contribution."
           />
           <Acknowledgement
+            id="artifact-permissions"
             checked={form.permissions}
+            error={acknowledgementError(form.permissions)}
             onChange={(value) => updateForm("permissions", value)}
             text="I have permission to share this academic artifact publicly on my portfolio."
           />
           <Acknowledgement
+            id="artifact-ai-use"
             checked={form.aiUse}
+            error={acknowledgementError(form.aiUse)}
             onChange={(value) => updateForm("aiUse", value)}
             text="I have disclosed any artificial-intelligence use required by academic policy."
           />
@@ -420,22 +454,36 @@ export default function ArtifactsPage({ readOnly = false }: { readOnly?: boolean
 }
 
 function Acknowledgement({
+  id,
   checked,
+  error,
   onChange,
   text,
 }: {
+  id: string;
   checked: boolean;
+  error: string;
   onChange: (value: boolean) => void;
   text: string;
 }) {
   return (
     <label className="artifact-check">
       <input
+        id={id}
         type="checkbox"
         checked={checked}
         onChange={(event) => onChange(event.target.checked)}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? `${id}-error` : undefined}
       />
-      <span>{text}</span>
+      <span className="artifact-check-copy">
+        <span>{text}</span>
+        {error && (
+          <small className="field-validation-error" id={`${id}-error`}>
+            {error}
+          </small>
+        )}
+      </span>
     </label>
   );
 }

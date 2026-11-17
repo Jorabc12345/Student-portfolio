@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { ArrowRight, BookOpen, Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 import { supabase } from "../services/supabase";
 import collegeOfMedicineLogo from "../assets/college-of-medicine-logo.jpg";
@@ -10,11 +10,14 @@ export default function LoginPage({ onSignedIn }: { onSignedIn: () => void }) {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [recoverySent, setRecoverySent] = useState(false);
+  const [emailValidationError, setEmailValidationError] = useState("");
+  const emailInputRef = useRef<HTMLInputElement>(null);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true);
     setMessage("");
+    setEmailValidationError("");
     try {
       const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
       if (error) {
@@ -36,10 +39,16 @@ export default function LoginPage({ onSignedIn }: { onSignedIn: () => void }) {
   }
 
   async function handleRecovery() {
-    if (!email.trim()) {
-      setMessage("Enter your email address first, then select Forgot password.");
+    if (!email.trim() || !emailInputRef.current?.validity.valid) {
+      setEmailValidationError(
+        email.trim()
+          ? "Enter a valid email address to request a password reset."
+          : "Enter your email address to request a password reset.",
+      );
+      setMessage("");
       return;
     }
+    setEmailValidationError("");
     setBusy(true);
     setMessage("");
     const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
@@ -79,7 +88,25 @@ export default function LoginPage({ onSignedIn }: { onSignedIn: () => void }) {
             <p className="login-subtitle">Owner access only. Everyone else can view the portfolio without signing in.</p>
             <form onSubmit={handleSubmit}>
               <label htmlFor="login-email">Email address</label>
-              <div className="login-input-wrap"><Mail size={18} aria-hidden="true" /><input id="login-email" type="email" autoComplete="email" placeholder="you@example.com" value={email} onChange={(event) => setEmail(event.target.value)} required /></div>
+              <div className={`login-input-wrap ${emailValidationError ? "has-error" : ""}`}>
+                <Mail size={18} aria-hidden="true" />
+                <input
+                  ref={emailInputRef}
+                  id="login-email"
+                  type="email"
+                  autoComplete="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(event) => {
+                    setEmail(event.target.value);
+                    setEmailValidationError("");
+                  }}
+                  aria-invalid={Boolean(emailValidationError)}
+                  aria-describedby={emailValidationError ? "login-email-error" : undefined}
+                  required
+                />
+              </div>
+              {emailValidationError && <small className="field-validation-error" id="login-email-error">{emailValidationError}</small>}
               <div className="login-password-heading"><label htmlFor="login-password">Password</label><button type="button" className="forgot-link" onClick={handleRecovery} disabled={busy}>Forgot password?</button></div>
               <div className="login-input-wrap"><LockKeyhole size={18} aria-hidden="true" /><input id="login-password" type={showPassword ? "text" : "password"} autoComplete="current-password" placeholder="Enter your password" value={password} onChange={(event) => setPassword(event.target.value)} required /><button type="button" className="password-toggle" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword((shown) => !shown)}>{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</button></div>
               {message && <p className={`login-message ${recoverySent ? "success" : ""}`} role="status">{message}</p>}

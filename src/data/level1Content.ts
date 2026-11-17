@@ -167,21 +167,22 @@ export const level1Subjects: Level1Subject[] = [
         id: "MED102-F01",
         name: "Patient & Family-Centered Care",
         description:
-          "The proposed parent grouping for patient-centered and family-focused domains.",
+          "Explore patient-centered and family-focused care through dedicated learning domains.",
         questions: [],
         evidence: [],
       },
       {
         id: "MED102-F02",
         name: "Health & Social Determinants",
-        description: "The proposed parent grouping for determinants and health frameworks.",
+        description:
+          "Explore social determinants and the local and global frameworks that shape health.",
         questions: [],
         evidence: [],
       },
       {
         id: "MED102-F03",
         name: "Healthcare Systems & Primary Care",
-        description: "The proposed parent grouping for primary care and systems domains.",
+        description: "Explore primary health care, Universal Health Care, and systems thinking.",
         questions: [],
         evidence: [],
       },
@@ -189,7 +190,7 @@ export const level1Subjects: Level1Subject[] = [
         id: "MED102-F04",
         name: "Community & Professional Development",
         description:
-          "The proposed parent grouping for community and professional identity domains.",
+          "Explore community engagement, social accountability, and professional identity.",
         questions: [],
         evidence: [],
       },

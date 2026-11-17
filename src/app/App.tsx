@@ -1,10 +1,23 @@
 ﻿import { useEffect, useState, type ReactNode } from "react";
 import type { Session } from "@supabase/supabase-js";
-import { ArrowLeft, ArrowRight, Bell, BookOpenText, FolderOpen, House, Layers3, LogOut, Menu, Target, UserRound, X } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  BookOpenText,
+  FolderOpen,
+  House,
+  Layers3,
+  LogOut,
+  Menu,
+  Target,
+  UserRound,
+  X,
+} from "lucide-react";
 import HomePage from "../pages/HomePage";
 import {
   AcademicFolder,
   AcademicQuestion,
+  LearningDomain,
   Level1Subject,
   level1Subjects,
   med102Questions,
@@ -29,10 +42,15 @@ type Page =
   | "home"
   | "level"
   | "subject"
+  | "folder"
+  | "domains"
+  | "domain"
   | "plos"
   | "final-musings"
   | "artifacts"
   | "profile";
+
+const OWNER_DISPLAY_NAME = "Nour-Aliah N. Macarampat";
 
 function isConfiguredPortfolioOwner(session: Session | null) {
   const ownerEmail = import.meta.env.VITE_PORTFOLIO_OWNER_EMAIL?.trim().toLowerCase();
@@ -41,6 +59,13 @@ function isConfiguredPortfolioOwner(session: Session | null) {
     ownerEmail &&
     session.user.email?.trim().toLowerCase() === ownerEmail,
   );
+}
+
+function getAccountName(session: Session | null) {
+  const profileName = session?.user.user_metadata.full_name;
+  return typeof profileName === "string" && profileName.trim() && !profileName.includes("@")
+    ? profileName.trim()
+    : OWNER_DISPLAY_NAME;
 }
 
 function formatPortfolioError(error: unknown) {
@@ -72,6 +97,8 @@ function App() {
   const [pathname, setPathname] = useState(window.location.pathname);
   const [page, setPage] = useState<Page>("home");
   const [selectedSubject, setSelectedSubject] = useState(level1Subjects[0]);
+  const [selectedFolder, setSelectedFolder] = useState<AcademicFolder | null>(null);
+  const [selectedDomain, setSelectedDomain] = useState<LearningDomain | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -80,8 +107,10 @@ function App() {
       setAuthenticated(Boolean(session));
       setIsPortfolioOwner(isConfiguredPortfolioOwner(session));
       setAccountEmail(session?.user.email ?? "");
-      setAccountName(String(session?.user.user_metadata.full_name ?? session?.user.email ?? "My portfolio"));
-      setAccountProgram(String(session?.user.user_metadata.program ?? "Doctor of Medicine · Level 1"));
+      setAccountName(getAccountName(session));
+      setAccountProgram(
+        String(session?.user.user_metadata.program ?? "Doctor of Medicine · Level 1"),
+      );
     };
 
     void (async () => {
@@ -112,7 +141,9 @@ function App() {
       }
     })();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       updateAccount(session);
       setSessionReady(true);
     });
@@ -154,29 +185,32 @@ function App() {
       setAuthenticated(true);
       setIsPortfolioOwner(true);
       setAccountEmail(ownerSession.user.email ?? "");
-      setAccountName(String(ownerSession.user.user_metadata.full_name ?? ownerSession.user.email ?? "My portfolio"));
-      setAccountProgram(String(ownerSession.user.user_metadata.program ?? "Doctor of Medicine · Level 1"));
+      setAccountName(getAccountName(ownerSession));
+      setAccountProgram(
+        String(ownerSession.user.user_metadata.program ?? "Doctor of Medicine · Level 1"),
+      );
       await initializePortfolioStorage(true);
       setPortfolioReady(true);
       window.history.replaceState({}, "", "/admin");
       setPathname("/admin");
     } catch (loadError: unknown) {
       console.error("Unable to initialize the owner's shared portfolio.", loadError);
-      setPortfolioLoadError(
-        formatPortfolioError(loadError),
-      );
+      setPortfolioLoadError(formatPortfolioError(loadError));
       setPortfolioReady(true);
     }
   };
 
-  if (!sessionReady || !portfolioReady) return <div className="auth-loading" aria-label="Loading portfolio" />;
+  if (!sessionReady || !portfolioReady)
+    return <div className="auth-loading" aria-label="Loading portfolio" />;
   if (portfolioLoadError) {
     return (
       <main className="admin-denied">
         <h1>Portfolio data could not be loaded</h1>
         <p>{portfolioLoadError}</p>
         <p>Check that the Supabase portfolio-sync setup has been applied, then reload this page.</p>
-        <button className="primary-button" onClick={() => window.location.reload()}>Retry</button>
+        <button className="primary-button" onClick={() => window.location.reload()}>
+          Retry
+        </button>
       </main>
     );
   }
@@ -191,8 +225,12 @@ function App() {
       <main className="admin-denied">
         <h1>Owner access only</h1>
         <p>This account is not configured as the portfolio owner.</p>
-        <a className="primary-button" href="/">Return to the public portfolio</a>
-        <button className="sign-out" onClick={() => void supabase.auth.signOut()}>Sign out</button>
+        <a className="primary-button" href="/">
+          Return to the public portfolio
+        </a>
+        <button className="sign-out" onClick={() => void supabase.auth.signOut()}>
+          Sign out
+        </button>
       </main>
     );
   }
@@ -211,7 +249,11 @@ function App() {
       />
       <aside className={`sidebar ${mobileMenuOpen ? "open" : ""}`}>
         <div className="brand">
-          <img className="brand-mark" src={collegeOfMedicineLogo} alt="BukSU College of Medicine seal" />
+          <img
+            className="brand-mark"
+            src={collegeOfMedicineLogo}
+            alt="BukSU College of Medicine seal"
+          />
           <div>
             <strong>My Portfolio</strong>
             <span>BukSU College of Medicine</span>
@@ -226,7 +268,7 @@ function App() {
           <div className="avatar">{ownerMode ? accountName.slice(0, 3).toUpperCase() : "PUB"}</div>
           <div>
             <strong>{ownerMode ? accountName : "Public portfolio"}</strong>
-            <span>{ownerMode ? accountEmail : "Open to everyone"}</span>
+            <span>{ownerMode ? "Portfolio owner" : "Open to everyone"}</span>
           </div>
         </button>
         <nav aria-label="Portfolio navigation">
@@ -238,7 +280,15 @@ function App() {
           />
           <NavItem
             label="Level 1"
-            active={page === "level" || page === "subject" || page === "plos" || page === "final-musings"}
+            active={
+              page === "level" ||
+              page === "subject" ||
+              page === "folder" ||
+              page === "domains" ||
+              page === "domain" ||
+              page === "plos" ||
+              page === "final-musings"
+            }
             onClick={() => navigate("level")}
             icon={<Layers3 size={18} aria-hidden="true" />}
           />
@@ -249,21 +299,26 @@ function App() {
             icon={<FolderOpen size={18} aria-hidden="true" />}
           />
         </nav>
-        <div className="sidebar-bottom">
-          {ownerMode && <NavItem
-            label="Profile & settings"
-            active={page === "profile"}
-            onClick={() => navigate("profile")}
-            icon={<UserRound size={18} aria-hidden="true" />}
-          />}
-          {ownerMode ? <button className="sign-out" onClick={() => {
-            void supabase.auth.signOut();
-            window.history.replaceState({}, "", "/");
-            setPathname("/");
-          }}>
-            Sign out <LogOut size={16} aria-hidden="true" />
-          </button> : <a className="owner-login-link" href="/admin">Owner sign in</a>}
-        </div>
+        {ownerMode && (
+          <div className="sidebar-bottom">
+            <NavItem
+              label="Profile & settings"
+              active={page === "profile"}
+              onClick={() => navigate("profile")}
+              icon={<UserRound size={18} aria-hidden="true" />}
+            />
+            <button
+              className="sign-out"
+              onClick={() => {
+                void supabase.auth.signOut();
+                window.history.replaceState({}, "", "/");
+                setPathname("/");
+              }}
+            >
+              Sign out <LogOut size={16} aria-hidden="true" />
+            </button>
+          </div>
+        )}
       </aside>
 
       <main className="main-content">
@@ -281,18 +336,19 @@ function App() {
             <b>/</b>
             <strong>{pageTitle(page)}</strong>
           </div>
-          <div className="topbar-actions">
-            {ownerMode && <button className="icon-button" aria-label="Notifications"><Bell size={18} aria-hidden="true" /></button>}
-          </div>
         </header>
         <div className={`page-wrap ${ownerMode ? "" : "read-only-portfolio"}`}>
           {page === "home" && <HomePage readOnly={!ownerMode} />}
           {page === "plos" && <PLOPage readOnly={!ownerMode} onBack={() => navigate("level")} />}
-          {page === "final-musings" && <FinalMusingsPage readOnly={!ownerMode} onBack={() => navigate("level")} />}
+          {page === "final-musings" && (
+            <FinalMusingsPage readOnly={!ownerMode} onBack={() => navigate("level")} />
+          )}
           {page === "level" && (
             <LevelPage
               onSelectSubject={(subject) => {
                 setSelectedSubject(subject);
+                setSelectedFolder(null);
+                setSelectedDomain(null);
                 navigate("subject");
               }}
               onNavigate={navigate}
@@ -303,19 +359,51 @@ function App() {
               key={selectedSubject.code}
               subject={selectedSubject}
               onBack={() => navigate("level")}
+              onOpenFolder={(folder) => {
+                setSelectedFolder(folder);
+                navigate(selectedSubject.domains ? "domains" : "folder");
+              }}
+            />
+          )}
+          {page === "domains" && selectedSubject.domains && selectedFolder && (
+            <DomainListPage
+              subject={selectedSubject}
+              folder={selectedFolder}
+              onBack={() => navigate("subject")}
+              onOpenDomain={(domain) => {
+                setSelectedDomain(domain);
+                navigate("domain");
+              }}
+            />
+          )}
+          {page === "domain" && selectedDomain && (
+            <DomainPage
+              key={selectedDomain.id}
+              domain={selectedDomain}
+              onBack={() => navigate("domains")}
+              readOnly={!ownerMode}
+            />
+          )}
+          {page === "folder" && selectedFolder && (
+            <FolderPage
+              subject={selectedSubject}
+              folder={selectedFolder}
+              onBack={() => navigate("subject")}
               readOnly={!ownerMode}
             />
           )}
           {page === "artifacts" && <ArtifactsPage readOnly={!ownerMode} />}
-          {page === "profile" && ownerMode && <ProfilePage
-            name={accountName}
-            email={accountEmail}
-            program={accountProgram}
-            onProfileUpdated={(name, program) => {
-              setAccountName(name);
-              setAccountProgram(program);
-            }}
-          />}
+          {page === "profile" && ownerMode && (
+            <ProfilePage
+              name={accountName}
+              email={accountEmail}
+              program={accountProgram}
+              onProfileUpdated={(name, program) => {
+                setAccountName(name);
+                setAccountProgram(program);
+              }}
+            />
+          )}
         </div>
       </main>
     </div>
@@ -365,7 +453,10 @@ function LevelPage({
             <span className="code-pill">{subject.code}</span>
             <h2>{subject.name}</h2>
             <p>{subject.progress}</p>
-            <span className="text-button">Open subject page <ArrowRight size={14} aria-hidden="true" /></span>
+            <span className="text-button">
+              {subject.domains ? "Open learning domains" : "Open subject page"}{" "}
+              <ArrowRight size={14} aria-hidden="true" />
+            </span>
           </button>
         ))}
       </div>
@@ -385,18 +476,15 @@ function LevelPage({
   );
 }
 
-function SubjectPage({ subject, onBack, readOnly }: { subject: Level1Subject; onBack: () => void; readOnly: boolean }) {
-  const [selectedFolderId, setSelectedFolderId] = useState(subject.folders[0].id);
-  const [selectedDomainId, setSelectedDomainId] = useState(subject.domains?.[0]?.id);
-  const [reflectionTarget, setReflectionTarget] = useState<{
-    context: string;
-    question: AcademicQuestion;
-    questionIndex: number;
-  } | null>(null);
-  const selectedFolder =
-    subject.folders.find((folder) => folder.id === selectedFolderId) ?? subject.folders[0];
-  const selectedDomain = subject.domains?.find((domain) => domain.id === selectedDomainId);
-
+function SubjectPage({
+  subject,
+  onBack,
+  onOpenFolder,
+}: {
+  subject: Level1Subject;
+  onBack: () => void;
+  onOpenFolder: (folder: AcademicFolder) => void;
+}) {
   return (
     <>
       <div className="page-intro">
@@ -414,88 +502,170 @@ function SubjectPage({ subject, onBack, readOnly }: { subject: Level1Subject; on
             <h2>{subject.name}</h2>
             <p>{subject.progress}</p>
           </div>
-          {!readOnly && <button className="secondary-button">Edit subject notes</button>}
         </div>
         <div className="folder-grid">
           {subject.folders.map((folder, index) => (
             <button
-              className={`folder-card folder-card-button ${
-                selectedFolder.id === folder.id ? "selected" : ""
-              }`}
+              className="folder-card folder-card-button"
               key={folder.id}
-              onClick={() => setSelectedFolderId(folder.id)}
+              onClick={() => onOpenFolder(folder)}
             >
               <span className="folder-number">0{index + 1}</span>
               <h3>{folder.name}</h3>
               <p>{folder.description}</p>
-              <span className="text-button">Open section <ArrowRight size={14} aria-hidden="true" /></span>
+              <span className="text-button">
+                {subject.domains ? "Open domains" : "Open section"}{" "}
+                <ArrowRight size={14} aria-hidden="true" />
+              </span>
             </button>
           ))}
         </div>
-        {subject.domains && (
-          <section className="domain-section">
-            <div className="detail-heading">
-              <div>
-                <span className="code-pill">INDIVIDUAL DOMAINS</span>
-                <h2>MED 102 learning domains</h2>
-                <p>
-                  Each domain remains independently accessible with the same four official
-                  questions.
-                </p>
-              </div>
-            </div>
-            <div className="domain-list">
-              {subject.domains.map((domain) => (
-                <button
-                  className={`domain-item ${selectedDomain?.id === domain.id ? "selected" : ""}`}
-                  key={domain.id}
-                  onClick={() => setSelectedDomainId(domain.id)}
-                >
-                  <strong>{domain.name}</strong>
-                  <small>View reflection and required evidence <ArrowRight size={13} aria-hidden="true" /></small>
-                </button>
-              ))}
-            </div>
-            {selectedDomain && (
-              <DomainDetail
-                name={selectedDomain.name}
-                context={`MED 102 - ${selectedDomain.name}`}
-                evidence={selectedDomain.evidence}
-                readOnly={readOnly}
-                onStartReflection={(question, questionIndex) =>
-                  setReflectionTarget({
-                    context: `MED 102 - ${selectedDomain.name}`,
-                    question,
-                    questionIndex,
-                  })
-                }
-              />
-            )}
-          </section>
-        )}
-        {subject.code !== "MED 102" && (
-          <FolderDetail
-            folder={selectedFolder}
-            context={`${subject.code} - ${selectedFolder.name}`}
-            readOnly={readOnly}
-            onStartReflection={(question, questionIndex) =>
-              setReflectionTarget({
-                context: `${subject.code} - ${selectedFolder.name}`,
-                question,
-                questionIndex,
-              })
-            }
-          />
-        )}
-        {reflectionTarget && (
-          <ReflectionEditor
-            context={reflectionTarget.context}
-            question={reflectionTarget.question}
-            questionIndex={reflectionTarget.questionIndex}
-            onClose={() => setReflectionTarget(null)}
-          />
-        )}
       </section>
+    </>
+  );
+}
+
+function DomainListPage({
+  subject,
+  folder,
+  onBack,
+  onOpenDomain,
+}: {
+  subject: Level1Subject;
+  folder: AcademicFolder;
+  onBack: () => void;
+  onOpenDomain: (domain: LearningDomain) => void;
+}) {
+  const domains = subject.domains ?? [];
+
+  return (
+    <>
+      <div className="page-intro">
+        <button className="back-button" onClick={onBack}>
+          <ArrowLeft size={16} aria-hidden="true" /> Back to {subject.code}
+        </button>
+        <p className="eyebrow">Level 1 subject</p>
+        <h1>{subject.code}</h1>
+        <p>Explore the learning domains available through {folder.name}.</p>
+      </div>
+      <section className="domain-section">
+        <div className="detail-heading">
+          <div>
+            <span className="code-pill">INDIVIDUAL DOMAINS</span>
+            <h2>MED 102 learning domains</h2>
+            <p>Each domain contains its own official reflection questions and evidence guidance.</p>
+          </div>
+        </div>
+        <div className="domain-list">
+          {domains.map((domain) => (
+            <button className="domain-item" key={domain.id} onClick={() => onOpenDomain(domain)}>
+              <strong>{domain.name}</strong>
+              <small>
+                View reflection and required evidence <ArrowRight size={13} aria-hidden="true" />
+              </small>
+            </button>
+          ))}
+        </div>
+      </section>
+    </>
+  );
+}
+
+function DomainPage({
+  domain,
+  onBack,
+  readOnly,
+}: {
+  domain: LearningDomain;
+  onBack: () => void;
+  readOnly: boolean;
+}) {
+  const [reflectionTarget, setReflectionTarget] = useState<{
+    context: string;
+    question: AcademicQuestion;
+    questionIndex: number;
+  } | null>(null);
+  const context = `MED 102 - ${domain.name}`;
+
+  if (reflectionTarget) {
+    return (
+      <ReflectionEditor
+        context={reflectionTarget.context}
+        question={reflectionTarget.question}
+        questionIndex={reflectionTarget.questionIndex}
+        onClose={() => setReflectionTarget(null)}
+      />
+    );
+  }
+
+  return (
+    <>
+      <div className="page-intro">
+        <button className="back-button" onClick={onBack}>
+          <ArrowLeft size={16} aria-hidden="true" /> Back to MED 102 learning domains
+        </button>
+        <p className="eyebrow">MED 102 · Learning domain</p>
+        <p>Write and save reflections for this domain.</p>
+      </div>
+      <DomainDetail
+        name={domain.name}
+        context={context}
+        evidence={domain.evidence}
+        readOnly={readOnly}
+        onStartReflection={(question, questionIndex) =>
+          setReflectionTarget({ context, question, questionIndex })
+        }
+      />
+    </>
+  );
+}
+
+function FolderPage({
+  subject,
+  folder,
+  onBack,
+  readOnly,
+}: {
+  subject: Level1Subject;
+  folder: AcademicFolder;
+  onBack: () => void;
+  readOnly: boolean;
+}) {
+  const [reflectionTarget, setReflectionTarget] = useState<{
+    context: string;
+    question: AcademicQuestion;
+    questionIndex: number;
+  } | null>(null);
+  const context = `${subject.code} - ${folder.name}`;
+
+  if (reflectionTarget) {
+    return (
+      <ReflectionEditor
+        context={reflectionTarget.context}
+        question={reflectionTarget.question}
+        questionIndex={reflectionTarget.questionIndex}
+        onClose={() => setReflectionTarget(null)}
+      />
+    );
+  }
+
+  return (
+    <>
+      <div className="page-intro">
+        <button className="back-button" onClick={onBack}>
+          <ArrowLeft size={16} aria-hidden="true" /> Back to {subject.code}
+        </button>
+        <p className="eyebrow">{subject.code} · Bimonthly section</p>
+        <p>Write and save reflections for this section.</p>
+      </div>
+      <FolderDetail
+        folder={folder}
+        context={context}
+        readOnly={readOnly}
+        onStartReflection={(question, questionIndex) =>
+          setReflectionTarget({ context, question, questionIndex })
+        }
+      />
     </>
   );
 }
@@ -519,12 +689,6 @@ function FolderDetail({
           <h2>{folder.name}</h2>
           <p>Official CERAE reflection prompts and supporting evidence requirements.</p>
         </div>
-        {!readOnly && <button
-          className="secondary-button"
-          onClick={() => folder.questions[0] && onStartReflection(folder.questions[0], 0)}
-        >
-          Start reflection
-        </button>}
       </div>
       <div className="question-list">
         {folder.questions.map((question, index) => (
@@ -535,12 +699,14 @@ function FolderDetail({
               {question.evidence && <p className="evidence-note">{question.evidence}</p>}
               <SavedReflection context={context} questionIndex={index} />
             </div>
-            {!readOnly && <button
-              className="text-button question-action"
-              onClick={() => onStartReflection(question, index)}
-            >
-              Write response <ArrowRight size={14} aria-hidden="true" />
-            </button>}
+            {!readOnly && (
+              <button
+                className="text-button question-action"
+                onClick={() => onStartReflection(question, index)}
+              >
+                Write response <ArrowRight size={14} aria-hidden="true" />
+              </button>
+            )}
           </article>
         ))}
       </div>
@@ -581,12 +747,6 @@ function DomainDetail({
           <h2>{name}</h2>
           <p>Complete the four official reflection questions for this domain.</p>
         </div>
-        {!readOnly && <button
-          className="secondary-button"
-          onClick={() => onStartReflection(med102Questions[0], 0)}
-        >
-          Start reflection
-        </button>}
       </div>
       <div className="question-list">
         {med102Questions.map((question, index) => (
@@ -597,12 +757,14 @@ function DomainDetail({
               <p className="evidence-note">{question.evidence}</p>
               <SavedReflection context={context} questionIndex={index} />
             </div>
-            {!readOnly && <button
-              className="text-button question-action"
-              onClick={() => onStartReflection(question, index)}
-            >
-              Write response <ArrowRight size={14} aria-hidden="true" />
-            </button>}
+            {!readOnly && (
+              <button
+                className="text-button question-action"
+                onClick={() => onStartReflection(question, index)}
+              >
+                Write response <ArrowRight size={14} aria-hidden="true" />
+              </button>
+            )}
           </article>
         ))}
       </div>
@@ -651,8 +813,9 @@ function SavedReflection({ context, questionIndex }: { context: string; question
   }
 
   return (
-    <div className="readonly-evidence">
-      <p><strong>Student reflection</strong><br />{response}</p>
+    <div className="readonly-evidence question-reflection">
+      <strong>Student reflection</strong>
+      <p>{response}</p>
     </div>
   );
 }
@@ -662,6 +825,9 @@ function pageTitle(page: Page) {
     home: "Home",
     level: "Level 1",
     subject: "Subject",
+    folder: "Bimonthly reflections",
+    domains: "MED 102 learning domains",
+    domain: "MED 102 domain",
     plos: "PLO Attainment",
     "final-musings": "Final Musings",
     artifacts: "Artifacts",
@@ -670,5 +836,3 @@ function pageTitle(page: Page) {
 }
 
 export default App;
-
-

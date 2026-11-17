@@ -72,10 +72,21 @@ export default function PLOPage({ readOnly = false, onBack }: { readOnly?: boole
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [validationAttempted, setValidationAttempted] = useState(false);
   const [artifacts, setArtifacts] = useState(loadArtifacts);
   const selectedPlo = programLearningOutcomes[selectedPloIndex];
   const selectedEvidence = savedEvidence[String(selectedPloIndex)];
   const selectedArtifact = artifacts.find((artifact) => artifact.id === selectedEvidence?.artifactId);
+  const artifactValidationMessage =
+    validationAttempted && !draft.artifactId ? "Select an artifact before saving." : "";
+  const descriptionValidationMessage =
+    validationAttempted && !draft.description.trim() ? "Describe the supporting artifact." : "";
+  const significanceValidationMessage =
+    validationAttempted && !draft.significance.trim()
+      ? "Explain the significance of this artifact."
+      : "";
+  const reflectionValidationMessage =
+    validationAttempted && !draft.reflection.trim() ? "Add a short reflection." : "";
   const isDirty =
     JSON.stringify(savedEvidence[String(selectedPloIndex)] ?? emptyEvidence) !==
     JSON.stringify(draft);
@@ -130,6 +141,7 @@ export default function PLOPage({ readOnly = false, onBack }: { readOnly?: boole
       return;
     }
     setSelectedPloIndex(index);
+    setValidationAttempted(false);
   };
 
   const updateDraft = <K extends keyof PLOEvidence>(field: K, value: PLOEvidence[K]) => {
@@ -139,13 +151,15 @@ export default function PLOPage({ readOnly = false, onBack }: { readOnly?: boole
   };
 
   const saveEvidence = async () => {
+    setValidationAttempted(true);
+    setError("");
+    setMessage("");
     if (
       !draft.artifactId ||
       !draft.description.trim() ||
       !draft.significance.trim() ||
       !draft.reflection.trim()
     ) {
-      setError("Select an artifact and complete its description, significance, and reflection.");
       return;
     }
 
@@ -155,13 +169,12 @@ export default function PLOPage({ readOnly = false, onBack }: { readOnly?: boole
       [String(selectedPloIndex)]: savedRecord,
     };
 
-    setError("");
-    setMessage("");
     setSaving(true);
     try {
       await setPortfolioItem(STORAGE_KEY, JSON.stringify(nextEvidence));
       setSavedEvidence(nextEvidence);
       setDraft(savedRecord);
+      setValidationAttempted(false);
       setMessage("PLO evidence saved. Attainment remains a student and faculty review decision.");
     } catch (saveError: unknown) {
       console.error("Unable to save PLO evidence.", saveError);
@@ -227,6 +240,8 @@ export default function PLOPage({ readOnly = false, onBack }: { readOnly?: boole
             <select
               value={draft.artifactId}
               onChange={(event) => updateDraft("artifactId", event.target.value)}
+              aria-invalid={Boolean(artifactValidationMessage)}
+              aria-describedby={artifactValidationMessage ? "plo-artifact-error" : undefined}
             >
               <option value="">Select an artifact</option>
               {artifacts.map((artifact) => (
@@ -235,6 +250,11 @@ export default function PLOPage({ readOnly = false, onBack }: { readOnly?: boole
                 </option>
               ))}
             </select>
+            {artifactValidationMessage && (
+              <small className="field-validation-error" id="plo-artifact-error">
+                {artifactValidationMessage}
+              </small>
+            )}
           </label>
           {artifacts.length === 0 && (
             <p className="field-note">
@@ -248,7 +268,16 @@ export default function PLOPage({ readOnly = false, onBack }: { readOnly?: boole
               onChange={(event) => updateDraft("description", event.target.value)}
               placeholder="Describe what the artifact is."
               rows={4}
+              aria-invalid={Boolean(descriptionValidationMessage)}
+              aria-describedby={
+                descriptionValidationMessage ? "plo-description-error" : undefined
+              }
             />
+            {descriptionValidationMessage && (
+              <small className="field-validation-error" id="plo-description-error">
+                {descriptionValidationMessage}
+              </small>
+            )}
           </label>
           <label>
             Explanation of significance
@@ -257,7 +286,16 @@ export default function PLOPage({ readOnly = false, onBack }: { readOnly?: boole
               onChange={(event) => updateDraft("significance", event.target.value)}
               placeholder="Explain what this artifact demonstrates in relation to this PLO."
               rows={5}
+              aria-invalid={Boolean(significanceValidationMessage)}
+              aria-describedby={
+                significanceValidationMessage ? "plo-significance-error" : undefined
+              }
             />
+            {significanceValidationMessage && (
+              <small className="field-validation-error" id="plo-significance-error">
+                {significanceValidationMessage}
+              </small>
+            )}
           </label>
           <label>
             Short student reflection
@@ -266,7 +304,16 @@ export default function PLOPage({ readOnly = false, onBack }: { readOnly?: boole
               onChange={(event) => updateDraft("reflection", event.target.value)}
               placeholder="Reflect briefly on your growth and learning."
               rows={6}
+              aria-invalid={Boolean(reflectionValidationMessage)}
+              aria-describedby={
+                reflectionValidationMessage ? "plo-reflection-error" : undefined
+              }
             />
+            {reflectionValidationMessage && (
+              <small className="field-validation-error" id="plo-reflection-error">
+                {reflectionValidationMessage}
+              </small>
+            )}
           </label>
           <div className="plo-fields-grid">
             <label>
