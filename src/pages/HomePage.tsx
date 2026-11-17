@@ -296,9 +296,9 @@ function HomePagePreview({
       <section className="privacy-note">
         <span className="note-icon">✦</span>
         <div>
-          <strong>Your portfolio is private</strong>
+          <strong>This portfolio is open to visitors</strong>
           <p>
-            Signed-in visitors can view this portfolio. Only its owner can edit entries or upload artifacts.
+            Visitors can explore this portfolio without an account. Only the owner can edit entries or upload artifacts.
           </p>
         </div>
       </section>

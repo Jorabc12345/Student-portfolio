@@ -34,6 +34,7 @@ function App() {
   const [accountEmail, setAccountEmail] = useState("");
   const [accountName, setAccountName] = useState("");
   const [accountProgram, setAccountProgram] = useState("Doctor of Medicine · Level 1");
+  const [pathname, setPathname] = useState(window.location.pathname);
   const [page, setPage] = useState<Page>("home");
   const [selectedSubject, setSelectedSubject] = useState(level1Subjects[0]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -70,9 +71,32 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    const updatePath = () => setPathname(window.location.pathname);
+    window.addEventListener("popstate", updatePath);
+    return () => window.removeEventListener("popstate", updatePath);
+  }, []);
+
   if (!sessionReady) return <div className="auth-loading" aria-label="Loading portfolio" />;
-  if (window.location.pathname === "/reset-password") return <ResetPasswordPage />;
-  if (!authenticated) return <LoginPage />;
+  if (pathname === "/reset-password") return <ResetPasswordPage />;
+  const isAdminRoute = pathname.replace(/\/$/, "") === "/admin";
+  const ownerMode = isAdminRoute && authenticated && isPortfolioOwner;
+  if (isAdminRoute && !authenticated) {
+    return <LoginPage onSignedIn={() => {
+      window.history.replaceState({}, "", "/admin");
+      setPathname("/admin");
+    }} />;
+  }
+  if (isAdminRoute && authenticated && !isPortfolioOwner) {
+    return (
+      <main className="admin-denied">
+        <h1>Owner access only</h1>
+        <p>This account is not configured as the portfolio owner.</p>
+        <a className="primary-button" href="/">Return to the public portfolio</a>
+        <button className="sign-out" onClick={() => void supabase.auth.signOut()}>Sign out</button>
+      </main>
+    );
+  }
 
   const navigate = (nextPage: Page) => {
     setPage(nextPage);
@@ -100,10 +124,10 @@ function App() {
           onClick={() => navigate("home")}
           aria-label="Go to portfolio home"
         >
-          <div className="avatar">{accountName.slice(0, 3).toUpperCase()}</div>
+          <div className="avatar">{ownerMode ? accountName.slice(0, 3).toUpperCase() : "PUB"}</div>
           <div>
-            <strong>{isPortfolioOwner ? accountName : "Portfolio viewer"}</strong>
-            <span>{accountEmail}</span>
+            <strong>{ownerMode ? accountName : "Public portfolio"}</strong>
+            <span>{ownerMode ? accountEmail : "Open to everyone"}</span>
           </div>
         </button>
         <nav aria-label="Portfolio navigation">
@@ -127,15 +151,19 @@ function App() {
           />
         </nav>
         <div className="sidebar-bottom">
-          <NavItem
+          {ownerMode && <NavItem
             label="Profile & settings"
             active={page === "profile"}
             onClick={() => navigate("profile")}
             icon={<UserRound size={18} aria-hidden="true" />}
-          />
-          <button className="sign-out" onClick={() => void supabase.auth.signOut()}>
+          />}
+          {ownerMode ? <button className="sign-out" onClick={() => {
+            void supabase.auth.signOut();
+            window.history.replaceState({}, "", "/");
+            setPathname("/");
+          }}>
             Sign out <LogOut size={16} aria-hidden="true" />
-          </button>
+          </button> : <a className="owner-login-link" href="/admin">Owner sign in</a>}
         </div>
       </aside>
 
@@ -155,13 +183,13 @@ function App() {
             <strong>{pageTitle(page)}</strong>
           </div>
           <div className="topbar-actions">
-            <button className="icon-button" aria-label="Notifications"><Bell size={18} aria-hidden="true" /></button>
+            {ownerMode && <button className="icon-button" aria-label="Notifications"><Bell size={18} aria-hidden="true" /></button>}
           </div>
         </header>
-        <div className={`page-wrap ${isPortfolioOwner ? "" : "read-only-portfolio"}`}>
-          {page === "home" && <HomePage readOnly={!isPortfolioOwner} />}
-          {page === "plos" && <PLOPage readOnly={!isPortfolioOwner} onBack={() => navigate("level")} />}
-          {page === "final-musings" && <FinalMusingsPage readOnly={!isPortfolioOwner} onBack={() => navigate("level")} />}
+        <div className={`page-wrap ${ownerMode ? "" : "read-only-portfolio"}`}>
+          {page === "home" && <HomePage readOnly={!ownerMode} />}
+          {page === "plos" && <PLOPage readOnly={!ownerMode} onBack={() => navigate("level")} />}
+          {page === "final-musings" && <FinalMusingsPage readOnly={!ownerMode} onBack={() => navigate("level")} />}
           {page === "level" && (
             <LevelPage
               onSelectSubject={(subject) => {
@@ -176,11 +204,11 @@ function App() {
               key={selectedSubject.code}
               subject={selectedSubject}
               onBack={() => navigate("level")}
-              readOnly={!isPortfolioOwner}
+              readOnly={!ownerMode}
             />
           )}
-          {page === "artifacts" && <ArtifactsPage readOnly={!isPortfolioOwner} />}
-          {page === "profile" && <ProfilePage
+          {page === "artifacts" && <ArtifactsPage readOnly={!ownerMode} />}
+          {page === "profile" && ownerMode && <ProfilePage
             name={accountName}
             email={accountEmail}
             program={accountProgram}

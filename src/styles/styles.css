@@ -266,6 +266,12 @@ nav {
   border-radius: 0;
   padding-top: 20px;
 }
+.owner-login-link { display: block; padding: 12px; border-top: 1px solid #e8dde2; color: #8a3156; font-size: 13px; font-weight: 600; text-decoration: none; }
+.owner-login-link:hover { text-decoration: underline; }
+.admin-denied { min-height: 100vh; display: grid; align-content: center; justify-items: center; gap: 12px; padding: 24px; background: #fff8fa; text-align: center; }
+.admin-denied h1, .admin-denied p { margin: 0; }
+.admin-denied p { color: #665c66; }
+.admin-denied .sign-out { width: auto; }
 .main-content {
   flex: 1;
   min-width: 0;
